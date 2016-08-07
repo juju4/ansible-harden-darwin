@@ -3,11 +3,12 @@
 os:
   - osx
 
-language: python
-python: "2.7"
+#language: python
+#python: "2.7"
 before_install:
  - ln -s ansible-harden-darwin ../harden
 install:
+  - python --version
   - pip install ansible ansible-lint
   - ansible --version
   - "{ echo '[defaults]'; echo 'roles_path = ../'; } >> ansible.cfg"
@@ -25,5 +26,4 @@ script:
 # Run the role/playbook again, checking to make sure it's idempotent.
 ## FIXME! known fail
   - "ansible-playbook -i inventory test/integration/default/default.yml --connection=local --sudo | tee /tmp/idempotency.log | grep -q 'changed=0.*failed=0'  && (echo 'Idempotence test: pass' && exit 0)  || (echo 'Idempotence test: fail' && cat /tmp/idempotency.log && exit 0)"
-
 
