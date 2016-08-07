@@ -1,0 +1,10 @@
+---
+
+- include: travis.yml
+
+- include: unix.yml
+
+- name: Darwin | Harden
+  include: darwin.yml
+  when: ansible_os_family == "Darwin"
+
