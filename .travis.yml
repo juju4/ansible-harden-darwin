@@ -16,7 +16,7 @@ install:
   - pip install --user ansible ansible-lint
   - env
   - find . -ls
-  - find $HOME/.local/lib -ls
+  - find $HOME -ls
   - brew install ansible
   - ansible --version
   - "{ echo '[defaults]'; echo 'roles_path = ../'; } >> ansible.cfg"
