@@ -6,11 +6,19 @@ os:
 #language: python
 #python: "2.7"
 before_install:
- - ln -s ansible-harden-darwin ../harden
+ - ln -s ansible-harden-darwin ../harden-darwin
 install:
   - python --version
-  - pip install ansible ansible-lint
+  - brew update
+  - which pip
+## error: could not create '/Library/Python/2.7/site-packages/ansible': Permission denied
+#  - pip install ansible ansible-lint
+  - pip install --user ansible ansible-lint
+#  - brew install ansible
   - ansible --version
+  - env
+  - find -ls
+  - find $HOME/.local/lib -ls
   - "{ echo '[defaults]'; echo 'roles_path = ../'; } >> ansible.cfg"
 script:
   - "echo \"[test-kitchen]\nlocalhost\" > inventory"
