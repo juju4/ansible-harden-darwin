@@ -14,11 +14,11 @@ install:
 ## error: could not create '/Library/Python/2.7/site-packages/ansible': Permission denied
 #  - pip install ansible ansible-lint
   - pip install --user ansible ansible-lint
-#  - brew install ansible
-  - ansible --version
   - env
   - find -ls
   - find $HOME/.local/lib -ls
+  - brew install ansible
+  - ansible --version
   - "{ echo '[defaults]'; echo 'roles_path = ../'; } >> ansible.cfg"
 script:
   - "echo \"[test-kitchen]\nlocalhost\" > inventory"
