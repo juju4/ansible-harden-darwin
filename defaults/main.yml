@@ -1,14 +1,10 @@
 ---
 
-#REJECT # Unix
-#harden_logcheck_hours: '*'
-harden_logcheck_hours: '6,18'
-harden_use_rpc: false
 harden_use_forwarding: false
 harden_umask: '022'
 #harden_umask: '027'
 harden_init_aidedb: false
-harden_unix_fstab_flags: true
+harden_unix_fstab_flags: false
 
 ## firewall rules? avoid to lock yourself
 #harden_fw: false
@@ -32,6 +28,8 @@ harden_fw_smtpservers:
   - 192.168.1.20
 harden_fw_smtp_port: 25
 
+#harden_darwin_user: 'myuser'
 harden_darwin_bluetoothoff: true
 harden_darwin_osxlockdown: 'audit'
 #harden_darwin_osxlockdown: 'run'
+

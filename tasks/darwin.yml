@@ -59,19 +59,25 @@
 - stat: path='/Library/Application Support/com.apple.TCC/TCC.db'
   register: tccdb
 - name: Allow osascript to command keyboard/mouse
-## works on osx but not travis osx
+## works on osx but not travis osx, latest osx (10.11 have 7 columns vs 6 before)
 #  command: "sqlite3 /Library/Application\ Support/com.apple.TCC/TCC.db \"INSERT or REPLACE INTO access VALUES('kTCCServiceAccessibility','com.apple.RemoteDesktopAgent',1,1,1,NULL)\""
-  command: "sqlite3 \"/Library/Application Support/com.apple.TCC/TCC.db\" \"INSERT or REPLACE INTO access VALUES('kTCCServiceAccessibility','com.apple.RemoteDesktopAgent',1,1,1,NULL)\""
+  command: "sqlite3 \"/Library/Application Support/com.apple.TCC/TCC.db\" \"INSERT or REPLACE INTO access('service','client','client_type','allowed','prompt_count','csreq') VALUES('kTCCServiceAccessibility','com.apple.RemoteDesktopAgent',1,1,1,NULL)\""
   when: tccdb.stat.exists
 - debug: msg="WARNING! didn't found /Library/Application\ Support/com.apple.TCC/TCC.db"
   when: not tccdb.stat.exists
 
+## User
+## https://docs.ansible.com/ansible/become.html#becoming-an-unprivileged-user = osx: use pipelining
 - block:
     - name: push bluetooth menu script
-      copy: src=osx-bluetooth-menu.scpt dest="{{ ansible_env['HOME'] }}/Desktop/osx-bluetooth-menu.scpt" mode=0644
-    - name: add bluetooth to menu bar
-      command: "osascript {{ ansible_env['HOME'] }}/Desktop/osx-bluetooth-menu.scpt"
-  when: "{{ ansible_env['USER'] }}" != 'root'
+      copy: src=osx-bluetooth-menu.scpt dest="/Users/{{ harden_darwin_user }}/Desktop/osx-bluetooth-menu.scpt" mode=0644 owner="{{ harden_darwin_user }}"
+## script does not seem to be executable from remote cli
+#    - name: add bluetooth to menu bar
+#      command: "osascript /Users/{{ harden_darwin_user }}/Desktop/osx-bluetooth-menu.scpt"
+#      become: yes
+#      become_user: "{{ harden_darwin_user }}"
+#      ignore_errors: true
+  when: harden_darwin_user is defined and harden_darwin_user != ''
 
 - name: disable IPv6 noise
   sysctl: name="{{ item.k }}" value="{{ item.v }}" state=present reload=no
@@ -121,8 +127,8 @@
 ## FIXME! not installing correct packages: only get gobject-introspection, goffice
 - name: macports packages install
   macports: name=go state=present
-  async: 3600
-  poll: 300
+#  async: 3600
+#  poll: 300
   when: mp.stat.exists and not mpgo.stat.exists
   register: mpgo
 - debug: var=mpgo
