@@ -102,7 +102,7 @@
 #  command: 'python {{ install_archives }}/fix-macosx.py'
 
 - name: download osxparanoia hosts
-  get_url: url=https://github.com/l1k/osxparanoia/blob/master/hosts dest="{{ install_archives }}/hosts.osxparanoia" mode=0644 sha256sum="a4ce3fd4ce634ea98bd9a485fcd5c03395b848e77b557cf175f18e80f670b487"
+  get_url: url=https://github.com/l1k/osxparanoia/blob/master/hosts dest="{{ install_archives }}/hosts.osxparanoia" mode=0644 sha256sum="69ebec50d96909413c50eb21d5548bd4237eae6c5fc4a7b14413b31e621b0e86"
 
 - stat: path={{ install_archives }}/osxlockdown
   register: osxl
