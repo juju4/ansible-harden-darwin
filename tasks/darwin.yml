@@ -54,9 +54,16 @@
   register: osx_bluetooth
   notify:
     - kill osx bluetooth
+
 ## http://jacobsalmela.com/bash-script-enable-access-assistive-devices-programmatically-os-x-mavericks-10-9-x-simulate-keystrokes/
+- stat: path='/Library/Application Support/com.apple.TCC/TCC.db'
+  register: tccdb
 - name: Allow osascript to command keyboard/mouse
   command: "sqlite3 /Library/Application\ Support/com.apple.TCC/TCC.db \"INSERT or REPLACE INTO access VALUES('kTCCServiceAccessibility','com.apple.RemoteDesktopAgent',1,1,1,NULL)\""
+  when: tccdb.stat.exists
+- debug: msg="WARNING! didn't found /Library/Application\ Support/com.apple.TCC/TCC.db"
+  when: not tccdb.stat.exists
+
 - name: add bluetooth to menu bar
   command: "osascript ~/Desktop/osx-bluetooth-menu.scpt"
 
