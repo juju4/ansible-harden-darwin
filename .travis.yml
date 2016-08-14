@@ -13,7 +13,7 @@ install:
   - which pip
 ## error: could not create '/Library/Python/2.7/site-packages/ansible': Permission denied
 #  - pip install ansible ansible-lint
-  - pip install --user ansible ansible-lint
+#  - pip install --user ansible ansible-lint
   - env
   - find . -ls
 #  - find $HOME/Library $HOME/.local -ls || true
