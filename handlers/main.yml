@@ -1,18 +1,11 @@
 ---
 - name: restart sshd
   service: name={{ ssh_svc }} state=restarted
-- name: restart iptables
-  service: name=iptables-persistent state=restarted
-  when: ansible_distribution == 'Debian' and (ansible_distribution == 'Ubuntu' and ansible_lsb.major_release|int < 16)
-- name: restart iptables - xenial
-  service: name=netfilter-persistent state=restarted
-  when: (ansible_distribution == 'Ubuntu' and ansible_lsb.major_release|int >= 16)
-- name: restart auditd
-  service: name=auditd state=restarted
 - name: reload fstab
   shell: "umount -a; mount -a"
   ignore_errors: true
 
 - name: kill osx bluetooth
   command: "killall -HUP blued"
+  ignore_errors: true
 
