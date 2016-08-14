@@ -71,7 +71,7 @@
       copy: src=osx-bluetooth-menu.scpt dest="{{ ansible_env['HOME'] }}/Desktop/osx-bluetooth-menu.scpt" mode=0644
     - name: add bluetooth to menu bar
       command: "osascript {{ ansible_env['HOME'] }}/Desktop/osx-bluetooth-menu.scpt"
-  when: "{{ ansible_env['USER'] }} != 'root'
+  when: "{{ ansible_env['USER'] }}" != 'root'
 
 - name: disable IPv6 noise
   sysctl: name="{{ item.k }}" value="{{ item.v }}" state=present reload=no
