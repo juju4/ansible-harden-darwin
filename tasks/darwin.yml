@@ -89,9 +89,11 @@
     - { k: 'net.inet6.icmp6.nd6_accept_6to4', v: 0 }
 
 ## https://github.com/ansible/ansible-modules-extras/pull/995/files
-- name: disable launchd services
-  command: "launchctl unload -w {{ item }}"
-  with_items: "{{ harden_darwin_launchd_services_unload }}"
+- block:
+    - name: disable launchd services
+      command: "launchctl unload -w {{ item }}"
+      with_items: "{{ harden_darwin_launchd_services_unload }}"
+  when: harden_darwin_launchd_services_unload is defined and harden_darwin_launchd_services_unload != '' and harden_darwin_launchd_services_unload != []
 
 - name: download fix-macosx.py to disable search engines 'leak'
   get_url: url=https://fix-macosx.com/fix-macosx.py dest="{{ install_archives }}/fix-macosx.py" mode=0755 sha256sum="b5a07e12269a11341c21f5a1a0951d9b9dbb002681ea1c251a325dc04951b9b3"
