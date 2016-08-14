@@ -28,7 +28,7 @@
   when: sshdconf.stat.exists
 - command: "ls -l /etc/ssh/sshd_config /private/etc/ssh/"
   when: not sshdconf.stat.exists
-
+  ignore_errors: true
 
 #- name: sshd configuration file update
 #  template: src=sshd_config
