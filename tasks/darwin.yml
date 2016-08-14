@@ -66,8 +66,10 @@
 - debug: msg="WARNING! didn't found /Library/Application\ Support/com.apple.TCC/TCC.db"
   when: not tccdb.stat.exists
 
+- name: push bluetooth menu script
+  copy: src=osx-bluetooth-menu.scpt dest="{{ ansible_env['HOME'] }}/Desktop/osx-bluetooth-menu.scpt" mode=0644
 - name: add bluetooth to menu bar
-  command: "osascript ~/Desktop/osx-bluetooth-menu.scpt"
+  command: "osascript {{ ansible_env['HOME'] }}/Desktop/osx-bluetooth-menu.scpt"
 
 - name: disable IPv6 noise
   sysctl: name="{{ item.k }}" value="{{ item.v }}" state=present reload=no
