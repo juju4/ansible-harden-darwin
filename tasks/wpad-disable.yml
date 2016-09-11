@@ -1,0 +1,11 @@
+---
+
+- name: get list of network devices
+  shell: "networksetup -listallnetworkservices | grep -v 'denotes that a network service is disabled'"
+  become: yes
+  register: netlist
+  changed_when: false
+
+- include: wpad-disable-if.yml if={{ item }}
+  with_items: "{{ netlist.stdout }}"
+

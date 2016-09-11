@@ -32,6 +32,7 @@ harden_fw_smtp_port: 25
 harden_darwin_bluetoothoff: true
 harden_darwin_osxlockdown: 'audit'
 #harden_darwin_osxlockdown: 'run'
+harden_darwin_disable_wpad: true
 
 #harden_darwin_launchd_services_unload:
 #    - /System/Library/LaunchDaemons/com.apple.RemoteDesktop.PrivilegeProxy.plist

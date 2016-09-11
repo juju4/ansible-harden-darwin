@@ -194,3 +194,6 @@
 
 ## https://github.com/iSECPartners/yontma-mac
 
+- include: wpad-disable.yml
+  when: harden_darwin_disable_wpad is defined and harden_darwin_disable_wpad
+

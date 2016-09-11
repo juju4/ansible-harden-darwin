@@ -1,0 +1,16 @@
+
+## /Users/*/Library/Application Support/com.apple.sharedfilelist/com.apple.LSSharedFileList.ProjectsItems.sfl
+## binary plist
+## plutil -convert xml1 -o - filename.plist
+## plutil -convert binary1 -o - filename.plist
+## defaults write /path/to/plist/file "URL Types" -array-add '{"URL Identifier" = "com.myapp.2"; "URL Schemes" = { "two"; }; }'l
+## defaults write /path/to/plist/file "URL Types" -array-add '{"URL Identifier" = "com.myapp.2"; "URL Schemes" = { "two"; }; }'l
+
+- osx_defaults:
+    domain: '/Users/*/Library/Application Support/com.apple.sharedfilelist/com.apple.LSSharedFileList.ProjectsItems.sfl'
+#    key: AppleLanguages
+    key: '$objects'
+    type: string
+    value: 'x-apple-findertag:TLP%3AYELLOW'
+
+
