@@ -7,5 +7,5 @@
   changed_when: false
 
 - include: wpad-disable-if.yml if={{ item }}
-  with_items: "{{ netlist.stdout }}"
+  with_items: "{{ netlist.stdout_lines }}"
 
