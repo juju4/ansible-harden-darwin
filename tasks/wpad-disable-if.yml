@@ -1,7 +1,7 @@
 ---
 
-- name: get state of interface {{ if }}
-  command: "networksetup -getproxyautodiscovery {{ if }}"
+- name: get state of interface "{{ if }}"
+  command: "networksetup -getproxyautodiscovery \"{{ if }}\""
   register: ifstate
   changed_when: false
 
