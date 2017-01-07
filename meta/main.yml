@@ -10,8 +10,8 @@ galaxy_info:
     - 10.9
     - 10.10
     - 10.11
-  categories:
+  galaxy_tags:
     - system
     - security
-dependencies:
+dependencies: []
 

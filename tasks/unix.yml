@@ -10,7 +10,14 @@
   register: sshdconf
 - block:
     - name: Restrict sshd config (1)
-      lineinfile: dest=/etc/ssh/sshd_config regexp="{{ item.regexp }}" line="{{ item.line }}" backup=yes
+      lineinfile:
+        dest: /etc/ssh/sshd_config
+        regexp: "{{ item.regexp }}"
+        line: "{{ item.line }}"
+        backup: yes
+        validate: "sshd -f %s -T"
+## avoid to add at end of file after a restricting match...
+        insertafter: "^#PermitEmptyPasswords"
       with_items:
         - { regexp: '^PasswordAuthentication', line: 'PasswordAuthentication no' }
         - { regexp: '^PermitRootLogin', line: 'PermitRootLogin without-password' }
@@ -20,13 +27,21 @@
       notify:
         - restart sshd
     - name: Restrict sshd config - UsePrivilegeSeparation sandbox
-      lineinfile: dest=/etc/ssh/sshd_config regexp="{{ item.regexp }}" line="{{ item.line }}" backup=yes
+      lineinfile:
+        dest: /etc/ssh/sshd_config
+        regexp: "{{ item.regexp }}"
+        line: "{{ item.line }}"
+        backup: yes
+        validate: "sshd -f %s -T"
+## avoid to add at end of file after a restricting match...
+        insertafter: "^#UsePrivilegeSeparation"
       with_items:
         - { regexp: '^UsePrivilegeSeparation', line: 'UsePrivilegeSeparation sandbox' }
       notify:
         - restart sshd
   when: sshdconf.stat.exists
-- command: "ls -l /etc/ssh/sshd_config /private/etc/ssh/"
+- name: where is sshd_config if not standard?
+  command: "ls -l /etc/ssh/sshd_config /private/etc/ssh/"
   when: not sshdconf.stat.exists
   ignore_errors: true
 

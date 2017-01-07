@@ -1,0 +1,28 @@
+---
+
+- fail: "FATAL! unrecognized action {{ action }}"
+  when: not (action == 'whitelist' or action == 'blacklist')
+
+- name: recover file info for {{ path }}
+  stat: path={{ path }} checksum_algorithm=sha256
+  register: filestat
+
+- block:
+    - name: santa | fileinfo check
+      command: "/usr/local/bin/santactl fileinfo '{{ path }}'"
+      changed_when: false
+      ignore_errors: true
+      register: fileinfo
+
+#    - debug: var=fileinfo
+
+    - name: santa | {{ action }} per certificate
+      command: "/usr/local/bin/santactl rule --{{ action }} --certificate --path '{{ path}}'"
+      when: "not ('{{ match }}listed (Certificate)' in fileinfo.stdout) and type == 'cert'"
+
+    - name: santa | {{ action }} per hash
+      command: "/usr/local/bin/santactl rule --{{ action }} --sha256 {{ filestat.stat.checksum }} --path '{{ path }}'"
+      when: "not ('{{ match }}listed (Binary)' in fileinfo.stdout) and type == 'hash'"
+
+  when: filestat.stat.exists
+

@@ -1,0 +1,9 @@
+---
+
+## https://github.com/iSECPartners/yontma-mac
+## https://github.com/iSECPartners/yontma-mac/releases/download/1.0.2/yontma-1.0.2.dmg
+## https://github.com/iSECPartners/yontma-mac/releases/download/1.0.2/yontma-1.0.2.dmg.sig
+## https://github.com/iSECPartners/yontma-mac/issues/5, https://support.apple.com/fr-fr/HT202842
+#sudo defaults write /Library/Preferences/com.apple.loginwindow DisableFDEAutoLogin -bool YES
+#sudo defaults delete /Library/Preferences/com.apple.loginwindow DisableFDEAutoLogin
+

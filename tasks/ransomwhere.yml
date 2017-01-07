@@ -1,0 +1,30 @@
+---
+
+## https://objective-see.com/products/ransomwhere.html
+
+- name: download ransomwhere
+  get_url:
+    url: https://bitbucket.org/objective-see/deploy/downloads/RansomWhere_1.1.0.zip
+    dest: "{{ install_archives }}/RansomWhere_1.1.0.zip"
+    mode: '0644'
+    sha256sum: "7b18e17abd8fb40d7c25f29f65d64a1f65c758d61c9f67c11d9722d1d7486ea9"
+  become: yes
+
+- name: decompress ransomwhere
+  unarchive:
+    src: "{{ install_archives }}/RansomWhere_1.1.0.zip"
+    dest: "{{ install_archives }}"
+    creates: "{{ install_archives }}/RansomWhere.app/Contents/MacOS/RansomWhere"
+  become: yes
+
+- block:
+    - include: "google-santa-whitelist.yml type=hash path={{ item }} action=whitelist match=White"
+      with_items:
+        - "{{ install_archives }}/RansomWhere.app/Contents/MacOS/RansomWhere"
+  when: harden_darwin_santa is defined and harden_darwin_santa and (harden_darwin_santa_mode == 'LOCKDOWN' or harden_darwin_santa_mode == 2)
+
+## FIXME! always return 'install ok' and rc = 0
+- name: install ransomwhere
+  command: "{{ install_archives }}/RansomWhere.app/Contents/MacOS/RansomWhere -install creates=/Library/RansomWhere/RansomWhere"
+  become: yes
+

@@ -1,0 +1,33 @@
+---
+
+## No real out-of-the-box way to protect here.
+## best: enable filevault, force hibernate mode and close/hibernate when leaving system
+## http://patrickmosca.com/root-a-mac-in-10-seconds-or-less/
+
+- name: USB+Firewire | Disable mass storage with kextunload
+  command: "kextunload /System/Library/Extensions/{{ item }}"
+  with_items:
+    - IOUSBMassStorageClass.kext
+    - IOFireWireSerialBusProtocolTransport.KEXT
+
+## 10.6/Snow Leopard, Apple's Security Configuration guide for Mac OS X: https://support.apple.com/en-us/HT201216 (no update for 10.12, it seems)
+## http://images.apple.com/server/macosx/docs/Leopard_Security_Config_20080530.pdf
+## until 10.9 (https://stackoverflow.com/questions/28348963/mac-os-x-10-10-disable-usb-ports)
+## need to reboot
+- block:
+    - name: USB+Firewire | Remove kernel extension from USB Mass storage
+      file:
+        dest: "/System/Library/Extensions/{{ item }}"
+        state: absent
+      with_items:
+        - IOUSBMassStorageClass.kext
+        - IOFireWireSerialBusProtocolTransport.KEXT
+      register: rmkext
+    - name: USB+Firewire | force refresh of Extensions cache at next reboot
+      file:
+        dest: /System/Library/Extensions
+        state: touch
+      when: rmkext.changed
+  when: harden_darwin_usb_remove_massstoragekext
+
+

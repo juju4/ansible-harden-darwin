@@ -1,0 +1,20 @@
+---
+
+## https://github.com/kristovatlas/osx-config-check
+- stat: path={{ install_archives }}/osx-config-check
+  register: osxcc
+- name: git clone osx-config-check
+  git:
+    repo=https://github.com/kristovatlas/osx-config-check
+    dest={{ install_archives }}/osx-config-check
+#  when: "{{ ansible_distribution_version | regex_replace('^(\d+)\.(\d+)\.(\d+)$', '\\1.\\2') }}" == '10.11'
+
+## Note: report is written to ~/Documents/ ...
+- name: execute osx-config-check - audit mode only
+  shell: "python app.py --report-only --disable-prompt | tee /private/var/root/osx-config-check.audit chdir={{ install_archives }}/osx-config-check creates=/private/var/root/osx-config-check.audit"
+  become: yes
+  register: osxccout
+#  ignore_errors: true
+## Note: long report
+#- debug: var=osxccout.stdout_lines
+

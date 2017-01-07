@@ -1,0 +1,12 @@
+## {{ ansible_managed }}
+/var/log/osquery/osqueryd.results.log {
+    weekly
+    missingok
+    rotate 52
+    compress
+    delaycompress
+    notifempty
+    create 640 root adm
+    sharedscripts
+}
+

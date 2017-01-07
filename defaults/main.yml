@@ -6,34 +6,149 @@ harden_umask: '022'
 harden_init_aidedb: false
 harden_unix_fstab_flags: false
 
-## firewall rules? avoid to lock yourself
+## TODO: firewall rules? avoid to lock yourself
 #harden_fw: false
-harden_fw: true
+#harden_fw: true
 ## Note: in default config, if you switch default policy to drop, you will lose access...
 #harden_fw_default: DROP
-harden_fw_default: ACCEPT
-harden_fw_ssh_restricted:
-  - 192.168.1.0/24
-  - 10.0.0.0/8
-  - 1.1.1.1
-harden_fw_ssh_port: 22
-harden_fw_snmp_restricted:
-  - 192.168.1.100
-harden_fw_dnsservers:
-  - 192.168.1.10
-  - 192.168.1.11
-  - 8.8.8.8
-  - 8.8.4.4
-harden_fw_smtpservers:
-  - 192.168.1.20
-harden_fw_smtp_port: 25
+#harden_fw_default: ACCEPT
+#harden_fw_ssh_restricted:
+#  - 192.168.1.0/24
+#  - 10.0.0.0/8
+#  - 1.1.1.1
+#harden_fw_ssh_port: 22
+#harden_fw_snmp_restricted:
+#  - 192.168.1.100
+#harden_fw_dnsservers:
+#  - 192.168.1.10
+#  - 192.168.1.11
+#  - 8.8.8.8
+#  - 8.8.4.4
+#harden_fw_smtpservers:
+#  - 192.168.1.20
+#harden_fw_smtp_port: 25
 
-#harden_darwin_user: 'myuser'
-harden_darwin_bluetoothoff: true
+harden_darwin_autocheckupdate: true
+harden_darwin_autoupdate_apps: true
+harden_darwin_autoupdate_restartrequired: false
+harden_darwin_infrared: false
+## https://support.apple.com/en-us/HT202842, OS X: How to disable automatic login when FileVault is enabled
+## YES = double login
+harden_darwin_disablefdeautologin: 'YES'
+#harden_darwin_disablefdeautologin: 'NO'
+
+## Application firewall
+## 0 disabled, 1 enabled for specific services, 2 enabled for essential services only (will not allow ssh or below applications)
+harden_darwin_firewall: 1
+harden_darwin_firewall_allow_signedapps: false
+## this is equivalent to value 2 and blocking ssh
+harden_darwin_firewall_blockall_apps_in: false
+harden_darwin_fw_program_allowed_in:
+  - /opt/local/sbin/nrpe
+  - /opt/local/sbin/snmpd
+  - /Library/PreferencePanes/DNSCrypt.prefPane/Contents/Resources/usr/sbin/dnscrypt-proxy
+  - /Library/PreferencePanes/DNSCrypt.prefPane/Contents/Resources/usr/bin/hostip
+harden_darwin_fw_program_blocked_in:
+  - /bin/sh
+  - /usr/bin/perl
+  - /usr/bin/python
+  - /usr/bin/curl
+  - /usr/bin/nc
+  - /usr/sbin/httpd
+  - /usr/sbin/ntpd
+
+harden_darwin_users: []
+harden_darwin_disable_bluetooth: true
+harden_darwin_disable_wpad: true
+harden_darwin_disable_airdrop: true
+harden_darwin_disable_iclouddrive: true
+harden_darwin_captiveportal: false
+harden_darwin_fastuserswitching: 'YES'
+#harden_darwin_fastuserswitching: 'NO'
+harden_darwin_safari_javascript: false
+
+## Experimental/Care! Will remove mass storage kext!
+harden_darwin_disable_usb: false
+
+harden_darwin_ransomwhere: false
+harden_darwin_fixmacosleak: false
+
+## Audit Tools
 harden_darwin_osxlockdown: 'audit'
 #harden_darwin_osxlockdown: 'run'
-harden_darwin_disable_wpad: true
+harden_darwin_osxconfigcheck: true
+
+
+### extra tools (use role juju4.macos-apps-install for application install, only doing configuration)
+## dnscrypt
+harden_darwin_dnscrypt: true
+
+## install google santa
+harden_darwin_santa: true
+harden_darwin_santa_mode: 'MONITOR'
+## Be careful when activating! be sure to fit whitelist to YOUR context.
+## For some reason, 'LOCKDOWN' is not working. 2 is fine to lock
+#harden_darwin_santa_mode: 'LOCKDOWN'
+#harden_darwin_santa_mode: 2
+harden_darwin_santa_blacklist_homeuserpath: false
+#$ cat /var/log/santa.log | awk -F'|' '/path=/ { gsub(/path=/, "", $5); print $5 }'| sort | uniq -c | sort -nr | head -10
+#$ cat /var/log/santa.log | awk -F'|' '/path=/ && /reason=UNKNOWN/ { gsub(/path=/, "", $5); print $5 }'| sort | uniq -c | sort -nr | head -100
+#decision ALLOW, DISKAPPEAR/DISKDISAPPEAR (usb/dmg)
+## If binary is not signed, it will have no effect. mush be added to hash list
+harden_darwin_santa_whitelist_cert:
+  - /bin/sh
+  - /usr/bin/ssh
+  - /opt/X11/bin/xauth
+  - /Applications/Firefox.app/Contents/MacOS/firefox
+  - /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome
+  - /Applications/VirtualBox.app/Contents/MacOS/VirtualBox
+  - /usr/local/bin/osqueryd
+  - /var/_install/RansomWhere.app/Contents/MacOS/RansomWhere
+  - /Library/RansomWhere/RansomWhere
+  - /Applications/Wireshark.app/Contents/MacOS/dumpcap
+#  - /Library/Application Support/Adobe/Flash Player Install Manager/fpsaud
+
+#harden_darwin_santa_whitelist_hash: []
+harden_darwin_santa_whitelist_hash:
+  - /System/Library/Frameworks/Python.framework/Versions/2.7/Resources/Python.app/Contents/MacOS/Python
+### mostly macports: keepass, smartmontools, nagios-plugins + jedda, interpreters
+### not signed: DNSCrypt, vagrant
+#  - /Applications/MacPorts/KeePassX.app/Contents/MacOS/KeePassX
+#  - /opt/local/sbin/smartctl
+#  - /opt/local/libexec/nagios/check_disk
+#  - /opt/local/libexec/nagios/check_dns
+#  - /opt/local/libexec/nagios/check_load
+#  - /opt/local/libexec/nagios/check_ntp_time
+#  - /opt/local/libexec/nagios/check_procs
+#  - /opt/local/libexec/nagios/check_users
+#  - /usr/local/share/OSX-Monitoring-Tools/check_osx_mem/build/Release/check_osx_mem
+#  - /usr/local/share/OSX-Monitoring-Tools/check_osx_mem/build/Release/check_osx_smc
+#  - /opt/local/libexec/macports/bin/tclsh8.5
+#  - /opt/local/bin/perl5.24
+#  - /Applications/DNSCrypt Menubar.app/Contents/MacOS/DNSCrypt Menubar
+#  - /Library/PreferencePanes/DNSCrypt.prefPane/Contents/Resources/usr/bin/lockfile
+#  - /Library/PreferencePanes/DNSCrypt.prefPane/Contents/Resources/usr/sbin/dnscrypt-proxy
+#  - /Library/PreferencePanes/DNSCrypt.prefPane/Contents/Resources/usr/bin/alarmer
+#  - /Library/PreferencePanes/DNSCrypt.prefPane/Contents/Resources/usr/bin/minisign-verify
+#  - /opt/vagrant/bin/vagrant
+#  - /opt/vagrant/embedded/bin/ruby
+#  - /opt/vagrant/embedded/bin/curl
+#  - /opt/vagrant/embedded/bin/bsdtar
+
+
+harden_darwin_santa_blacklist_hash: []
+## for testing purpose
+#harden_darwin_santa_blacklist_hash:
+#  - /usr/bin/yes
+
+harden_darwin_osquery: true
+
+## Archived/deprecated: MIDAS
+## https://github.com/etsy/MIDAS
+## https://github.com/etsy/MIDAS/tree/pre_archive
 
 #harden_darwin_launchd_services_unload:
 #    - /System/Library/LaunchDaemons/com.apple.RemoteDesktop.PrivilegeProxy.plist
+
+install_archives: /private/var/_install
 

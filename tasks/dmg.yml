@@ -1,0 +1,46 @@
+---
+## inspired from https://github.com/MWGriffin/ansible-playbooks/blob/master/install/dmg.yaml
+## MIT License, Copyright (c) 2013 Michael Griffin, http://mwgriffin.com
+
+## Note: some app are not installing here
+- set_fact:
+    verbose: true
+
+- name: check if {{ app_name }} exists
+  stat: path="/Applications/{{ app_name }}.app"
+  register: app
+  when: to is not defined
+- stat: path="{{ to }}"
+  register: app
+  when: to is defined
+- debug: var=versioncmd
+  when: verbose is defined and verbose
+- name: force update/install if no version cmd
+  set_fact:
+    versioncmd: 'echo 0.01'
+  when: versioncmd is not defined or versioncmd == ''
+- name: get current version of app
+  shell: "{{ versioncmd }}"
+  register: currentversion
+  changed_when: false
+  when: app.stat.exists
+
+- block:
+    #- debug: var=app
+    - debug: var=version
+    - debug: var=currentversion.stdout
+      when: app.stat.exists and versioncmd is defined and versioncmd != ""
+    - debug: var="{{ version | version_compare( currentversion.stdout, '>') }}"
+      when: app.stat.exists and versioncmd is defined and versioncmd != ""
+  when: verbose is defined and verbose
+
+## Note: splitting conditions else not respected/BUG
+#- debug: msg="Doing Install!"
+#  when: not app.stat.exists or "{{ version | version_compare( currentversion.stdout, '>') }}"
+- include: dmginstall.yml
+  when: not app.stat.exists
+- block:
+    - include: dmginstall.yml
+      when: "{{ version | version_compare( currentversion.stdout, '>') }}"
+  when: app.stat.exists
+

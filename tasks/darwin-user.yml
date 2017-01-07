@@ -1,0 +1,65 @@
+---
+
+- name: no delay between screensaver and lock
+  osx_defaults: domain=com.apple.screensaver key=askForPasswordDelay type=int value=0 state=present
+
+- name: Show Hidden Files
+  osx_defaults: domain=com.apple.finder key=AppleShowAllFiles type=bool value=true state=present
+- name: Use Plain Text Mode as Default in TextEdit
+  osx_defaults: domain=com.apple.TextEdit key=RichText type=int value=0 state=present
+- name: Show Path Bar
+  osx_defaults: domain=com.apple.finder key=ShowPathbar type=bool value=true state=present
+- name: Enable Smooth Scrolling
+  osx_defaults: domain=NSGlobalDomain key=NSScrollAnimationEnabled type=bool value=false state=present
+- name: Finder Save to Disk by Default
+  osx_defaults: domain=NSGlobalDomain key=NSDocumentSaveNewDocumentsToCloud type=bool value=false state=present
+## 0 as full name, 2 as icon
+- name: Finder FastUserSwitching menu as icon
+  osx_defaults: domain=NSGlobalDomain key=userMenuExtraStyle type=int value=2 state=present
+
+- name: Disable automatic loading of remote content Mail.app
+  osx_defaults: domain=com.apple.mail-shared key=DisableURLLoading type=bool value=true state=present
+
+- name: Disable AirDrop
+  osx_defaults: domain=com.apple.NetworkBrowser key=DisableAirDrop type=bool value=true state=present
+- name: Disable iCloud drive
+  osx_defaults: domain=NSGlobalDomain key=NSDocumentSaveNewDocumentsToCloud type=bool value=false state=present
+  when: harden_darwin_disable_iclouddrive
+
+#- osx_defaults: domain=com.apple.Safari key=IncludeInternalDebugMenu type=bool value=true state=present
+#- osx_defaults: domain=com.apple.Safari key=IncludeDevelopMenu type=bool value=true state=present
+- name: Safari - disable extensions
+  osx_defaults: domain=~/Library/Preferences/com.apple.Safari key=ExtensionsEnabled type=bool value=false state=present
+- name: Safari - Warn about fraudulent websites
+  osx_defaults: domain=~/Library/Preferences/com.apple.Safari key=WarnAboutFraudulentWebsites type=bool value=true state=present
+- name: Safari - configure javascript
+  osx_defaults: domain=~/Library/Preferences/com.apple.Safari key=com.apple.Safari.ContentPageGroupIdentifier.WebKit2JavaScriptEnabled type=bool value={{ harden_darwin_safari_javascript | default(false) }} state=present
+- name: Safari - configure javascript legacy
+  osx_defaults: domain=~/Library/Preferences/com.apple.Safari key=WebKitJavaScriptEnabled type=bool value={{ harden_darwin_safari_javascript | default(false) }} state=present
+- name: Safari - configure java
+  osx_defaults: domain=~/Library/Preferences/com.apple.Safari key=com.apple.Safari.ContentPageGroupIdentifier.WebKit2JavaEnabled type=bool value=false state=present
+- name: Safari - don't open directly downloaded "safe" files
+  osx_defaults: domain=~/Library/Preferences/com.apple.Safari key=AutoOpenSafeDownloads type=bool value=false state=present
+- name: Safari - disable autofill credit cards
+  osx_defaults: domain=~/Library/Preferences/com.apple.Safari key=AutoFillCreditCardData type=bool value=false state=present
+- name: Safari - disable autofill from contacts
+  osx_defaults: domain=~/Library/Preferences/com.apple.Safari key=AutoFillFromAddressBook type=bool value=false state=present
+- name: Safari - disable autofill passwords
+  osx_defaults: domain=~/Library/Preferences/com.apple.Safari key=AutoFillPasswords type=bool value=false state=present
+- name: Safari - disable autofill others
+  osx_defaults: domain=~/Library/Preferences/com.apple.Safari key=AutoFillMiscellaneaousForms type=bool value=false state=present
+- name: Safari - disable search engine suggestions
+  osx_defaults: domain=~/Library/Preferences/com.apple.Safari key=SuppressSearchSuggestions type=bool value=true state=present
+- name: Safari - disable universal search
+  osx_defaults: domain=~/Library/Preferences/com.apple.Safari key=UniversalSearchEnabled type=bool value=false state=present
+- name: Safari - DoNotTrack HTTP header
+  osx_defaults: domain=~/Library/Preferences/com.apple.Safari key=SendDoNotTrackHTTPHeader type=bool value=true state=present
+- name: Safari - Show Full URL
+  osx_defaults: domain=~/Library/Preferences/com.apple.Safari key=ShowFullURLInSmartSearchField type=bool value=true state=present
+
+##???
+#Make Crash Reporter appear as a notification
+#defaults write com.apple.CrashReporter UseUNC 1
+#Display the file extensions in Finder
+#defaults write NSGlobalDomain AppleShowAllExtensions -bool true
+#notify: killall Finder

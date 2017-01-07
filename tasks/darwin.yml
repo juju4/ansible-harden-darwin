@@ -1,83 +1,87 @@
 ---
-## https://github.com/SummitRoute/osxlockdown only osx 10.11/El Capitan
-## https://github.com/alterstep/dnscrypt-osxclient
 ## https://github.com/herrbischoff/awesome-osx-command-line
 ## http://csrc.nist.gov/publications/drafts/800-179/sp800_179_draft.pdf
 
-- set_fact:
-    install_archives: /private/var/_install
-
-- file: dest="{{ install_archives }}" mode=0755 state=directory
+- name: ensure archives directory exists
+  file: dest="{{ install_archives }}" mode=0755 state=directory
   become: yes
 
+- include: darwin-updates.yml
+
+## FIXME! not idempotent
 - name: enforce hibernation and evict Filevault keys from memory instead of traditional sleep to memory
   command: "pmset -a {{ item.k }} {{ item.v }}"
   with_items:
     - { k: destroyfvkeyonstandby, v: 1 }
 ## https://developer.apple.com/library/mac/documentation/Darwin/Reference/ManPages/man1/pmset.1.html
-#    - { k: hibernatemode, v: 25 }      ## makes mac hibernate...
+## FIXME! ?10.10: makes mac hibernate directly. ok on 10.11+10.12
+    - { k: hibernatemode, v: 25 }
 
 #- name: Reset Accessibility settings
 #  command: tccutil reset Accessibility
 
-- osx_defaults: domain=com.apple.alf key=globalstate type=bool value=true state=present
-- osx_defaults: domain=com.apple.alf key=loggingenabled type=bool value=true state=present
-#- osx_defaults: domain=com.apple.alf key=allowsignedenabled type=bool value=true state=present
-#- osx_defaults: domain=com.apple.captive.control key=Active type=bool value=false state=present
-#- osx_defaults: domain=com.apple.Safari key=IncludeInternalDebugMenu type=bool value=true state=present
-#- osx_defaults: domain=com.apple.Safari key=IncludeDevelopMenu type=bool value=true state=present
 #- osx_defaults: domain=NSGlobalDomain key=WebKitDeveloperExtras type=bool value=true state=present
-- osx_defaults: domain=NSGlobalDomain key=NSDocumentSaveNewDocumentsToCloud type=bool value=false state=present
 - name: screen saver with password
   osx_defaults: domain=com.apple.screensaver key=askForPassword type=int value=1 state=present
-- osx_defaults: domain=com.apple.screensaver key=askForPasswordDelay type=int value=300 state=present
-- name: Use Plain Text Mode as Default in TextEdit
-  osx_defaults: domain=com.apple.TextEdit key=RichText type=int value=0 state=present
-- name: Show Hidden Files
-  osx_defaults: domain=com.apple.finder key=AppleShowAllFiles type=bool value=true state=present
-- name: Show Path Bar
-  osx_defaults: domain=com.apple.finder key=ShowPathbar type=bool value=true state=present
-- name: Enable Smooth Scrolling
-  osx_defaults: domain=NSGlobalDomain key=NSScrollAnimationEnabled type=bool value=false state=present
-- name: Finder Save to Disk by Default
-  osx_defaults: domain=NSGlobalDomain key=NSDocumentSaveNewDocumentsToCloud type=bool value=false state=present
+
 - name: Disable Creation of Metadata Files on Network Volumes
   osx_defaults: domain=com.apple.desktopservices key=DSDontWriteNetworkStores type=bool value=true state=present
 - name: Disable Creation of Metadata Files on USB Volumes
   osx_defaults: domain=com.apple.desktopservices key=DSDontWriteUSBStores type=bool value=true state=present
 - name: Check for Software Updates Daily
   osx_defaults: domain=com.apple.SoftwareUpdate key=ScheduleFrequency type=int value=1 state=present
-
+- name: Enable infrared receiver
+  osx_defaults: domain=/Library/Preferences/com.apple.driver.AppleIRController key=DeviceEnabled type={{ darwin_booltype }} value={{ darwin_booltype_true }} state=present
+  when: harden_darwin_infrared
+- name: Disable infrared receiver
+  osx_defaults: domain=/Library/Preferences/com.apple.driver.AppleIRController key=DeviceEnabled type={{ darwin_booltype }} value={{ darwin_booltype_false }} state=present
+  when: not harden_darwin_infrared
+## FIXME! it seems type can be int or bool, and different even between 2 Sierra/10.12 (depends if system upgraded?)
+- name: Enable bluetooth
+  osx_defaults: domain=/Library/Preferences/com.apple.Bluetooth key=ControllerPowerState type={{ darwin_booltype }} value={{ darwin_booltype_true }} state=present
+  when: not harden_darwin_disable_bluetooth
+  ignore_errors: true
 - name: Disable bluetooth
-  osx_defaults: domain=/Library/Preferences/com.apple.Bluetooth key=ControllerPowerState type=int value=0 state=present
-  when: harden_darwin_bluetoothoff is defined and harden_darwin_bluetoothoff
+  osx_defaults: domain=/Library/Preferences/com.apple.Bluetooth key=ControllerPowerState type={{ darwin_booltype }} value={{ darwin_booltype_false }} state=present
+  when: harden_darwin_disable_bluetooth
   register: osx_bluetooth
   notify:
     - kill osx bluetooth
+  ignore_errors: true
+
+- name: Configure Captive Portal
+  osx_defaults: domain=/Library/Preferences/SystemConfiguration/com.apple.captive.control key=Active type=bool value={{ harden_darwin_captiveportal }} state=present
+
+- name: Configure FastUserSwitching
+  osx_defaults: domain=/Library/Preferences/.GlobalPreferences key=MultipleSessionEnabled type=bool value={{ harden_darwin_fastuserswitching }} state=present
+  
+- name: Configure Disable FDE AutoLogin (Filevault DoubleLogin) = {{ harden_darwin_disablefdeautologin }}
+  osx_defaults: domain=/Library/Preferences/com.apple.loginwindow key=DisableFDEAutoLogin type=bool value={{ harden_darwin_disablefdeautologin }} state=present
+  
+
+## per user settings
+#- include: darwin-user.yml
+## FIXME! https://github.com/ansible/ansible/issues/19729
+#  become: yes
+#  become_user: "{{ item }}"
+#  with_items: "{{ harden_darwin_users }}"
 
 ## http://jacobsalmela.com/bash-script-enable-access-assistive-devices-programmatically-os-x-mavericks-10-9-x-simulate-keystrokes/
 - stat: path='/Library/Application Support/com.apple.TCC/TCC.db'
   register: tccdb
-- name: Allow osascript to command keyboard/mouse
-## works on osx but not travis osx, latest osx (10.11 have 7 columns vs 6 before)
-#  command: "sqlite3 /Library/Application\ Support/com.apple.TCC/TCC.db \"INSERT or REPLACE INTO access VALUES('kTCCServiceAccessibility','com.apple.RemoteDesktopAgent',1,1,1,NULL)\""
-  command: "sqlite3 \"/Library/Application Support/com.apple.TCC/TCC.db\" \"INSERT or REPLACE INTO access('service','client','client_type','allowed','prompt_count','csreq') VALUES('kTCCServiceAccessibility','com.apple.RemoteDesktopAgent',1,1,1,NULL)\""
-  when: tccdb.stat.exists
-- debug: msg="WARNING! didn't found /Library/Application\ Support/com.apple.TCC/TCC.db"
-  when: not tccdb.stat.exists
-
-## User
-## https://docs.ansible.com/ansible/become.html#becoming-an-unprivileged-user = osx: use pipelining
+## incompatible with 10.12+, https://github.com/Homebrew/brew/pull/1029
 - block:
-    - name: push bluetooth menu script
-      copy: src=osx-bluetooth-menu.scpt dest="/Users/{{ harden_darwin_user }}/Desktop/osx-bluetooth-menu.scpt" mode=0644 owner="{{ harden_darwin_user }}"
-## script does not seem to be executable from remote cli
-#    - name: add bluetooth to menu bar
-#      command: "osascript /Users/{{ harden_darwin_user }}/Desktop/osx-bluetooth-menu.scpt"
-#      become: yes
-#      become_user: "{{ harden_darwin_user }}"
-#      ignore_errors: true
-  when: harden_darwin_user is defined and harden_darwin_user != ''
+    - name: Allow osascript to command keyboard/mouse
+    ## works on osx but not travis osx, latest osx (10.11 have 7 columns vs 6 before)
+    #  command: "sqlite3 /Library/Application\ Support/com.apple.TCC/TCC.db \"INSERT or REPLACE INTO access VALUES('kTCCServiceAccessibility','com.apple.RemoteDesktopAgent',1,1,1,NULL)\""
+      command: "sqlite3 \"/Library/Application Support/com.apple.TCC/TCC.db\" \"INSERT or REPLACE INTO access('service','client','client_type','allowed','prompt_count','csreq') VALUES('kTCCServiceAccessibility','com.apple.RemoteDesktopAgent',1,1,1,NULL)\""
+      become: yes
+      when: tccdb.stat.exists
+    - debug: msg="WARNING! didn't found /Library/Application\ Support/com.apple.TCC/TCC.db"
+      when: not tccdb.stat.exists
+  when: "{{ ansible_distribution_version | version_compare( '10.12', '<') }}"
+- debug: msg='Warning! macOS Sierra+ accessibility can\'t be enable from command line.'
+  when: "{{ ansible_distribution_version | version_compare( '10.12', '>=') }}"
 
 - name: disable IPv6 noise
   sysctl: name="{{ item.k }}" value="{{ item.v }}" state=present reload=no
@@ -90,28 +94,19 @@
 
 ## https://github.com/ansible/ansible-modules-extras/pull/995/files
 - block:
+## FIXME! not idempotent
     - name: disable launchd services
       command: "launchctl unload -w {{ item }}"
       with_items: "{{ harden_darwin_launchd_services_unload }}"
   when: harden_darwin_launchd_services_unload is defined and harden_darwin_launchd_services_unload != '' and harden_darwin_launchd_services_unload != []
 
+## 2016/12 website down?
 - name: download fix-macosx.py to disable search engines 'leak'
-  get_url: url=https://fix-macosx.com/fix-macosx.py dest="{{ install_archives }}/fix-macosx.py" mode=0755 sha256sum="b5a07e12269a11341c21f5a1a0951d9b9dbb002681ea1c251a325dc04951b9b3"
+  get_url: url=https://fix-macosx.com/fix-macosx.py dest="{{ install_archives }}/fix-macosx.py" mode=0755 sha256sum="b5a07e12269a11341c21f5a1a0951d9b9dbb002681ea1c251a325dc04951b9b3" validate_certs=false
 ## as your user?
 #- name: execute fix-macosx.py
 #  command: 'python {{ install_archives }}/fix-macosx.py'
-
-- name: download osxparanoia hosts
-  get_url: url="https://raw.githubusercontent.com/l1k/osxparanoia/23df53e48e47e17862621d133ad8740648124656/hosts" dest="{{ install_archives }}/hosts.osxparanoia" mode=0644 sha256sum="29d2a429545b03845cb9313d9e06bf5f7d3b7941411d845d004475b9812703b0"
-
-- stat: path={{ install_archives }}/osxlockdown
-  register: osxl
-- name: git clone osxlockdown
-  git:
-    repo=https://github.com/SummitRoute/osxlockdown
-    dest={{ install_archives }}/osxlockdown
-#  when: "{{ ansible_distribution_version | regex_replace('^(\d+)\.(\d+)\.(\d+)$', '\\1.\\2') }}" == '10.11'
-  when: ansible_distribution_version.find('10.11') != -1 and not osxl.stat.exists
+  when: harden_darwin_fixmacosleak
 
 - stat: path={{ install_archives }}/fsmon
   register: fsmon
@@ -121,63 +116,6 @@
     dest={{ install_archives }}/fsmon
   when: not fsmon.stat.exists
 
-
-- stat: path=/opt/local/bin/port
-  register: mp
-- stat: path=/opt/local/bin/go
-  register: mpgo
-## FIXME! not installing correct packages: only get gobject-introspection, goffice
-- name: macports packages install
-  macports: name=go state=present
-#  async: 3600
-#  poll: 300
-  when: mp.stat.exists and not mpgo.stat.exists
-  register: mpgo
-- debug: var=mpgo
-- stat: path=/private/var/root/osxlockdown.audit
-  register: osxlfile
-- name: build osxlockdown
-  shell: "{{ item.c }} chdir={{ item.d }}"
-  with_items:
-    - { c: "go get gopkg.in/yaml.v2", d: "{{ install_archives }}/osxlockdown" }
-    - { c: "go build osxlockdown", d: "{{ install_archives }}/osxlockdown" }
-  environment:
-    PATH: "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/local/bin"
-    GOROOT: "/opt/local/lib/go"
-    GOPATH: "/tmp/gowork"
-  become: yes
-  when: ansible_distribution_version.find('10.11') != -1 and not osxlfile.stat.exists
-  ignore_errors: true
-- name: execute osxlockdown - audit mode only
-  shell: "./osxlockdown | tee /private/var/root/osxlockdown.audit chdir={{ install_archives }}/osxlockdown"
-  environment:
-    PATH: "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/local/bin"
-    GOROOT: "/opt/local/lib/go"
-    GOPATH: "/tmp/gowork"
-  become: yes
-  register: osxlout
-  when: ansible_distribution_version.find('10.11') != -1 and not osxlfile.stat.exists and harden_darwin_osxlockdown == 'audit'
-  ignore_errors: true
-- debug: var=osxlout.stdout_lines
-  when: ansible_distribution_version.find('10.11') != -1 and not osxlfile.stat.exists
-
-- name: download dnscrypt-osxclient
-  get_url: url=https://github.com/alterstep/dnscrypt-osxclient/releases/download/1.0.11/dnscrypt-osxclient-1.0.11.dmg dest="{{ install_archives }}/dnscrypt-osxclient-1.0.11.dmg" mode=0644 sha256sum="91610e90474cf788430f820f9a13f59d84449773133ff11df1c5ee58a9dfe82e"
-  become: yes
-- stat: path="/Applications/DNSCrypt Menubar.app"
-  register: dnsc
-## https://github.com/MWGriffin/ansible-playbooks/blob/master/install/dmg.yaml
-- name: Mount dnscrypt-osxclient image
-  command: hdiutil attach dnscrypt-osxclient-1.0.11.dmg chdir="{{ install_archives }}"
-  when: not dnsc.stat.exists
-- name: Install dnscrypt-osxclient pkg
-  command: installer -package /Volumes/dnscrypt-pkg/DNSCrypt.pkg -target /
-  become: yes
-  when: not dnsc.stat.exists
-- name: Unmount dnscrypt-osxclient image
-  command: hdiutil detach /Volumes/dnscrypt-pkg
-  when: not dnsc.stat.exists
-
 #- name: add certificate to keychain - admin store
 #  command: "security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain <certificate>"
 #- name: add certificate to keychain - user store
@@ -185,15 +123,31 @@
 #  become: yes
 #  become_user: targetuser
 
-## https://objective-see.com/products/ransomwhere.html
-- name: download ransomwhere
-  get_url: url=https://bitbucket.org/objective-see/deploy/downloads/RansomWhere_1.1.0.zip dest="{{ install_archives }}/RansomWhere_1.1.0.zip" mode=0644 sha256sum="7b18e17abd8fb40d7c25f29f65d64a1f65c758d61c9f67c11d9722d1d7486ea9"
-  become: yes
-#- command: "RansomWhere.app/Contents/MacOS/RansomWhere -install"
-#  become: yes
-
 ## https://github.com/iSECPartners/yontma-mac
+
+- include: firewall.yml
+
+- include: usb.yml
+  when: harden_darwin_disable_usb is defined and harden_darwin_disable_usb
 
 - include: wpad-disable.yml
   when: harden_darwin_disable_wpad is defined and harden_darwin_disable_wpad
+
+- include: dnscrypt.yml
+  when: harden_darwin_dnscrypt is defined and harden_darwin_dnscrypt
+
+- include: osxlockdown.yml
+  when: harden_darwin_osxlockdown is defined and harden_darwin_osxlockdown
+
+- include: osx-config-check.yml
+  when: harden_darwin_osxconfigcheck is defined and harden_darwin_osxconfigcheck
+
+- include: google-santa.yml
+  when: harden_darwin_santa is defined and harden_darwin_santa
+
+- include: osquery.yml
+  when: harden_darwin_osquery is defined and harden_darwin_osquery
+
+- include: ransomwhere.yml
+  when: harden_darwin_ransomwhere
 

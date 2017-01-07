@@ -1,0 +1,6 @@
+---
+
+# /etc/newsyslog.conf
+# /etc/asl.conf     = add ttl=30 file_max=10MB
+
+#https://discussions.apple.com/thread/7511919?start=0&tstart=0

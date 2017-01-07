@@ -1,5 +1,9 @@
 ---
 
+- name: Include version-specific variables
+  include_vars: "MacOSX-{{ ansible_distribution_version.split('.')[0] }}.{{ ansible_distribution_version.split('.')[1] }}.yml"
+  when: ansible_distribution == "MacOSX"
+
 - include: travis.yml
 
 - include: unix.yml

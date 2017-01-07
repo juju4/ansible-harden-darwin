@@ -1,0 +1,43 @@
+---
+
+## howto fully disable/uninstall?
+
+- name: check santa is installed
+  stat: path=/var/db/santa
+  register: hasSanta
+
+- block:
+
+    # conf?
+    #/private/etc/asl/com.google.santa.asl.conf ## just logging
+    #/Library/LaunchAgents/com.google.santagui.plist
+    #/Library/LaunchDaemons/com.google.santad.plist
+    #/private/var/log/santa.log
+    #/private/var/db/santa/rules.db (sqlite3)
+
+    - include: "google-santa-whitelist.yml type=cert path={{ item }} action=whitelist match=White"
+      with_items: "{{ harden_darwin_santa_whitelist_cert }}"
+
+    - include: "google-santa-whitelist.yml type=hash path={{ item }} action=whitelist match=White"
+      with_items: "{{ harden_darwin_santa_whitelist_hash }}"
+
+    - include: "google-santa-whitelist.yml type=hash path={{ item }} action=blacklist match=Black"
+      with_items: "{{ harden_darwin_santa_blacklist_hash }}"
+
+    - name: santa | blacklist users home folders path
+      osx_defaults:
+        domain: /var/db/santa/config.plist
+        key: BlacklistRegex
+        value: "'^(?:/Users)/.*'"
+        state: present
+      when: harden_darwin_santa_blacklist_homeuserpath
+
+    ## default is monitor mode only
+    - name: ensure config set to desired mode = {{ harden_darwin_santa_mode }}
+      osx_defaults: domain=/var/db/santa/config.plist key=ClientMode value={{ harden_darwin_santa_mode }}
+      when: harden_darwin_santa_mode == 'MONITOR' or (harden_darwin_santa_mode == 'LOCKDOWN' or harden_darwin_santa_mode == 2)
+      notify:
+        - restart santa
+
+  when: hasSanta.stat.exists
+

@@ -1,0 +1,38 @@
+---
+
+## No application outgoing block without 3rd party: LittleSnitch, (TCPBlock/RIP)
+
+- name: Configure application firewall
+  osx_defaults: domain=/Library/Preferences/com.apple.alf key=globalstate type=int value={{ harden_darwin_firewall }} state=present
+
+- name: Ensure logging is enabled
+  osx_defaults: domain=/Library/Preferences/com.apple.alf key=loggingenabled type=int value=1 state=present
+
+## FIXME! key might have changed, type not consistent?
+- name: Allow or block ({{ harden_darwin_firewall_allow_signedapps }}) signed apps from being auto-permitted to listen through firewall
+#  osx_defaults: domain=/Library/Preferences/com.apple.alf key=allowsignedenabled type=bool value={{ harden_darwin_firewall_allow_signedapps | lower }} state=present
+  osx_defaults: domain=/Library/Preferences/com.apple.alf key=allowsignedenabled type=int value=0 state=present
+  when: not harden_darwin_firewall_allow_signedapps
+- osx_defaults: domain=/Library/Preferences/com.apple.alf key=allowsignedenabled type=int value=1 state=present
+  when: harden_darwin_firewall_allow_signedapps
+
+- name: Block all incoming connections
+  command: "/usr/libexec/ApplicationFirewall/socketfilterfw --setblockall on"
+  when: harden_darwin_firewall_blockall_apps_in
+
+- name: list application firewall rules
+  command: "/usr/libexec/ApplicationFirewall/socketfilterfw --listapps"
+  changed_when: false
+  ignore_errors: true
+  register: appfwlist
+- name: add application to allow incoming
+  command: "/usr/libexec/ApplicationFirewall/socketfilterfw --add {{ item }}"
+  with_items: "{{ harden_darwin_fw_program_allowed_in }}"
+  register: addallow
+  changed_when: not "'The application is already a part of the firewall' in addallow.stdout"
+- name: add application to block incoming
+  shell: "/usr/libexec/ApplicationFirewall/socketfilterfw --add {{ item }}; /usr/libexec/ApplicationFirewall/socketfilterfw --blockapp {{ item }}"
+  with_items: "{{ harden_darwin_fw_program_blocked_in }}"
+  register: addblock
+  changed_when: not "'The application is already a part of the firewall' in addblock.stdout"
+

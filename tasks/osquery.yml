@@ -1,0 +1,34 @@
+---
+
+## configuration?
+# /var/osquery/osquery.conf
+# /var/osquery/osquery.example.conf
+#osqueryctl config-check
+
+- name: check if osquery is present
+  stat: path=/var/osquery
+  register: hasOsquery
+- block:
+    - name: configure osquery
+      template: src=osquery.conf.j2 dest=/var/osquery/osquery.conf mode=0644 backup=yes
+      notify:
+        - restart osquery
+## https://github.com/facebook/osquery/issues/302
+    - name: configure newsyslog for osquery
+      template: src=newsyslog-osquery.conf.j2 dest=/private/etc/newsyslog.d/osquery.conf mode=0644 backup=yes
+#      notify:
+#        - restart newsyslog
+    - name: configure Launchd for osquery
+      copy: src=/var/osquery/com.facebook.osqueryd.plist dest=/Library/LaunchDaemons/ mode=0644 remote_src=true
+    - name: check if service is loaded
+      command: "launchctl list"
+      changed_when: false
+      register: launchctllist
+    - name: ensure service is enabled and started
+#      service: name=osqueryd state=started enabled=yes
+#      command: "launchctl load /Library/LaunchDaemons/com.facebook.osqueryd.plist"
+      command: "/usr/local/bin/osqueryctl start"
+      when: launchctllist is defined and launchctllist.stdout is defined and launchctllist.stdout.find("com.facebook.osqueryd") == -1
+  when: hasOsquery.stat.exists
+
+
