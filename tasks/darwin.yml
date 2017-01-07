@@ -30,12 +30,14 @@
   osx_defaults: domain=com.apple.desktopservices key=DSDontWriteUSBStores type=bool value=true state=present
 - name: Check for Software Updates Daily
   osx_defaults: domain=com.apple.SoftwareUpdate key=ScheduleFrequency type=int value=1 state=present
+## FIXME! it seems type can be int or bool
 - name: Enable infrared receiver
   osx_defaults: domain=/Library/Preferences/com.apple.driver.AppleIRController key=DeviceEnabled type={{ darwin_booltype }} value={{ darwin_booltype_true }} state=present
   when: harden_darwin_infrared
 - name: Disable infrared receiver
   osx_defaults: domain=/Library/Preferences/com.apple.driver.AppleIRController key=DeviceEnabled type={{ darwin_booltype }} value={{ darwin_booltype_false }} state=present
   when: not harden_darwin_infrared
+  ignore_errors: true
 ## FIXME! it seems type can be int or bool, and different even between 2 Sierra/10.12 (depends if system upgraded?)
 - name: Enable bluetooth
   osx_defaults: domain=/Library/Preferences/com.apple.Bluetooth key=ControllerPowerState type={{ darwin_booltype }} value={{ darwin_booltype_true }} state=present

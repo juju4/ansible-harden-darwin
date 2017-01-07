@@ -9,6 +9,8 @@ before_install:
  - ln -s ansible-harden-darwin ../juju4.harden-darwin
  - "[ -f get-dependencies.sh ] && sh -x get-dependencies.sh"
 install:
+  - sw_vers
+  - uname -a
   - python --version
   - brew update
   - which pip
