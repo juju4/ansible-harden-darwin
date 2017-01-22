@@ -14,6 +14,11 @@
 ## http://www.ifca.ai/fc14/papers/fc14_submission_100.pdf
 ## https://apple.stackexchange.com/questions/24640/how-do-i-remove-many-system-roots-from-apple-system-keychain
 
+- name: Ensure backup directory exists
+  file: "dest={{ item }} mode=0755 state=directory"
+  with_items:
+    - "{{ backupdir }}"
+
 - name: Backup certificate keychains
   command: "install -m 0400 {{ item }} {{ backupdir }}/{{ item | regex_replace('/', '-') }}-{{ ansible_date_time.date }} creates={{ backupdir }}/{{ item | regex_replace('/', '-') }}-{{ ansible_date_time.date }}"
   with_items:
