@@ -59,7 +59,9 @@
   
 - name: Configure Disable FDE AutoLogin (Filevault DoubleLogin) = {{ harden_darwin_disablefdeautologin }}
   osx_defaults: domain=/Library/Preferences/com.apple.loginwindow key=DisableFDEAutoLogin type=bool value={{ harden_darwin_disablefdeautologin }} state=present
-  
+
+- name: Disable bonjour multicast advertisements
+  osx_defaults: domain=/Library/Preferences/com.apple.mDNSResponder key=NoMulticastAdvertisements type=bool value=YES state=present
 
 ## per user settings
 #- include: darwin-user.yml
@@ -73,12 +75,16 @@
   register: tccdb
 ## incompatible with 10.12+, https://github.com/Homebrew/brew/pull/1029
 - block:
+    - name: check current tcc.db
+      command: "sqlite3 \"/Library/Application Support/com.apple.TCC/TCC.db\" \"SELECT * FROM access\""
+      register: tccselect
+      changed_when: false
     - name: Allow osascript to command keyboard/mouse
     ## works on osx but not travis osx, latest osx (10.11 have 7 columns vs 6 before)
     #  command: "sqlite3 /Library/Application\ Support/com.apple.TCC/TCC.db \"INSERT or REPLACE INTO access VALUES('kTCCServiceAccessibility','com.apple.RemoteDesktopAgent',1,1,1,NULL)\""
       command: "sqlite3 \"/Library/Application Support/com.apple.TCC/TCC.db\" \"INSERT or REPLACE INTO access('service','client','client_type','allowed','prompt_count','csreq') VALUES('kTCCServiceAccessibility','com.apple.RemoteDesktopAgent',1,1,1,NULL)\""
       become: yes
-      when: tccdb.stat.exists
+      when: tccdb.stat.exists and not ('com.apple.RemoteDesktopAgent' in tccselect.stdout)
     - debug: msg="WARNING! didn't found /Library/Application\ Support/com.apple.TCC/TCC.db"
       when: not tccdb.stat.exists
   when: "{{ ansible_distribution_version | version_compare( '10.12', '<') }}"
@@ -118,13 +124,6 @@
     dest={{ install_archives }}/fsmon
   when: not fsmon.stat.exists
 
-#- name: add certificate to keychain - admin store
-#  command: "security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain <certificate>"
-#- name: add certificate to keychain - user store
-#  command: "security add-trusted-cert -r trustRoot -k $HOME/Library/Keychains/System.keychain <certificate>"
-#  become: yes
-#  become_user: targetuser
-
 ## https://github.com/iSECPartners/yontma-mac
 
 - include: firewall.yml
@@ -152,4 +151,8 @@
 
 - include: ransomwhere.yml
   when: harden_darwin_ransomwhere
+
+- include: immutable.yml
+- include: darwin-openbsm.yml
+- include: darwin-certificates.yml
 

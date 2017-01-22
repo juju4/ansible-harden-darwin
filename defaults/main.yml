@@ -37,6 +37,8 @@ harden_darwin_infrared: false
 harden_darwin_disablefdeautologin: 'YES'
 #harden_darwin_disablefdeautologin: 'NO'
 
+harden_darwin_auditconf: openbsm-security_control.j2
+
 ## Application firewall
 ## 0 disabled, 1 enabled for specific services, 2 enabled for essential services only (will not allow ssh or below applications)
 harden_darwin_firewall: 1
@@ -44,10 +46,17 @@ harden_darwin_firewall_allow_signedapps: false
 ## this is equivalent to value 2 and blocking ssh
 harden_darwin_firewall_blockall_apps_in: false
 harden_darwin_fw_program_allowed_in:
+## the sshd line and /{usr,System} apps are only necessary if we don't allow incoming to built-in software
+  - /usr/libexec/sshd-keygen-wrapper
+  - /usr/sbin/netbiosd
+  - /usr/libexec/sharingd
+  - /System/Library/CoreServices/NetAuthAgent.app/Contents/MacOS/NetAuthSysAgent
   - /opt/local/sbin/nrpe
   - /opt/local/sbin/snmpd
   - /Library/PreferencePanes/DNSCrypt.prefPane/Contents/Resources/usr/sbin/dnscrypt-proxy
   - /Library/PreferencePanes/DNSCrypt.prefPane/Contents/Resources/usr/bin/hostip
+  - /opt/local/sbin/dhcpd
+  - /opt/local/sbin/tftpd
 harden_darwin_fw_program_blocked_in:
   - /bin/sh
   - /usr/bin/perl
@@ -56,6 +65,7 @@ harden_darwin_fw_program_blocked_in:
   - /usr/bin/nc
   - /usr/sbin/httpd
   - /usr/sbin/ntpd
+  - /Applications/iTunes.app
 
 harden_darwin_users: []
 harden_darwin_disable_bluetooth: true
@@ -76,7 +86,8 @@ harden_darwin_fixmacosleak: false
 ## Audit Tools
 harden_darwin_osxlockdown: 'audit'
 #harden_darwin_osxlockdown: 'run'
-harden_darwin_osxconfigcheck: true
+## FAILED! => {"changed": false, "cmd": ["/usr/bin/git", "fetch", "--tags", "origin"], "failed": true, "msg": "Failed to download remote objects and refs:  fatal: unable to access 'https://github.com/kristovatlas/osx-config-check/': The requested URL returned error: 504\n"}
+harden_darwin_osxconfigcheck: false
 
 
 ### extra tools (use role juju4.macos-apps-install for application install, only doing configuration)
@@ -85,6 +96,7 @@ harden_darwin_dnscrypt: true
 
 ## install google santa
 harden_darwin_santa: true
+#harden_darwin_santa: false
 harden_darwin_santa_mode: 'MONITOR'
 ## Be careful when activating! be sure to fit whitelist to YOUR context.
 ## For some reason, 'LOCKDOWN' is not working. 2 is fine to lock
@@ -147,8 +159,89 @@ harden_darwin_osquery: true
 ## https://github.com/etsy/MIDAS
 ## https://github.com/etsy/MIDAS/tree/pre_archive
 
+harden_darwin_launchd_services_unload: []
 #harden_darwin_launchd_services_unload:
-#    - /System/Library/LaunchDaemons/com.apple.RemoteDesktop.PrivilegeProxy.plist
+#  - /System/Library/LaunchDaemons/com.apple.RemoteDesktop.PrivilegeProxy.plist
+#  - /System/Library/LaunchDaemons/com.apple.apsd.plist
+#  - /System/Library/LaunchAgents/com.apple.NowPlayingTouchUI.plist
+
+harden_darwin_set_immutable: []
+#  - /var/db/santa/config.plist
+harden_darwin_set_notimmutable: []
+
+## Keychain will only affect System, Apple applications like Safari, Chrome but not Firefox
+## To identify used certificates to keep, you can use
+##  - NIDS like bro
+##  - web proxy
+##  - Firefox extension: cert patrol (but not root CA)
+##      sqlite3 "$HOME/Library/Application Support/Firefox/Profiles/*.default-*/CertPatrol.sqlite"
+##      sqlite> select issuerSha1Fingerprint,issuerCommonName,count(*) as c from certificates group by issuerCommonName order by c desc limit 30;
+## ?Keep: Symantec, Go Daddy, DigiCert, COMODO, GeoTrust, Symantec, GlobalSign, DigiCert, Entrust, Thawte, StartCom, IdenTrust(Let's Encrypt)
+## FIXME! 'security: SecKeychainItemDelete: UNIX[Operation not permitted]'. SIP ???
+harden_darwin_certificates_hash_delete: []
+#  - D1EB23A46D17D68FD92564C2F1F1601764D8E349
+#  - F373B387065A28848AF2F34ACE192BDDC78E9CAC
+#  - CCAB0EA04C2301D6697BDD379FCD12EB24E3949D
+#  - 253F775B0E7797AB645F15915597C39E263631D1
+#  - 30779E9315022E94856A3FF8BCF815B082F9AEFD
+#  - 4A3F8D6BDC0E1ECFCD72E377DEF2D7FF92C19BC7
+#  - 2F783D255218A74A653971B52CA29C45156FE919
+#  - 1B4B396126276B6491A2686DD70243212D1F1D96
+harden_darwin_certificates_cn_delete: []
+
+## WARNING! Must be customized to your own usage.
+## $ openssl s_client -showcerts -connect news.ycombinator.com:443 |grep issuer=
+## $ openssl s_client -showcerts -connect advancedhomeserver.com:443 |grep issuer= GoDaddy???
+##          www.siemplify.co?
+#harden_darwin_certificates_cn_denytrust: []
+harden_darwin_certificates_cn_denytrust:
+## To be completed...
+  - AAA Certificate Services
+  - Actalis Authentication Root CA
+  - AddTrust Class 1 CA Root
+#  - AddTrust External CA Root      # = news.ycombinator.com
+  - AddTrust Public CA Root
+  - AddTrust Qualified CA Root
+  - Admin-Root-CA
+  - AffirmTrust Commercial
+  - AffirmTrust Networking
+  - AffirmTrust Premium
+  - AffirmTrust Premium ECC
+  - ANF Global Root CA
+  - ApplicationCA
+  - ApplicationCA2 Root
+  - Autoridad de Certificacion Firmaprofesional CIF A62634068
+  - Autoridad de Certificacion Raiz del Estado Venezolano
+#  - Baltimore CyberTrust Root  # s3.amazonaws.com
+  - Belgium Root CA2
+  - Buypass Class 2 Root CA
+  - Buypass Class 3 Root CA
+  - CA Disig Root R1
+  - CA Disig Root R2
+## http://arstechnica.com/security/2013/12/french-agency-caught-minting-ssl-certificates-impersonating-google/
+  - Certinomis - Autorité Racine
+  - Certinomis - Root CA
+  - Chambers of Commerce Root
+  - Chambers of Commerce Root - 2008
+  - Cisco Root CA 2048
+  - Class 2 Primary CA
+  - Common Policy
+  - ComSign CA
+  - ComSign Global Root CA
+  - ComSign Secured CA
+  - D-TRUST Root Class 3 CA 2 2009
+  - D-TRUST Root Class 3 CA 2 EV 2009
+  - Deutsche Telekom Root CA 2
+  - DoD Root CA 2
+  - DST ACES CA X6
+#  - DST Root CA X3         # Let's Encrypt Authority X3
+  - DST Root CA X4
+  - E-Tugra Certification Authority
+  - Echoworx Root CA2
+  - EE Certification Centre Root CA
+  - Izenpe.com
+  - TÜBİTAK UEKAE Kök Sertifika Hizmet Sağlayıcısı - Sürüm 3
 
 install_archives: /private/var/_install
+backupdir: /var/_backup
 

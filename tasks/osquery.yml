@@ -15,7 +15,7 @@
         - restart osquery
 ## https://github.com/facebook/osquery/issues/302
     - name: configure newsyslog for osquery
-      template: src=newsyslog-osquery.conf.j2 dest=/private/etc/newsyslog.d/osquery.conf mode=0644 backup=yes
+      template: src=newsyslog-osquery.conf.j2 dest=/private/etc/newsyslog.d/osquery.conf mode=0644 backup=yes validate='newsyslog -N -f %s'
 #      notify:
 #        - restart newsyslog
     - name: configure Launchd for osquery

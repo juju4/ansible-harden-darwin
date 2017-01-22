@@ -1,0 +1,16 @@
+---
+
+## https://derflounder.wordpress.com/2012/01/30/openbsm-auditing-on-mac-os-x/
+## https://ilostmynotes.blogspot.ca/2013/10/openbsm-auditd-on-os-x-these-are-logs.html
+## https://www.scip.ch/en/?labs.20150108
+
+- name: configure openbsdm auditd
+  template:
+    src: "{{ harden_darwin_auditconf }}"
+    dest: /etc/security/audit_control
+    mode: '0400'
+    backup: yes
+## no validate option in auditd
+  notify:
+    - restart auditd
+

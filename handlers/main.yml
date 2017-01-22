@@ -23,3 +23,7 @@
   command: "launchctl stop -w /Library/LaunchDaemons/com.google.santad.plist; launchctl start -w /Library/LaunchDaemons/com.google.santad.plist"
   ignore_errors: true
 
+- name: restart auditd
+  command: "launchctl stop -w /System/Library/LaunchDaemons/com.apple.auditd.plist; launchctl start -w /System/Library/LaunchDaemons/com.apple.auditd.plist"
+  ignore_errors: true
+

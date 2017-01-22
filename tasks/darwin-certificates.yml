@@ -1,0 +1,47 @@
+---
+
+## http://wiki.cacert.org/FAQ/ImportRootCert#Using_the_command_line
+## https://certsimple.com/blog/control-the-ssl-cas-your-browser-trusts
+
+#- name: add certificate to keychain - admin store
+#  command: "security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain <certificate>"
+#- name: add certificate to keychain - user store
+#  command: "security add-trusted-cert -r trustRoot -k $HOME/Library/Keychains/System.keychain <certificate>"
+#  become: yes
+#  become_user: targetuser
+
+## https://codeascraft.com/2013/07/16/reducing-the-roots-of-some-evil/
+## http://www.ifca.ai/fc14/papers/fc14_submission_100.pdf
+## https://apple.stackexchange.com/questions/24640/how-do-i-remove-many-system-roots-from-apple-system-keychain
+
+- name: Backup certificate keychains
+  command: "install -m 0400 {{ item }} {{ backupdir }}/{{ item | regex_replace('/', '-') }}-{{ ansible_date_time.date }} creates={{ backupdir }}/{{ item | regex_replace('/', '-') }}-{{ ansible_date_time.date }}"
+  with_items:
+## Note: SIP prevents us from writing in /System
+    - /System/Library/Keychains/SystemRootCertificates.keychain
+    - /Library/Keychains/System.keychain
+- name: Export trust settings
+  command: "security trust-settings-export -d {{ backupdir }}/trust_settings-{{ ansible_date_time.date }}.plist creates={{ backupdir }}/trust_settings-{{ ansible_date_time.date }}.plist"
+
+- name: dump system certificates
+  command: "security dump-keychain /System/Library/Keychains/SystemRootCertificates.keychain"
+  register: systemrootcert
+  changed_when: false
+## Not allowed... 'security: SecKeychainItemDelete: UNIX[Operation not permitted]'
+- name: remove certificate to keychain - admin store (hash)
+  command: "security delete-certificate -Z '{{ item }}' /System/Library/Keychains/SystemRootCertificates.keychain"
+  with_items: "{{ harden_darwin_certificates_hash_delete }}"
+- name: remove certificate to keychain - admin store (common name)
+  command: "security delete-certificate -c '{{ item }}' /System/Library/Keychains/SystemRootCertificates.keychain"
+  with_items: "{{ harden_darwin_certificates_cn_delete }}"
+
+## FIXME! not idempotent
+## Can't select by hash or cn
+#$ security export -k /System/Library/Keychains/SystemRootCertificates.keychain -t certs -o /tmp/certs.pm
+## No hash selection, only cn
+#$ security find-certificate -a -p -c Izenpe.com /System/Library/Keychains/SystemRootCertificates.keychain > /tmp/certs.pm
+#$ security add-trusted-cert -d -r deny -k "/Library/Keychains/System.keychain" certname.cer
+- name: deny trust to keychain - admin store (common name)
+  shell: "security find-certificate -a -p -c '{{ item }}' /System/Library/Keychains/SystemRootCertificates.keychain > /tmp/certs.pm; security add-trusted-cert -d -r deny -k /Library/Keychains/System.keychain /tmp/certs.pm"
+  with_items: "{{ harden_darwin_certificates_cn_denytrust }}"
+

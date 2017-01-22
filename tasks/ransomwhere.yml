@@ -28,3 +28,5 @@
   command: "{{ install_archives }}/RansomWhere.app/Contents/MacOS/RansomWhere -install creates=/Library/RansomWhere/RansomWhere"
   become: yes
 
+## can eventually replicate /Library/RansomWhere/approvedBinaries.plist
+

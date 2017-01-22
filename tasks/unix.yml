@@ -39,6 +39,20 @@
         - { regexp: '^UsePrivilegeSeparation', line: 'UsePrivilegeSeparation sandbox' }
       notify:
         - restart sshd
+    - name: Disable UseKeyChain sshd config - 10.12.2+
+      lineinfile:
+        dest: /etc/ssh/sshd_config
+        regexp: "{{ item.regexp }}"
+        line: "{{ item.line }}"
+        backup: yes
+        validate: "sshd -f %s -T"
+## avoid to add at end of file after a restricting match...
+        insertafter: "^#PermitEmptyPasswords"
+      with_items:
+        - { regexp: '^UseKeyChain', line: 'UseKeyChain no' }
+      notify:
+        - restart sshd
+      when: "{{ ansible_distribution_version | version_compare( '10.12.2', '>=') }}"
   when: sshdconf.stat.exists
 - name: where is sshd_config if not standard?
   command: "ls -l /etc/ssh/sshd_config /private/etc/ssh/"
