@@ -4,6 +4,7 @@
 - name: restart sshd
 #  service: name={{ ssh_svc }} state=restarted
   command: "launchctl stop -w /System/Library/LaunchDaemons/ssh.plist; launchctl start -w /System/Library/LaunchDaemons/ssh.plist"
+  ignore_errors: true
 
 - name: reload fstab
   shell: "umount -a; mount -a"
