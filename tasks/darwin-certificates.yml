@@ -27,6 +27,8 @@
     - /Library/Keychains/System.keychain
 - name: Export trust settings
   command: "security trust-settings-export -d {{ backupdir }}/trust_settings-{{ ansible_date_time.date }}.plist creates={{ backupdir }}/trust_settings-{{ ansible_date_time.date }}.plist"
+## travis: "stderr": "SecTrustSettingsCreateExternalRepresentation: No Trust Settings were found."
+  ignore_errors: true
 
 - name: dump system certificates
   command: "security dump-keychain /System/Library/Keychains/SystemRootCertificates.keychain"

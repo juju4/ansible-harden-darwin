@@ -10,18 +10,32 @@
 #  when: "{{ ansible_distribution_version | regex_replace('^(\d+)\.(\d+)\.(\d+)$', '\\1.\\2') }}" == '10.11'
   when: ansible_distribution_version.find('10.11') != -1 and not osxl.stat.exists
 
+## go install with macport or homebrew
 - stat: path=/opt/local/bin/port
   register: mp
 - stat: path=/opt/local/bin/go
   register: mpgo
-## FIXME! not installing correct packages: only get gobject-introspection, goffice
-- name: macports packages install
-  macports: name=go state=present
+- block:
+    ## FIXME! not installing correct packages: only get gobject-introspection, goffice
+    - name: macports go package install
+      macports: name=go state=present
 #  async: 3600
 #  poll: 300
+    - set_fact:
+        GOROOT: /opt/local/lib/go
   when: mp.stat.exists and not mpgo.stat.exists
-  register: mpgo
-- debug: var=mpgo
+
+- stat: path=/usr/local/bin/brew
+  register: brew
+- block:
+    - name: homebrew go package install
+      homebrew:
+        name: go
+        state: present
+    - set_fact:
+        GOROOT: /usr/local/opt/go/libexec
+  when: brew.stat.exists and not mp.stat.exists
+
 - stat: path=/private/var/root/osxlockdown.audit
   register: osxlfile
 - name: build osxlockdown
@@ -31,7 +45,7 @@
     - { c: "go build osxlockdown", d: "{{ install_archives }}/osxlockdown" }
   environment:
     PATH: "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/local/bin"
-    GOROOT: "/opt/local/lib/go"
+    GOROOT: "{{ GOROOT }}"
     GOPATH: "/tmp/gowork"
   become: yes
   when: ansible_distribution_version.find('10.11') != -1 and not osxlfile.stat.exists
@@ -40,7 +54,7 @@
   shell: "./osxlockdown | tee /private/var/root/osxlockdown.audit chdir={{ install_archives }}/osxlockdown"
   environment:
     PATH: "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/local/bin"
-    GOROOT: "/opt/local/lib/go"
+    GOROOT: "{{ GOROOT }}"
     GOPATH: "/tmp/gowork"
   become: yes
   register: osxlout
