@@ -32,6 +32,9 @@
       homebrew:
         name: go
         state: present
+## Error: Running Homebrew as root is extremely dangerous and no longer supported.\nAs Homebrew does not drop privileges on installation you would be giving all\nbuild scripts full access to your system.
+      become: yes
+      become_user: "{{ ansible_user }}"
     - set_fact:
         GOROOT: /usr/local/opt/go/libexec
   when: brew.stat.exists and not mp.stat.exists
