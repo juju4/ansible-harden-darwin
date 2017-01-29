@@ -9,6 +9,7 @@ This role is continuous work in progress as security landscape is constantly evo
 Legal disclaimer!
 Depending on settings, very detailed activity log can be created.
 Only apply to your own system else for most countries (ex: Europe), user must have been warned and agreed (usually through internal policy, code of conduct...)
+Whitelisting and certificates trust removal are part of most impacting tasks.
 
 ## Requirements & Dependencies
 
