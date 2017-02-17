@@ -1,0 +1,38 @@
+---
+
+## Classical firewall
+
+- name: check interface status
+  command: ifconfig
+  changed_when: false
+  ignore_errors: true
+  register: ifstatus
+- name: create pflog interface
+  command: "ifconfig pflog0 create"
+  when: "not 'pflog0' in ifstatus.stdout and harden_darwin_fw_pf"
+
+- name: configure pf
+  template:
+    src: "{{ harden_darwin_fw_template }}"
+    dest: /private/etc/pf.conf
+    mode: '0644'
+    owner: root
+    group: wheel
+    backup: yes
+    validate: 'pfctl -f %s -n'
+  notify:
+    - reload pf
+  when: harden_darwin_fw_pf
+
+- name: check pf status
+  command: pfctl -s info
+  changed_when: false
+  ignore_errors: true
+  register: pfstatus
+- name: enable pf
+  command: pfctl -e
+  when: "'Disabled' in pfstatus.stdout and harden_darwin_fw_pf"
+- name: disable pf
+  command: pfctl -d
+  when: "not 'Disabled' in pfstatus.stdout and not harden_darwin_fw_pf"
+

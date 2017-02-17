@@ -28,3 +28,6 @@
   command: "launchctl stop -w /System/Library/LaunchDaemons/com.apple.auditd.plist; launchctl start -w /System/Library/LaunchDaemons/com.apple.auditd.plist"
   ignore_errors: true
 
+- name: reload pf
+  command: "pfctl -f /etc/pf.conf"
+

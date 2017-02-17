@@ -7,26 +7,19 @@ harden_init_aidedb: false
 harden_unix_fstab_flags: false
 
 ## TODO: firewall rules? avoid to lock yourself
-#harden_fw: false
-#harden_fw: true
-## Note: in default config, if you switch default policy to drop, you will lose access...
-#harden_fw_default: DROP
-#harden_fw_default: ACCEPT
-#harden_fw_ssh_restricted:
-#  - 192.168.1.0/24
-#  - 10.0.0.0/8
-#  - 1.1.1.1
-#harden_fw_ssh_port: 22
-#harden_fw_snmp_restricted:
-#  - 192.168.1.100
-#harden_fw_dnsservers:
-#  - 192.168.1.10
-#  - 192.168.1.11
-#  - 8.8.8.8
-#  - 8.8.4.4
-#harden_fw_smtpservers:
-#  - 192.168.1.20
-#harden_fw_smtp_port: 25
+harden_darwin_fw_pf: false
+#harden_darwin_fw_pf: true
+harden_darwin_fw_template: pf.conf.j2
+harden_darwin_fw_ssh_port: 22
+harden_darwin_fw_snmp_restricted:
+  - 192.168.1.100
+harden_darwin_fw_dnsservers:
+  - 192.168.1.10
+  - 192.168.1.11
+  - 8.8.8.8
+  - 8.8.4.4
+harden_darwin_fw_smtpservers:
+  - 192.168.1.20
 
 harden_darwin_autocheckupdate: true
 harden_darwin_autoupdate_apps: true
@@ -259,14 +252,14 @@ harden_darwin_certificates_cn_denytrust:
   - OISTE WISeKey Global Root GA CA
   - OISTE WISeKey Global Root GB CA
   - QuoVadis Root CA 1 G3
-  - QuoVadis Root CA 2
+#  - QuoVadis Root CA 2          # blogs.cisco.com
   - QuoVadis Root CA 2 G3
   - QuoVadis Root CA 3
   - QuoVadis Root CA 3 G3
   - QuoVadis Root Certification Authority
 #  - RSA Security 2048 V3      ## not working
   - Secure Global CA
-  - SecureTrust CA
+#  - SecureTrust CA              # www.thestar.com, www.trustwave.com
 ## no common name??? JP
 #  - Security Communication EV RootCA1      ## not working
 #  - Security Communication RootCA1      ## not working
@@ -277,8 +270,8 @@ harden_darwin_certificates_cn_denytrust:
   - Staat der Nederlanden Root CA - G2
   - Staat der Nederlanden Root CA - G3
 #  - Starfield Class 2 Certification Authority      ## not working
-  - Starfield Root Certificate Authority - G2
-  - Starfield Services Root Certificate Authority - G2
+#  - Starfield Root Certificate Authority - G2          # tools.ietf.org
+#  - Starfield Services Root Certificate Authority - G2  # www.scmagazineuk.com
   - StartCom Certification Authority
   - StartCom Certification Authority G2
   - Swisscom Root CA 1
@@ -294,9 +287,9 @@ harden_darwin_certificates_cn_denytrust:
   - T-TeleSec GlobalRoot Class 2
   - T-TeleSec GlobalRoot Class 3
   - TeliaSonera Root CA v1
-  - thawte Primary Root CA
-  - thawte Primary Root CA - G2
-  - thawte Primary Root CA - G3
+#  - thawte Primary Root CA
+#  - thawte Primary Root CA - G2
+#  - thawte Primary Root CA - G3        # www.usenix.org
   - TRUST2408 OCES Primary CA
 #  - Trustis FPS Root CA      ## not working
   - TÜBİTAK UEKAE Kök Sertifika Hizmet Sağlayıcısı - Sürüm 3

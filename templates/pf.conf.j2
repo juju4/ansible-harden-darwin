@@ -1,0 +1,85 @@
+# {{ ansible_managed }}
+#
+# PF configuration file.
+#
+# See pf.conf(5) for syntax.
+## FIXME! nothings got ever evaluated...
+
+ext_if=en0
+#int_if=
+wifi_if=en1
+ssh_port={{ harden_darwin_fw_ssh_port }}
+
+scrub in all fragment reassemble
+
+#
+# com.apple anchor point
+#
+scrub-anchor "com.apple/*"
+nat-anchor "com.apple/*"
+rdr-anchor "com.apple/*"
+dummynet-anchor "com.apple/*"
+anchor "com.apple/*"
+load anchor "com.apple" from "/etc/pf.anchors/com.apple"
+
+table <private> const { 10/8, 172.16/12, 192.168/16 }
+table <dnsservers> const { {{ harden_darwin_fw_dnsservers | join(", ") }} }
+table <snmpclients> const { {{ harden_darwin_fw_snmp_restricted | join(", ") }} }
+table <smtpservers> const { {{ harden_darwin_fw_smtpservers | join(", ") }} }
+table <bruteforce> persist
+table <badhosts> persist
+
+set skip on lo0
+
+antispoof for lo0
+antispoof for $ext_if
+#antispoof for $wifi_if
+
+## default block
+#block return log all
+block in log from no-route to any
+block in log from urpf-failed to any
+block in log quick from any to 255.255.255.255
+block quick from <bruteforce>
+
+## pass rules
+pass out on $ext_if proto tcp all modulate state
+
+## icmp, dhcp, dns, ntp, ssh, snmp
+pass inet proto icmp all icmp-type 8 code 0
+pass in quick inet proto udp from any port 67 to any port 68
+pass out log proto { udp, tcp } from any to <dnsservers> port domain
+pass out on $ext_if proto udp from any to any port ntp
+pass in log on $ext_if proto tcp from <private> to any port $ssh_port \
+    flags S/SA keep state \
+    (max-src-conn 5, max-src-conn-rate 5/5, overload <bruteforce> flush global)
+pass out log proto tcp from <private> to any port $ssh_port
+pass in on $ext_if proto udp from <snmpclients> to any port 161
+
+## not allowing by default 25/smtp cleartext
+pass out on $ext_if proto tcp from any to <smtpservers> port 587
+## bonjour?
+pass in log quick proto udp to any port 5353
+## openvpn, mhn/honeymap
+pass out proto udp from any to any port 1194
+pass out proto tcp from any to any port 3000
+## mosh-server
+pass out proto udp from any to any port 60001
+
+block log proto tcp from any to any port 25
+
+pass out proto tcp from any to any port 443
+## only https traffic or proxy?
+pass out proto tcp from any to any port { 80, 8080 }
+#block out proto tcp from any to any port { 80, 8080 }
+
+# Apple Push Notification service (apsd)
+# https://discussions.apple.com/thread/4459153?tstart=0
+# https://www.nu42.com/2014/09/stop-your-mac-from-keeping-perpetual.html
+block out log quick proto tcp from any to any port 5223
+
+
+## tagging
+#pass in on $int_if from any to any tag INTNET
+pass in on $wifi_if from any to any tag WIFINET
+

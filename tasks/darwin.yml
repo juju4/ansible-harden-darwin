@@ -126,6 +126,8 @@
 
 ## https://github.com/iSECPartners/yontma-mac
 
+- include: firewall-pf.yml
+
 - include: firewall.yml
 
 - include: usb.yml
