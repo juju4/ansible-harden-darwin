@@ -44,10 +44,10 @@ harden_darwin_fw_program_allowed_in:
   - /usr/sbin/netbiosd
   - /usr/libexec/sharingd
   - /System/Library/CoreServices/NetAuthAgent.app/Contents/MacOS/NetAuthSysAgent
-  - /opt/local/sbin/nrpe
-  - /opt/local/sbin/snmpd
   - /Library/PreferencePanes/DNSCrypt.prefPane/Contents/Resources/usr/sbin/dnscrypt-proxy
   - /Library/PreferencePanes/DNSCrypt.prefPane/Contents/Resources/usr/bin/hostip
+  - /opt/local/sbin/nrpe
+  - /opt/local/sbin/snmpd
   - /opt/local/sbin/dhcpd
   - /opt/local/sbin/tftpd
 harden_darwin_fw_program_blocked_in:
@@ -59,6 +59,9 @@ harden_darwin_fw_program_blocked_in:
   - /usr/sbin/httpd
   - /usr/sbin/ntpd
   - /Applications/iTunes.app
+  - /Applications/Google Chrome.app
+  - /Applications/Skype.app
+  - /Library/PrivilegedHelperTools/com.skype.skypeinstaller
 
 harden_darwin_users: []
 harden_darwin_disable_bluetooth: true
@@ -149,6 +152,18 @@ harden_darwin_santa_blacklist_hash: []
 #  - /usr/bin/yes
 
 harden_darwin_osquery: true
+harden_darwin_osquery_template: 'osquery.conf.j2'
+harden_darwin_osquery_fim: false
+## extra files to upload as packs
+harden_darwin_osquery_upload_packs: []
+harden_darwin_osquery_packs:
+    - "osquery-monitoring"
+    - "incident-response"
+    - "it-compliance"
+## FIXME! bugs in osx-attacks, and vuln-management
+#    - "osx-attacks"
+#    - "vuln-management"
+    - "hardware-monitoring"
 
 ## Archived/deprecated: MIDAS
 ## https://github.com/etsy/MIDAS
@@ -195,9 +210,9 @@ harden_darwin_certificates_cn_denytrust:
   - AAA Certificate Services
   - Actalis Authentication Root CA
   - AddTrust Class 1 CA Root
-#  - AddTrust External CA Root      # = news.ycombinator.com
+#  - AddTrust External CA Root      # = news.ycombinator.com, isc.sans.edu
   - Admin-Root-CA
-  - AffirmTrust Commercial
+  - AffirmTrust Commercial         # www.trendmicro.com
   - AffirmTrust Networking
   - AffirmTrust Premium
   - AffirmTrust Premium ECC
@@ -218,7 +233,7 @@ harden_darwin_certificates_cn_denytrust:
   - Chambers of Commerce Root
   - Chambers of Commerce Root - 2008
   - Cisco Root CA 2048
-  - Class 2 Primary CA
+  - Class 2 Primary CA      # paiement.systempay.fr
   - Common Policy
   - ComSign CA
   - ComSign Global Root CA
@@ -237,7 +252,7 @@ harden_darwin_certificates_cn_denytrust:
   - Federal Common Policy CA
   - Global Chambersign Root
   - Global Chambersign Root - 2008
-  - GlobalSign
+#  - GlobalSign                             # www.sophos.com
 #  - GlobalSign Root CA                      # www.buzzfeed.com
 ## no common name??? TW
 #  - Government Root Certification Authority      ## multiple/not working
@@ -252,7 +267,7 @@ harden_darwin_certificates_cn_denytrust:
   - OISTE WISeKey Global Root GA CA
   - OISTE WISeKey Global Root GB CA
   - QuoVadis Root CA 1 G3
-#  - QuoVadis Root CA 2          # blogs.cisco.com
+  - QuoVadis Root CA 2          # blogs.cisco.com
   - QuoVadis Root CA 2 G3
   - QuoVadis Root CA 3
   - QuoVadis Root CA 3 G3

@@ -33,7 +33,7 @@
     "events_expiry": "3600",
 
     // A filesystem path for disk-based backing storage used for events and
-    // and query results differentials. See also 'use_in_memory_database'.
+    // query results differentials. See also 'use_in_memory_database'.
     //"database_path": "/var/osquery/osquery.db",
 
     // Comma-delimited list of table names to be disabled.
@@ -63,6 +63,39 @@
     }
   },
 
+{% if harden_darwin_osquery_fim %}
+    "fim" : {
+//      "query": "select target_path, category, time, action from file_events;", 
+      "query": "select * from file_events;",
+      "removed": false,
+      "interval": 300
+    }
+{% endif %}
+
+{% if harden_darwin_osquery_fim %}
+  "file_paths": {
+    "homes": [
+      "/var/root/.ssh/%%",
+      "/Users/%/.ssh/%%"
+    ],
+    "etc": [
+      "/private/etc/%%"
+    ],
+    "tmp": [
+      "/private/tmp/%%"
+    ]
+  },
+
+{% endif %}
+
+  // Decorators are normal queries that append data to every query.
+  "decorators": {
+    "load": [
+      "SELECT uuid AS host_uuid FROM system_info;",
+      "SELECT user AS username FROM logged_in_users ORDER BY time DESC LIMIT 1;"
+    ]
+  },
+
   // Add default osquery packs or install your own.
   //
   // There are several 'default' packs installed with 'make install' or via
@@ -74,11 +107,8 @@
   // make install: {PREFIX}/share/osquery/packs
   //
   "packs": {
-    "osquery-monitoring": "/var/osquery/packs/osquery-monitoring.conf",
-    "incident-response": "/var/osquery/packs/incident-response.conf",
-    "it-compliance": "/var/osquery/packs/it-compliance.conf",
-    //"osx-attacks": "/var/osquery/packs/osx-attacks.conf",
-    //"vuln-management": "/var/osquery/packs/vuln-management.conf",
-    "hardware-monitoring": "/var/osquery/packs/hardware-monitoring.conf"
+{% for item in harden_darwin_osquery_packs %}
+    "{{ item }}": "/var/osquery/packs/{{ item }}.conf"
+{% endfor %}
   }
 }

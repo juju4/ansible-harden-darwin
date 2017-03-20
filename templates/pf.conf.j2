@@ -69,6 +69,7 @@ pass out proto udp from any to any port 60001
 block log proto tcp from any to any port 25
 
 pass out proto tcp from any to any port 443
+pass out proto tcp from any to any port 993
 ## only https traffic or proxy?
 pass out proto tcp from any to any port { 80, 8080 }
 #block out proto tcp from any to any port { 80, 8080 }

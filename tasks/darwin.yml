@@ -8,6 +8,14 @@
 
 - include: darwin-updates.yml
 
+- name: check wake for network access status
+  command: "/usr/sbin/systemsetup -getwakeonnetworkaccess"
+  register: wakestate
+- name: disable wake for network access
+  command: "/usr/sbin/systemsetup -setwakeonnetworkaccess off"
+  when: "'Off' not in wakestate.stdout"
+
+## http://www.macos.utah.edu/documentation/administration/pmset.html
 ## FIXME! not idempotent
 - name: enforce hibernation and evict Filevault keys from memory instead of traditional sleep to memory
   command: "pmset -a {{ item.k }} {{ item.v }}"

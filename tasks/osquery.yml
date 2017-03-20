@@ -9,8 +9,31 @@
   stat: path=/var/osquery
   register: hasOsquery
 - block:
+    - name: push extra osquery packs file
+      template:
+        src: "{{ item }}"
+        dest: "/var/osquery/packs/{{ item | basename | regex_replace('.j2$', '') }}"
+      with_items: "{{ harden_darwin_osquery_upload_packs }}"
+      notify:
+        - restart osquery
+    - name: review default packs configuration
+      replace:
+        dest: "{{ item.d }}"
+        regexp: "{{ item.re }}"
+        replace: "{{ item.rep }}"
+        backup: yes
+      with_items:
+## The browser_plugins table returns data based on the current user by default, consider JOINing against the users table
+        - { d: '/var/osquery/packs/it-compliance.conf', re: '"select \* from browser_plugins;"', rep: '"select browser_plugins.* from users join browser_plugins using (uid);"' }
+        - { d: '/var/osquery/packs/incident-response.conf', re: '"select \* from shell_history;"', rep: '"select shell_history.* from users join shell_history using (uid);"' }
     - name: configure osquery
-      template: src=osquery.conf.j2 dest=/var/osquery/osquery.conf mode=0644 backup=yes
+      template:
+        src: "{{ harden_darwin_osquery_template }}"
+        dest: /var/osquery/osquery.conf
+        mode: '0644'
+        backup: yes
+## FIXME! config_check is more strict than when running daemon
+#        validate: 'osqueryi --config_path %s --config_check'
       notify:
         - restart osquery
 ## https://github.com/facebook/osquery/issues/302
