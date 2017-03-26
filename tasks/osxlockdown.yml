@@ -48,7 +48,7 @@
       become_user: "{{ ansible_user | default('travis') }}"
     - set_fact:
         GOROOT: /usr/local/opt/go/libexec
-  when: brew.stat.exists and not mp.stat.exists
+  when: brew.stat.exists and not mp.stat.exists and ansible_user != 'root'
 
 - stat: path=/private/var/root/osxlockdown.audit
   register: osxlfile
