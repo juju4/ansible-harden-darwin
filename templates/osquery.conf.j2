@@ -1,3 +1,4 @@
+// {{ ansible_managed }}
 {
   // Configure the daemon below:
   "options": {
@@ -60,8 +61,7 @@
       "query": "SELECT hostname, cpu_brand, physical_memory FROM system_info;",
       // The interval in seconds to run this query, not an exact interval.
       "interval": 3600
-    }
-  },
+    }{% if harden_darwin_osquery_fim %},{% endif %}
 
 {% if harden_darwin_osquery_fim %}
     "fim" : {
@@ -71,6 +71,7 @@
       "interval": 300
     }
 {% endif %}
+  },
 
 {% if harden_darwin_osquery_fim %}
   "file_paths": {
@@ -83,6 +84,13 @@
     ],
     "tmp": [
       "/private/tmp/%%"
+    ],
+    "bin": [
+      "/bin/%%",
+      "/sbin/%%"
+    ],
+    "webroot": [
+      "/var/www/%%"
     ]
   },
 
@@ -108,7 +116,8 @@
   //
   "packs": {
 {% for item in harden_darwin_osquery_packs %}
-    "{{ item }}": "/var/osquery/packs/{{ item }}.conf"
+    "{{ item }}": "/var/osquery/packs/{{ item }}.conf"{% if not loop.last %},{% endif %}
+
 {% endfor %}
   }
 }

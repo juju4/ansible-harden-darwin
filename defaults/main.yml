@@ -160,9 +160,8 @@ harden_darwin_osquery_packs:
     - "osquery-monitoring"
     - "incident-response"
     - "it-compliance"
-## FIXME! bugs in osx-attacks, and vuln-management
-#    - "osx-attacks"
-#    - "vuln-management"
+    - "osx-attacks"
+    - "vuln-management"
     - "hardware-monitoring"
 
 ## Archived/deprecated: MIDAS
@@ -267,7 +266,7 @@ harden_darwin_certificates_cn_denytrust:
   - OISTE WISeKey Global Root GA CA
   - OISTE WISeKey Global Root GB CA
   - QuoVadis Root CA 1 G3
-  - QuoVadis Root CA 2          # blogs.cisco.com
+  - QuoVadis Root CA 2          # blogs.cisco.com, umbrella.cisco.com
   - QuoVadis Root CA 2 G3
   - QuoVadis Root CA 3
   - QuoVadis Root CA 3 G3

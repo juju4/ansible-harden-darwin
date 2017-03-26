@@ -32,10 +32,11 @@
         dest: /var/osquery/osquery.conf
         mode: '0644'
         backup: yes
-## FIXME! config_check is more strict than when running daemon
-#        validate: 'osqueryi --config_path %s --config_check'
+        validate: 'osqueryi --config_path %s --config_check --verbose'
       notify:
         - restart osquery
+      environment:
+        PATH: '/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin'
 ## https://github.com/facebook/osquery/issues/302
     - name: configure newsyslog for osquery
       template: src=newsyslog-osquery.conf.j2 dest=/private/etc/newsyslog.d/osquery.conf mode=0644 backup=yes validate='newsyslog -N -f %s'
