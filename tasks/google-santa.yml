@@ -28,14 +28,22 @@
       osx_defaults:
         domain: /var/db/santa/config.plist
         key: BlacklistRegex
-        value: "'^(?:/Users)/.*'"
+        value: "{{ harden_darwin_santa_blacklist_path }}"
         state: present
-      when: harden_darwin_santa_blacklist_homeuserpath
+      when: harden_darwin_santa_blacklist_path != ''
+
+    - name: santa | whitelist macports build path
+      osx_defaults:
+        domain: /var/db/santa/config.plist
+        key: WhitelistRegex
+        value: "{{ harden_darwin_santa_whitelist_path }}"
+        state: present
+      when: harden_darwin_santa_whitelist_path != ''
 
     ## default is monitor mode only
     - name: ensure config set to desired mode = {{ harden_darwin_santa_mode }}
-      osx_defaults: domain=/var/db/santa/config.plist key=ClientMode value={{ harden_darwin_santa_mode }}
-      when: harden_darwin_santa_mode == 'MONITOR' or (harden_darwin_santa_mode == 'LOCKDOWN' or harden_darwin_santa_mode == 2)
+      osx_defaults: domain=/var/db/santa/config.plist key=ClientMode value={{ harden_darwin_santa_mode }} type=int
+      when: harden_darwin_santa_mode == '0' or (harden_darwin_santa_mode == 'LOCKDOWN' or harden_darwin_santa_mode == 2)
       notify:
         - restart santa
 

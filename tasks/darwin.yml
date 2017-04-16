@@ -2,6 +2,9 @@
 ## https://github.com/herrbischoff/awesome-osx-command-line
 ## http://csrc.nist.gov/publications/drafts/800-179/sp800_179_draft.pdf
 
+## just to ensure playbook doesn't get block by google santa during provisioning
+- include: "google-santa-whitelist.yml type=hash path=/System/Library/Frameworks/Python.framework/Versions/2.7/Resources/Python.app/Contents/MacOS/Python action=whitelist match=White"
+
 - name: ensure archives directory exists
   file: dest="{{ install_archives }}" mode=0755 state=directory
   become: yes

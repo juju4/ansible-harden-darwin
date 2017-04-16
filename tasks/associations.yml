@@ -1,0 +1,9 @@
+---
+## https://apple.stackexchange.com/questions/91522/change-file-association-in-terminal
+## https://apple.stackexchange.com/questions/9866/programmatically-script-atically-changing-the-default-open-with-setting
+## ~/Library/Preferences/com.apple.LaunchServices.plist
+## http://duti.org/documentation.html
+## $ defaults read com.apple.LaunchServices
+
+## if issues, rebuild the Launch Services registry
+## $ /System/Library/Frameworks/CoreServices.framework/Versions/Current/Frameworks/LaunchServices.framework/Versions/Current/Support/lsregister -kill -r -domain local -domain system -domain user

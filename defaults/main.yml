@@ -5,6 +5,7 @@ harden_umask: '022'
 #harden_umask: '027'
 harden_init_aidedb: false
 harden_unix_fstab_flags: false
+harden_darwin_logrotate_days: 90
 
 ## TODO: firewall rules? avoid to lock yourself
 harden_darwin_fw_pf: false
@@ -90,15 +91,14 @@ harden_darwin_osxconfigcheck: false
 ## dnscrypt
 harden_darwin_dnscrypt: true
 
-## install google santa
+## install google santa. mode 0 = Monitor, 1 = Blacklist, 2 = Whitelist
 harden_darwin_santa: true
 #harden_darwin_santa: false
-harden_darwin_santa_mode: 'MONITOR'
+#harden_darwin_santa_mode: 0
 ## Be careful when activating! be sure to fit whitelist to YOUR context.
-## For some reason, 'LOCKDOWN' is not working. 2 is fine to lock
-#harden_darwin_santa_mode: 'LOCKDOWN'
 #harden_darwin_santa_mode: 2
-harden_darwin_santa_blacklist_homeuserpath: false
+harden_darwin_santa_blacklist_path: "'^(?:/Users|/private/tmp)/.*'"
+harden_darwin_santa_whitelist_path: "'^(?:/opt/local/var/macports/build/.*/work)/.*'"
 #$ cat /var/log/santa.log | awk -F'|' '/path=/ { gsub(/path=/, "", $5); print $5 }'| sort | uniq -c | sort -nr | head -10
 #$ cat /var/log/santa.log | awk -F'|' '/path=/ && /reason=UNKNOWN/ { gsub(/path=/, "", $5); print $5 }'| sort | uniq -c | sort -nr | head -100
 #decision ALLOW, DISKAPPEAR/DISKDISAPPEAR (usb/dmg)
@@ -108,7 +108,7 @@ harden_darwin_santa_whitelist_cert:
   - /usr/bin/ssh
   - /opt/X11/bin/xauth
   - /Applications/Firefox.app/Contents/MacOS/firefox
-  - /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome
+  - /Applications/Google Chrome.app/Contents/MacOS/Google Chrome
   - /Applications/VirtualBox.app/Contents/MacOS/VirtualBox
   - /usr/local/bin/osqueryd
   - /var/_install/RansomWhere.app/Contents/MacOS/RansomWhere
@@ -132,9 +132,40 @@ harden_darwin_santa_whitelist_hash:
 #  - /opt/local/libexec/nagios/check_procs
 #  - /opt/local/libexec/nagios/check_users
 #  - /usr/local/share/OSX-Monitoring-Tools/check_osx_mem/build/Release/check_osx_mem
-#  - /usr/local/share/OSX-Monitoring-Tools/check_osx_mem/build/Release/check_osx_smc
+#  - /usr/local/share/OSX-Monitoring-Tools/check_osx_smc/build/Release/check_osx_smc
 #  - /opt/local/libexec/macports/bin/tclsh8.5
 #  - /opt/local/bin/perl5.24
+#  - /opt/local/bin/daemondo
+#  - /opt/local/bin/sqlite3
+#  - /opt/local/bin/aide
+#  - /opt/local/bin/lftp
+#  - /opt/local/bin/clear
+### macports build and more...
+#  - /opt/local/bin/gsed
+#  - /opt/local/bin/yasm
+#  - /opt/local/bin/gawk
+#  - /opt/local/bin/openssl
+#  - /opt/local/bin/strip
+#  - /opt/local/bin/ar
+#  - /opt/local/bin/llvm-gcc-4.2
+#  - /opt/local/libexec/llvm-3.9/bin/llvm-objdump
+#  - /opt/local/libexec/llvm-3.9/bin/llvm-nm
+#  - /opt/local/bin/i686-apple-darwin15-llvm-gcc-4.2
+#  - /opt/local/bin/llvm-otool
+#  - /opt/local/bin/ld-latest
+#  - /opt/local/bin/pkg-config
+#  - /opt/local/bin/libtool
+#  - /opt/local/bin/msgfmt
+#  - /opt/local/bin/glib-compile-schemas
+#  - /opt/local/bin/gsx
+#  - /opt/local/bin/xgettext
+#  - /opt/local/bin/gmake
+#  - /opt/local/bin/cmake
+#  - /opt/local/bin/xsltproc
+#  - /opt/local/bin/msgmerge
+#  - /opt/local/bin/lua
+#  - /opt/local/bin/lipo
+### macports build (end)
 #  - /Applications/DNSCrypt Menubar.app/Contents/MacOS/DNSCrypt Menubar
 #  - /Library/PreferencePanes/DNSCrypt.prefPane/Contents/Resources/usr/bin/lockfile
 #  - /Library/PreferencePanes/DNSCrypt.prefPane/Contents/Resources/usr/sbin/dnscrypt-proxy
@@ -153,6 +184,8 @@ harden_darwin_santa_blacklist_hash: []
 
 harden_darwin_osquery: true
 harden_darwin_osquery_template: 'osquery.conf.j2'
+## fim on macos requires kernel module and extra actions
+## Process file access is Experimental: https://osquery.readthedocs.io/en/stable/deployment/file-integrity-monitoring/
 harden_darwin_osquery_fim: false
 ## extra files to upload as packs
 harden_darwin_osquery_upload_packs: []
@@ -201,7 +234,7 @@ harden_darwin_certificates_cn_delete: []
 ## WARNING! Must be customized to your own usage.
 ## $ openssl s_client -showcerts -connect news.ycombinator.com:443 |grep issuer=
 ## $ openssl s_client -showcerts -connect advancedhomeserver.com:443 |grep issuer= GoDaddy???
-##          www.siemplify.co?
+##          www.siemplify.co? www.osfi-bsif.gc.ca?
 ## https://support.apple.com/en-us/HT205204
 #harden_darwin_certificates_cn_denytrust: []
 harden_darwin_certificates_cn_denytrust:
@@ -211,7 +244,7 @@ harden_darwin_certificates_cn_denytrust:
   - AddTrust Class 1 CA Root
 #  - AddTrust External CA Root      # = news.ycombinator.com, isc.sans.edu
   - Admin-Root-CA
-  - AffirmTrust Commercial         # www.trendmicro.com
+  - AffirmTrust Commercial         # www.trendmicro.com, blog.trendmicro.com
   - AffirmTrust Networking
   - AffirmTrust Premium
   - AffirmTrust Premium ECC
@@ -266,7 +299,7 @@ harden_darwin_certificates_cn_denytrust:
   - OISTE WISeKey Global Root GA CA
   - OISTE WISeKey Global Root GB CA
   - QuoVadis Root CA 1 G3
-  - QuoVadis Root CA 2          # blogs.cisco.com, umbrella.cisco.com
+  - QuoVadis Root CA 2          # blogs.cisco.com, umbrella.cisco.com, supportforums.cisco.com
   - QuoVadis Root CA 2 G3
   - QuoVadis Root CA 3
   - QuoVadis Root CA 3 G3

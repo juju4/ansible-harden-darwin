@@ -18,7 +18,7 @@
 - block:
     - block:
         - name: Google Santa | ensure config set to monitor mode
-          osx_defaults: domain=/var/db/santa/config.plist key=ClientMode value='MONITOR'
+          osx_defaults: domain=/var/db/santa/config.plist key=ClientMode value=0 type=int
           when: (harden_darwin_santa_mode == 'LOCKDOWN' or harden_darwin_santa_mode == 2)
 
     ## FIXME! not installing correct packages: only get gobject-introspection, goffice
@@ -29,7 +29,7 @@
 
       always:
         - name: Google Santa | ensure config set to Lockdown mode
-          osx_defaults: domain=/var/db/santa/config.plist key=ClientMode value=2
+          osx_defaults: domain=/var/db/santa/config.plist key=ClientMode value=2 type=int
           when: (harden_darwin_santa_mode == 'LOCKDOWN' or harden_darwin_santa_mode == 2)
 
     - set_fact:
