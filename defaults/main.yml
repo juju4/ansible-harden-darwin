@@ -94,7 +94,7 @@ harden_darwin_dnscrypt: true
 ## install google santa. mode 0 = Monitor, 1 = Blacklist, 2 = Whitelist
 harden_darwin_santa: true
 #harden_darwin_santa: false
-#harden_darwin_santa_mode: 0
+harden_darwin_santa_mode: 0
 ## Be careful when activating! be sure to fit whitelist to YOUR context.
 #harden_darwin_santa_mode: 2
 harden_darwin_santa_blacklist_path: "'^(?:/Users|/private/tmp)/.*'"
