@@ -18,7 +18,11 @@
 - block:
     - block:
         - name: Google Santa | ensure config set to monitor mode
-          osx_defaults: domain=/var/db/santa/config.plist key=ClientMode value=0 type=int
+          osx_defaults:
+            domain: /var/db/santa/config.plist
+            key: ClientMode
+            value: 0
+            type: "{{ harden_darwin_santa_db_type }}"
           when: (harden_darwin_santa_mode == 'LOCKDOWN' or harden_darwin_santa_mode == 2)
 
     ## FIXME! not installing correct packages: only get gobject-introspection, goffice
@@ -29,7 +33,11 @@
 
       always:
         - name: Google Santa | ensure config set to Lockdown mode
-          osx_defaults: domain=/var/db/santa/config.plist key=ClientMode value=2 type=int
+          osx_defaults:
+            domain: /var/db/santa/config.plist
+            key: ClientMode
+            value: 2
+            type: "{{ harden_darwin_santa_db_type }}"
           when: (harden_darwin_santa_mode == 'LOCKDOWN' or harden_darwin_santa_mode == 2)
 
     - set_fact:
@@ -48,7 +56,7 @@
       become_user: "{{ ansible_user | default('travis') }}"
     - set_fact:
         GOROOT: /usr/local/opt/go/libexec
-  when: brew.stat.exists and not mp.stat.exists and ansible_user != 'root'
+  when: brew.stat.exists and not mp.stat.exists and ansible_user is defined and ansible_user != 'root'
 
 - stat: path=/private/var/root/osxlockdown.audit
   register: osxlfile

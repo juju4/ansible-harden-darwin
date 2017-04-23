@@ -93,6 +93,13 @@ harden_darwin_dnscrypt: true
 
 ## install google santa. mode 0 = Monitor, 1 = Blacklist, 2 = Whitelist
 harden_darwin_santa: true
+## ?ElCapitan/0.9.17
+harden_darwin_santa_db_type: int
+## Sierra/0.9.17
+# "msg": "Type mismatch. Type in defaults: str"
+# "msg": "value of type must be one of: array,bool,boolean,date,float,int,integer,string, got: str"
+# "failed": true, "msg": "Type mismatch. Type in defaults: int"
+#harden_darwin_santa_db_type: string
 #harden_darwin_santa: false
 harden_darwin_santa_mode: 0
 ## Be careful when activating! be sure to fit whitelist to YOUR context.

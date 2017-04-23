@@ -42,8 +42,12 @@
 
     ## default is monitor mode only
     - name: ensure config set to desired mode = {{ harden_darwin_santa_mode }}
-      osx_defaults: domain=/var/db/santa/config.plist key=ClientMode value={{ harden_darwin_santa_mode }} type=int
-      when: harden_darwin_santa_mode == '0' or (harden_darwin_santa_mode == 'LOCKDOWN' or harden_darwin_santa_mode == 2)
+      osx_defaults:
+        domain: /var/db/santa/config.plist
+        key: ClientMode
+        value: "{{ harden_darwin_santa_mode }}"
+        type: "{{ harden_darwin_santa_db_type }}"
+      when: harden_darwin_santa_mode == '0' or harden_darwin_santa_mode == 2 or harden_darwin_santa_mode == 1
       notify:
         - restart santa
 

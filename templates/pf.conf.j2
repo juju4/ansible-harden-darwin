@@ -50,9 +50,12 @@ pass inet proto icmp all icmp-type 8 code 0
 pass in quick inet proto udp from any port 67 to any port 68
 pass out log proto { udp, tcp } from any to <dnsservers> port domain
 pass out on $ext_if proto udp from any to any port ntp
+{# 5, 5/5 is too low for ansible... orchestrator can be blacklisted. same 15, 15/5. should be less an issue with ansible 2.3 #}
 pass in log proto tcp from <private> to any port $ssh_port \
-    flags S/SA keep state \
-    (max-src-conn 5, max-src-conn-rate 5/5, overload <bruteforce> flush global)
+    flags S/SA keep state
+#pass in log proto tcp from <private> to any port $ssh_port \
+#    flags S/SA keep state \
+#    (max-src-conn 15, max-src-conn-rate 15/5, overload <bruteforce> flush global)
 pass out log proto tcp from <private> to any port $ssh_port
 pass in on $ext_if proto udp from <snmpclients> to any port 161
 
