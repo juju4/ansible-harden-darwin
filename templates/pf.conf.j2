@@ -10,6 +10,9 @@ ext_if=en0
 wifi_if=en1
 ssh_port={{ harden_darwin_fw_ssh_port }}
 
+#set block-policy drop
+set fingerprints "/etc/pf.os"
+
 scrub in all fragment reassemble
 
 #
@@ -82,6 +85,10 @@ pass out proto tcp from any to any port { 80, 8080 }
 # https://www.nu42.com/2014/09/stop-your-mac-from-keeping-perpetual.html
 block out log quick proto tcp from any to any port 5223
 
+# Restrict SMB to private networks
+pass in log proto udp from <private> to any port { 137, 138 }
+pass in log proto tcp from <private> to any port { 137, 139, 445 } \
+    flags S/SA keep state
 
 ## tagging
 #pass in on $int_if from any to any tag INTNET
