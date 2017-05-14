@@ -2,14 +2,6 @@
 
 ## http://wiki.cacert.org/FAQ/ImportRootCert#Using_the_command_line
 ## https://certsimple.com/blog/control-the-ssl-cas-your-browser-trusts
-
-#- name: add certificate to keychain - admin store
-#  command: "security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain <certificate>"
-#- name: add certificate to keychain - user store
-#  command: "security add-trusted-cert -r trustRoot -k $HOME/Library/Keychains/System.keychain <certificate>"
-#  become: yes
-#  become_user: targetuser
-
 ## https://codeascraft.com/2013/07/16/reducing-the-roots-of-some-evil/
 ## http://www.ifca.ai/fc14/papers/fc14_submission_100.pdf
 ## https://apple.stackexchange.com/questions/24640/how-do-i-remove-many-system-roots-from-apple-system-keychain
@@ -29,6 +21,15 @@
   command: "security trust-settings-export -d {{ backupdir }}/trust_settings-{{ ansible_date_time.date }}.plist creates={{ backupdir }}/trust_settings-{{ ansible_date_time.date }}.plist"
 ## travis: "stderr": "SecTrustSettingsCreateExternalRepresentation: No Trust Settings were found."
   ignore_errors: true
+
+- name: Download extra certificates
+  get_url:
+    url: "{{ item.u }}"
+    dest: "{{ backupdir }}/{{ item.u | basename }}"
+    mode: '0644'
+    validate_certs: "{{ item.validate }}"
+    checksum: "{{ item.c }}"
+  with_items: "{{ harden_darwin_certificates_dl }}"
 
 - name: dump system certificates
   command: "security dump-keychain /System/Library/Keychains/SystemRootCertificates.keychain"
@@ -60,4 +61,7 @@
   shell: "security find-certificate -a -p -c '{{ item }}' /System/Library/Keychains/SystemRootCertificates.keychain > /tmp/certs.pm; security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain /tmp/certs.pm"
   with_items: "{{ harden_darwin_certificates_cn_trust }}"
 
+- name: Keychain | trust extra certificates
+  shell: "security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain {{ backupdir }}/{{ item.u | basename }}"
+  with_items: "{{ harden_darwin_certificates_dl }}"
 
