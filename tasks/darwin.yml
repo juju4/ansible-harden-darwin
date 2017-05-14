@@ -23,10 +23,16 @@
 - name: enforce hibernation and evict Filevault keys from memory instead of traditional sleep to memory
   command: "pmset -a {{ item.k }} {{ item.v }}"
   with_items:
-    - { k: destroyfvkeyonstandby, v: 1 }
+    - { k: 'destroyfvkeyonstandby', v: '1' }
 ## https://developer.apple.com/library/mac/documentation/Darwin/Reference/ManPages/man1/pmset.1.html
 ## FIXME! ?10.10: makes mac hibernate directly. ok on 10.11+10.12
-    - { k: hibernatemode, v: 25 }
+    - { k: 'hibernatemode', v: '25' }
+## https://github.com/drduh/macOS-Security-and-Privacy-Guide/issues/124
+## FIXME! The error was: 'dict object' has no attribute 'k' ???
+#    - { k: 'powernap', v: '0' }
+#    - { k: 'standby', v: '0' }
+#    - { k: 'standbydelay', v: '0' }
+#    - { k: 'autopoweroff', v: '0' }
 
 #- name: Reset Accessibility settings
 #  command: tccutil reset Accessibility
