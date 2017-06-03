@@ -21,6 +21,7 @@ harden_darwin_fw_dnsservers:
   - 8.8.4.4
 harden_darwin_fw_smtpservers:
   - 192.168.1.20
+harden_darwin_fw_pass_out_dport: []
 
 harden_darwin_autocheckupdate: true
 harden_darwin_autoupdate_apps: true
@@ -97,12 +98,12 @@ harden_darwin_dnscrypt: true
 ## install google santa. mode 0 = Monitor, 1 = Blacklist, 2 = Whitelist
 harden_darwin_santa: true
 ## ?ElCapitan/0.9.17
-harden_darwin_santa_db_type: int
+#harden_darwin_santa_db_type: int
 ## Sierra/0.9.17
 # "msg": "Type mismatch. Type in defaults: str"
 # "msg": "value of type must be one of: array,bool,boolean,date,float,int,integer,string, got: str"
 # "failed": true, "msg": "Type mismatch. Type in defaults: int"
-#harden_darwin_santa_db_type: string
+harden_darwin_santa_db_type: string
 #harden_darwin_santa: false
 harden_darwin_santa_mode: 0
 ## Be careful when activating! be sure to fit whitelist to YOUR context.
@@ -225,6 +226,7 @@ harden_darwin_set_immutable: []
 harden_darwin_set_notimmutable: []
 
 ## Keychain will only affect System, Apple applications like Safari, Chrome but not Firefox
+harden_darwin_certificates: true
 ## To identify used certificates to keep, you can use
 ##  - NIDS like bro
 ##  - web proxy
@@ -278,7 +280,7 @@ harden_darwin_certificates_cn_denytrust:
   - Chambers of Commerce Root
   - Chambers of Commerce Root - 2008        # www.ccn-cert.cni.es
   - Cisco Root CA 2048
-  - Class 2 Primary CA      # paiement.systempay.fr
+  - Class 2 Primary CA      # paiement.systempay.fr, www.caisse-epargne.fr
   - Common Policy
   - ComSign CA
   - ComSign Global Root CA
@@ -399,10 +401,14 @@ harden_darwin_certificates_cn_trust: []
 harden_darwin_certificates_dl:
   - { u: 'https://www.cacert.org/certs/root.crt', validate: false, c: 'sha256:c0e0773a79dceb622ef6410577c19c1e177fb2eb9c623a49340de3c9f1de2560' }
   - { u: 'https://www.cacert.org/certs/class3.crt', validate: false, c: 'sha256:f5badaa5da1cc05b110a9492455a2c2790d00c7175dcf3a7bcb5441af71bf84f' }
+harden_darwin_certificates_files: []
 
 ## Keychain preferences: both OCSP and CRL are in 'Best attempt' mode, choices: Off/Best Attempt/Require if certificate indicates/(Require for all certificates=grayed out)
 
+## MDM Mobile config
+harden_darwin_mobileconfigs: []
 
 install_archives: /private/var/_install
 backupdir: /var/_backup
+
 

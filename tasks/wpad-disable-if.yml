@@ -4,6 +4,7 @@
   command: "networksetup -getproxyautodiscovery \"{{ if }}\""
   register: ifstate
   changed_when: false
+  ignore_errors: true
 
 - name: turn off wpad
   command: "networksetup -setproxyautodiscovery \"{{ if }}\" off"

@@ -174,4 +174,5 @@
 - include: immutable.yml
 - include: darwin-openbsm.yml
 - include: darwin-certificates.yml
-
+  when: harden_darwin_certificates
+- include: mobileconfig.yml

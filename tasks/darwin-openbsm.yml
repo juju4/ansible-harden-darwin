@@ -3,6 +3,8 @@
 ## https://derflounder.wordpress.com/2012/01/30/openbsm-auditing-on-mac-os-x/
 ## https://ilostmynotes.blogspot.ca/2013/10/openbsm-auditd-on-os-x-these-are-logs.html
 ## https://www.scip.ch/en/?labs.20150108
+## binary logs in /var/audit: praudit, auditreduce
+## auditreduce -m AUE_EXECVE /var/audit/current | praudit -s | grep -A8 "/bin/sh"
 
 - name: configure openbsdm auditd
   template:

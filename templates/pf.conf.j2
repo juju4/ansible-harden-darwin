@@ -90,6 +90,13 @@ pass in log proto udp from <private> to any port { 137, 138 }
 pass in log proto tcp from <private> to any port { 137, 139, 445 } \
     flags S/SA keep state
 
+{% if harden_darwin_fw_pass_out_dport is defined and harden_darwin_fw_pass_out_dport != [] %}
+{% for p in harden_darwin_fw_pass_out_dport %}
+pass out log proto tcp from any to any port {{ p }} \
+    flags S/SA keep state
+{% endfor %}
+
+{% endif %}
 ## tagging
 #pass in on $int_if from any to any tag INTNET
 pass in on $wifi_if from any to any tag WIFINET
