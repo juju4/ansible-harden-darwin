@@ -1,0 +1,26 @@
+---
+## Use Apple Configurator or Macos server
+## 802.1X Authentication, http://training.apple.com/pdf/WP_8021X_Authentication.pdf
+## Managing OS X with Configuration Profiles, http://m.softchoice.com/cms/brands/apple/pdf/bs_apple_ad4_0513_pdf.pdf
+## 10.7+: networksetup command mostly deprecated
+
+- name: list current profile
+  command: profiles -P
+  changed_when: false
+  ignore_errors: true
+  register: profileslist
+
+- debug: var=profileslist
+- block:
+    - name: copy file to target
+      copy:
+        src: "{{ item }}"
+        dest: "{{ install_archives }}/{{ item | basename }}"
+        mode: '0400'
+        backup: yes
+      with_items: "{{ harden_darwin_mobileconfigs }}"
+    - name: add mobileconfig profiles
+      command: "profiles -I -F {{ install_archives }}/{{ item | basename }}"
+      with_items: "{{ harden_darwin_mobileconfigs }}"
+#      when: "'{{ item | basename }}' not in profileslist.stdout"
+  when: harden_darwin_mobileconfigs != []
