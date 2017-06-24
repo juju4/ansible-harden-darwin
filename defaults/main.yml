@@ -288,19 +288,35 @@ harden_darwin_certificates_cn_denytrust:
   - D-TRUST Root Class 3 CA 2 2009
   - D-TRUST Root Class 3 CA 2 EV 2009
   - Deutsche Telekom Root CA 2
+  - DigiCert Assured ID Root CA
+  - DigiCert Assured ID Root G2
+  - DigiCert Assured ID Root G3
+  - DigiCert Global Root CA
+  - DigiCert Global Root G2
+  - DigiCert Global Root G3
+  - DigiCert High Assurance EV Root CA
+  - DigiCert Trusted Root G4
   - DST ACES CA X6
 #  - DST Root CA X3         # Let's Encrypt Authority X3
   - DST Root CA X4
   - E-Tugra Certification Authority
   - Echoworx Root CA2
   - EE Certification Centre Root CA
+  - Entrust Root Certification Authority
+  - Entrust Root Certification Authority - EC1
+  - Entrust Root Certification Authority - G2
+  - Entrust.net Certification Authority (2048)
 ## no common name??? TW
 #  - ePKI Root Certification Authority      ## not working
   - Federal Common Policy CA
+  - GeoTrust Global CA
+  - GeoTrust Primary Certification Authority
+  - GeoTrust Primary Certification Authority - G2
+  - GeoTrust Primary Certification Authority - G3
   - Global Chambersign Root
   - Global Chambersign Root - 2008
 #  - GlobalSign                             # www.sophos.com
-#  - GlobalSign Root CA                      # www.buzzfeed.com
+  - GlobalSign Root CA                      # www.buzzfeed.com
 ## no common name??? TW
 #  - Government Root Certification Authority      ## multiple/not working
   - Hellenic Academic and Research Institutions RootCA 2011
