@@ -170,9 +170,13 @@
 
 - include: ransomwhere.yml
   when: harden_darwin_ransomwhere
+- include: oversight.yml
+  when: harden_darwin_oversight
 
 - include: immutable.yml
 - include: darwin-openbsm.yml
 - include: darwin-certificates.yml
   when: harden_darwin_certificates
 - include: mobileconfig.yml
+- include: darwin-hostname.yml
+  when: harden_darwin_hostname is defined and harden_darwin_hostname != ''

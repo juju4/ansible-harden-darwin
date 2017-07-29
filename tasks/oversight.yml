@@ -1,0 +1,38 @@
+---
+## https://objective-see.com/products/oversight.html
+
+- name: download oversight
+  get_url:
+    url: https://bitbucket.org/objective-see/deploy/downloads/OverSight_1.1.2.zip
+    dest: "{{ install_archives }}/OverSight_1.1.2.zip"
+    mode: '0644'
+    sha256sum: "aaaa"
+  become: yes
+
+- name: decompress oversight
+#  unarchive:
+#    src: "{{ install_archives }}/oversight_1.1.0.zip"
+#    dest: "{{ install_archives }}"
+  command: "unzip -d {{ install_archives }} {{ install_archives }}/OverSight_1.1.2.zip"
+  args:
+    creates: "{{ install_archives }}/oversight.app/Contents/MacOS/oversight"
+  become: yes
+
+- block:
+    - include: "google-santa-whitelist.yml type=hash path={{ item }} action=whitelist match=White"
+      with_items:
+        - "{{ install_archives }}/oversight.app/Contents/MacOS/oversight"
+  when: harden_darwin_santa is defined and harden_darwin_santa and harden_darwin_santa_mode == 2
+
+## FIXME! always return 'install ok' and rc = 0
+- name: install oversight
+  command: "{{ install_archives }}/oversight.app/Contents/MacOS/oversight -install"
+  args:
+    creates: "/Library/oversight/oversight"
+  become: yes
+
+- block:
+    - include: "google-santa-whitelist.yml type=hash path={{ item }} action=whitelist match=White"
+      with_items:
+        - "/Library/oversight/oversight"
+  when: harden_darwin_santa is defined and harden_darwin_santa and harden_darwin_santa_mode == 2

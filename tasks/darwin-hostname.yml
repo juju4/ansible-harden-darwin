@@ -1,0 +1,9 @@
+---
+## https://apple.stackexchange.com/questions/272036/how-to-refuse-dhcp-server-to-change-my-hostname
+
+- name: Set hostname manually to avoid dhcp override
+  command: "{{ item }}"
+  with_items:
+    - "scutil --set HostName '{{ harden_darwin_hostname }}'"
+    - "scutil --set LocalHostName '{{ harden_darwin_hostname }}'"
+    - "scutil --set ComputerName '{{ harden_darwin_hostname }}'"
