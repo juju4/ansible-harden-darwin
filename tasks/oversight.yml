@@ -6,7 +6,7 @@
     url: https://bitbucket.org/objective-see/deploy/downloads/OverSight_1.1.2.zip
     dest: "{{ install_archives }}/OverSight_1.1.2.zip"
     mode: '0644'
-    sha256sum: "aaaa"
+    sha256sum: "4d930136f7e99880f7fb98cd195c47ee69b011c726be1e860ee4b43546386bd5"
   become: yes
 
 - name: decompress oversight
