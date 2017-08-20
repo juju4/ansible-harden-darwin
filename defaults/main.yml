@@ -210,6 +210,9 @@ harden_darwin_osquery_packs:
     - "osx-attacks"
     - "vuln-management"
     - "hardware-monitoring"
+    - "osquery-darwin-snapshots-pack"
+harden_darwin_osquery_snapshot_interval: 604800
+harden_darwin_osquery_snapshot_interval2: 604800
 
 ## Archived/deprecated: MIDAS
 ## https://github.com/etsy/MIDAS

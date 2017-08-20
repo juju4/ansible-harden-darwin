@@ -1,0 +1,248 @@
+{
+  "queries": {
+    "authorized_keys": {
+      "query" : "select authorized_keys.* from users join authorized_keys using (uid);",
+      "description" : "Info on authorized keys",
+      "interval" : "{{ harden_darwin_osquery_snapshot_interval }}",
+      "snapshot": true
+    },
+    "user_ssh_keys": {
+      "query" : "select * from user_ssh_keys;",
+      "description" : "info on user ssh keys",
+      "interval" : "{{ harden_darwin_osquery_snapshot_interval }}",
+      "snapshot": true
+    },
+    "dns_resolvers": {
+      "query" : "select * from dns_resolvers;",
+      "description" : "check DNS resolvers",
+      "interval" : "{{ harden_darwin_osquery_snapshot_interval2 }}",
+      "snapshot": true
+      },
+    "known_hosts": {
+      "query" : "select known_hosts.* from users join known_hosts using (uid);",
+      "description" : "line-delimited known_hosts table",
+      "interval" : "{{ harden_darwin_osquery_snapshot_interval }}",
+      "snapshot": true
+    },
+    "sudoers": {
+      "query" : "select * from sudoers;",
+      "description" : "Retrieves all the information for sudoers.",
+      "interval" : "{{ harden_darwin_osquery_snapshot_interval2 }}",
+      "snapshot": true
+    },
+    "groups": {
+      "query" : "select * from groups;",
+      "description" : "Retrieves groups info.",
+      "interval" : "{{ harden_darwin_osquery_snapshot_interval }}",
+      "snapshot": true
+    },
+    "interface_details": {
+      "query" : "select * from interface_details;",
+      "description" : "Retrieves interface details.",
+      "interval" : "{{ harden_darwin_osquery_snapshot_interval2 }}",
+      "snapshot": true
+    },
+    "fileless_process": {
+      "query" : "SELECT name, path, pid FROM processes WHERE on_disk = 0;",
+      "description" : "Retrieves interface details.",
+      "interval" : "{{ harden_darwin_osquery_snapshot_interval }}",
+      "snapshot": true
+    },
+    "processes": {
+      "query": "SELECT pid, name, path, cmdline from processes;",
+      "description": "Retrieve list of processes",
+      "interval" : "{{ harden_darwin_osquery_snapshot_interval }}",
+      "snapshot": true
+    },
+    "process_binding_to_ports": {
+      "query" : "select DISTINCT process.name, listening.port, process.pid FROM processes as process JOIN listening_ports AS listening ON process.pid=listening.pid;",
+      "description" : "Retrieves the list of processes bound to listening ports.",
+      "interval" : "{{ harden_darwin_osquery_snapshot_interval }}",
+      "snapshot": true
+    },
+    "python_packages": {
+      "query" : "select * FROM python_packages;",
+      "interval" : "{{ harden_darwin_osquery_snapshot_interval }}",
+      "snapshot": true,
+      "description" : "Python packages installed in a system"
+    },
+    "arp_anomalies": {
+      "query" : "SELECT address, mac, COUNT(mac) AS mac_count FROM arp_cache GROUP BY mac HAVING count(mac) > 1;",
+      "description" : "Retrieves interface details.",
+      "interval" : "{{ harden_darwin_osquery_snapshot_interval }}",
+      "snapshot": true
+    },
+    "crontab": {
+      "query" : "select * from crontab;",
+      "version" : "1.4.5",
+      "description" : "Retrieves all the jobs scheduled in crontab in the target system.",
+      "value" : "Identify malware that uses this persistence mechanism to launch at a given interval",
+      "interval" : "{{ harden_darwin_osquery_snapshot_interval }}",
+      "snapshot": true
+    },
+    "etc_hosts": {
+      "query" : "select * from etc_hosts;",
+      "version" : "1.4.5",
+      "description" : "Retrieves all the entries in the target system /etc/hosts file.",
+      "value" : "Identify network communications that are being redirected. Example: identify if security logging has been disabled",
+      "interval" : "{{ harden_darwin_osquery_snapshot_interval2 }}",
+      "snapshot": true
+    },
+    "suid_bin": {
+      "query" : "select * from suid_bin;",
+      "version" : "1.4.5",
+      "description" : "Retrieves all the files in the target system that are setuid enabled.",
+      "value" : "Detect backdoor binaries (attacker may drop a copy of /bin/sh). Find potential elevation points / vulnerabilities in the standard build.",
+      "interval" : "{{ harden_darwin_osquery_snapshot_interval2 }}",
+      "snapshot": true
+    },
+    "system_controls": {
+      "query": "select * from system_controls;",
+      "interval" : "{{ harden_darwin_osquery_snapshot_interval2 }}",
+      "snapshot": true,
+      "platform": "all",
+      "description": "sysctl names, values, and settings information"
+    },
+    "ad_config": {
+      "query": "select * from ad_config;",
+      "interval" : "{{ harden_darwin_osquery_snapshot_interval2 }}",
+      "snapshot": true,
+      "platform": "darwin",
+      "description": "OS X Active Directory configuration"
+    },
+    "alf": {
+      "query": "select * from alf;",
+      "interval" : "{{ harden_darwin_osquery_snapshot_interval2 }}",
+      "snapshot": true,
+      "platform": "darwin",
+      "description": "OS X application layer firewall (ALF) service details"
+    },
+    "alf_exceptions": {
+      "query": "select * from alf_exceptions;",
+      "interval" : "{{ harden_darwin_osquery_snapshot_interval2 }}",
+      "snapshot": true,
+      "platform": "darwin",
+      "description": "OS X application layer firewall (ALF) service exceptions"
+    },
+    "alf_explicit_auths": {
+      "query": "select * from alf_explicit_auths;",
+      "interval" : "{{ harden_darwin_osquery_snapshot_interval2 }}",
+      "snapshot": true,
+      "platform": "darwin",
+      "description": "ALF services explicitly allowed to perform networking"
+    },
+    "alf_services": {
+      "query": "select * from alf_services;",
+      "interval" : "{{ harden_darwin_osquery_snapshot_interval2 }}",
+      "snapshot": true,
+      "platform": "darwin",
+      "description": "OS X application layer firewall (Firewall) services"
+    },
+    "app_schemes": {
+      "query": "select * from app_schemes;",
+      "interval" : "{{ harden_darwin_osquery_snapshot_interval2 }}",
+      "snapshot": true,
+      "platform": "darwin",
+      "description": "OS X application schemes and handlers (e.g., http, file, mailto)"
+    },
+    "apps": {
+      "query": "select * from apps;",
+      "interval" : "{{ harden_darwin_osquery_snapshot_interval2 }}",
+      "snapshot": true,
+      "platform": "darwin",
+      "description": "OS X applications installed in known search paths (e.g., /Applications)"
+    },
+    "browser_plugins": {
+      "query": "select * from browser_plugins;",
+      "interval" : "{{ harden_darwin_osquery_snapshot_interval2 }}",
+      "snapshot": true,
+      "platform": "darwin",
+      "description": "All C/NPAPI browser plugin details for all users"
+    },
+    "certificates": {
+      "query": "select * from certificates;",
+      "interval" : "{{ harden_darwin_osquery_snapshot_interval2 }}",
+      "snapshot": true,
+      "platform": "darwin",
+      "description": "Certificate Authorities installed in Keychains/ca-bundles"
+    },
+    "crashes": {
+      "query": "select * from crashes;",
+      "interval" : "{{ harden_darwin_osquery_snapshot_interval2 }}",
+      "snapshot": true,
+      "platform": "darwin",
+      "description": "Application, System, and Mobile App crash logs"
+    },
+    "device_firmware": {
+      "query": "select * from device_firmware;",
+      "interval" : "{{ harden_darwin_osquery_snapshot_interval2 }}",
+      "snapshot": true,
+      "platform": "darwin",
+      "description": "A best-effort list of discovered firmware versions"
+    },
+    "disk_events": {
+      "query": "select * from disk_events;",
+      "interval" : "{{ harden_darwin_osquery_snapshot_interval2 }}",
+      "snapshot": true,
+      "platform": "darwin",
+      "description": "Track DMG disk image events (appearance/disappearance) when opened"
+    },
+    "gatekeeper": {
+      "query": "select * from gatekeeper;",
+      "interval" : "{{ harden_darwin_osquery_snapshot_interval2 }}",
+      "snapshot": true,
+      "platform": "darwin",
+      "description": "OS X Gatekeeper Details"
+    },
+    "gatekeeper_approved_apps": {
+      "query": "select * from gatekeeper_approved_apps;",
+      "interval" : "{{ harden_darwin_osquery_snapshot_interval2 }}",
+      "snapshot": true,
+      "platform": "darwin",
+      "description": "Gatekeeper apps a user has allowed to run"
+    },
+    "kernel_panics": {
+      "query": "select * from kernel_panics;",
+      "interval" : "{{ harden_darwin_osquery_snapshot_interval2 }}",
+      "snapshot": true,
+      "platform": "darwin",
+      "description": "System kernel panic logs"
+    },
+    "package_install_history": {
+      "query": "select * from package_install_history;",
+      "interval" : "{{ harden_darwin_osquery_snapshot_interval2 }}",
+      "snapshot": true,
+      "platform": "darwin",
+      "description": "OS X package install history"
+    },
+    "sandboxes": {
+      "query": "select * from sandboxes;",
+      "interval" : "{{ harden_darwin_osquery_snapshot_interval2 }}",
+      "snapshot": true,
+      "platform": "darwin",
+      "description": "OS X application sandboxes container details"
+    },
+    "shared_folders": {
+      "query": "select * from shared_folders;",
+      "interval" : "{{ harden_darwin_osquery_snapshot_interval2 }}",
+      "snapshot": true,
+      "platform": "darwin",
+      "description": "Folders available to others via SMB or AFP"
+    },
+    "wifi_networks": {
+      "query": "select * from wifi_networks;",
+      "interval" : "{{ harden_darwin_osquery_snapshot_interval2 }}",
+      "snapshot": true,
+      "platform": "darwin",
+      "description": "OS X known/remembered Wi-Fi networks list"
+    },
+    "xprotect_entries": {
+      "query": "select * from xprotect_entries;",
+      "interval" : "{{ harden_darwin_osquery_snapshot_interval2 }}",
+      "snapshot": true,
+      "platform": "darwin",
+      "description": "Database of the machine's XProtect signatures"
+    }
+  }
+}
+
