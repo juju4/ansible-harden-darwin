@@ -164,6 +164,8 @@
 
 - include: google-santa.yml
   when: harden_darwin_santa is defined and harden_darwin_santa
+  tags:
+    - santa
 
 - include: osquery.yml
   when: harden_darwin_osquery is defined and harden_darwin_osquery
@@ -172,6 +174,10 @@
   when: harden_darwin_ransomwhere
 - include: oversight.yml
   when: harden_darwin_oversight
+- include: blockblock.yml
+  when: harden_darwin_blockblock
+- include: knockknock.yml
+  when: harden_darwin_knockknock
 
 - include: immutable.yml
 - include: darwin-openbsm.yml

@@ -1,0 +1,29 @@
+---
+
+- set_fact:
+    app_name: KnockKnock
+    app_url: https://bitbucket.org/objective-see/deploy/downloads/KnockKnock_1.9.0.zip
+    app_checksum: 'sha1:86701b501fa9e37ad1b119df3c48dbbc132c81ed'
+
+- name: download {{ app_name }}
+  get_url:
+    url: "{{ app_url }}"
+    dest: "{{ install_archives }}/{{ app_url | basename }}"
+    mode: '0644'
+    checksum: "{{ app_checksum }}"
+  become: yes
+
+- name: decompress {{ app_name }}
+#  unarchive:
+#    src: "{{ install_archives }}/{{ app_url | basename }}"
+#    dest: "{{ install_archives }}"
+  command: "unzip -d {{ install_archives }} {{ install_archives }}/{{ app_url | basename }}"
+  args:
+    creates: "{{ install_archives }}/{{ app_name }}.app/Contents/MacOS/{{ app_name }}"
+  become: yes
+
+- block:
+    - include: "google-santa-whitelist.yml type=hash path={{ item }} action=whitelist match=White"
+      with_items:
+        - "{{ install_archives }}/{{ app_name }}.app/Contents/MacOS/{{ app_name }}"
+  when: harden_darwin_santa is defined and harden_darwin_santa and harden_darwin_santa_mode == 2

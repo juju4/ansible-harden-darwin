@@ -1,10 +1,10 @@
 ---
 
-## https://objective-see.com/products/ransomwhere.html
+## https://www.objective-see.com/products/blockblock.html
 - set_fact:
-    app_name: RansomWhere
-    app_url: https://bitbucket.org/objective-see/deploy/downloads/RansomWhere_1.1.0.zip
-    app_checksum: 'sha256:7b18e17abd8fb40d7c25f29f65d64a1f65c758d61c9f67c11d9722d1d7486ea9'
+    app_name: BlockBlock
+    app_url: https://bitbucket.org/objective-see/deploy/downloads/BlockBlock_0.9.7.zip
+    app_checksum: 'sha1:6b07d713afd43cb008239906b6b033e3f282a697'
 
 - name: download {{ app_name }}
   get_url:
@@ -14,7 +14,6 @@
     checksum: "{{ app_checksum }}"
   become: yes
 
-## FIXME! Unable to find '/private/var/_install/RansomWhere_1.1.0.zip' in expected paths.
 - name: decompress {{ app_name }}
 #  unarchive:
 #    src: "{{ install_archives }}/{{ app_url | basename }}"
@@ -34,14 +33,13 @@
 - name: install ransomwhere
   command: "{{ install_archives }}/{{ app_name }}.app/Contents/MacOS/{{ app_name }} -install"
   args:
-    creates: "/Library/RansomWhere/RansomWhere"
+    creates: "/Library/Objective-See/BlockBlock"
   become: yes
 
 - block:
     - include: "google-santa-whitelist.yml type=hash path={{ item }} action=whitelist match=White"
       with_items:
-        - "/Library/RansomWhere/RansomWhere"
+        - "/Library/Objective-See/BlockBlock"
   when: harden_darwin_santa is defined and harden_darwin_santa and harden_darwin_santa_mode == 2
 
-## can eventually replicate /Library/RansomWhere/approvedBinaries.plist
-
+# /Library/Objective-See/BlockBlock/whitelist.plist ?
