@@ -1,38 +1,43 @@
 ---
 ## https://objective-see.com/products/oversight.html
 
-- name: download oversight
+- set_fact:
+    app_name: OverSight_Installer
+    app_url: https://bitbucket.org/objective-see/deploy/downloads/OverSight_1.1.2.zip
+    app_checksum: 'sha256:4d930136f7e99880f7fb98cd195c47ee69b011c726be1e860ee4b43546386bd5'
+
+- name: download {{ app_name }}
   get_url:
-    url: https://bitbucket.org/objective-see/deploy/downloads/OverSight_1.1.2.zip
-    dest: "{{ install_archives }}/OverSight_1.1.2.zip"
+    url: "{{ app_url }}"
+    dest: "{{ install_archives }}/{{ app_url | basename }}"
     mode: '0644'
-    sha256sum: "4d930136f7e99880f7fb98cd195c47ee69b011c726be1e860ee4b43546386bd5"
+    checksum: "{{ app_checksum }}"
   become: yes
 
-- name: decompress oversight
+- name: decompress {{ app_name }}
 #  unarchive:
-#    src: "{{ install_archives }}/oversight_1.1.0.zip"
+#    src: "{{ install_archives }}/{{ app_url | basename }}"
 #    dest: "{{ install_archives }}"
-  command: "unzip -d {{ install_archives }} {{ install_archives }}/OverSight_1.1.2.zip"
+  command: "unzip -d {{ install_archives }} {{ install_archives }}/{{ app_url | basename }}"
   args:
-    creates: "{{ install_archives }}/oversight.app/Contents/MacOS/oversight"
+    creates: "{{ install_archives }}/{{ app_name }}.app/Contents/MacOS/{{ app_name }}"
   become: yes
 
 - block:
     - include: "google-santa-whitelist.yml type=hash path={{ item }} action=whitelist match=White"
       with_items:
-        - "{{ install_archives }}/oversight.app/Contents/MacOS/oversight"
+        - "{{ install_archives }}/{{ app_name }}.app/Contents/MacOS/{{ app_name }}"
   when: harden_darwin_santa is defined and harden_darwin_santa and harden_darwin_santa_mode == 2
 
 ## FIXME! always return 'install ok' and rc = 0
 - name: install oversight
-  command: "{{ install_archives }}/oversight.app/Contents/MacOS/oversight -install"
+  command: "{{ install_archives }}/{{ app_name }}.app/Contents/MacOS/{{ app_name }} -install"
   args:
-    creates: "/Library/oversight/oversight"
+    creates: "/OverSight_Helper.app/Contents/XPCServices"
   become: yes
 
 - block:
     - include: "google-santa-whitelist.yml type=hash path={{ item }} action=whitelist match=White"
       with_items:
-        - "/Library/oversight/oversight"
+        - "/Applications/OverSight.app/Contents/Library/LoginItems/OverSightXPC.xpc"
   when: harden_darwin_santa is defined and harden_darwin_santa and harden_darwin_santa_mode == 2
