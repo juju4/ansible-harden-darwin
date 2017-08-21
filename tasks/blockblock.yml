@@ -20,18 +20,18 @@
 #    dest: "{{ install_archives }}"
   command: "unzip -d {{ install_archives }} {{ install_archives }}/{{ app_url | basename }}"
   args:
-    creates: "{{ install_archives }}/{{ app_name }}.app/Contents/MacOS/{{ app_name }}"
+    creates: "{{ install_archives }}/{{ app_name }}_Installer.app/Contents/MacOS/{{ app_name }}"
   become: yes
 
 - block:
     - include: "google-santa-whitelist.yml type=hash path={{ item }} action=whitelist match=White"
       with_items:
-        - "{{ install_archives }}/{{ app_name }}.app/Contents/MacOS/{{ app_name }}"
+        - "{{ install_archives }}/{{ app_name }}_Installer.app/Contents/MacOS/{{ app_name }}"
   when: harden_darwin_santa is defined and harden_darwin_santa and harden_darwin_santa_mode == 2
 
 ## FIXME! always return 'install ok' and rc = 0
-- name: install ransomwhere
-  command: "{{ install_archives }}/{{ app_name }}.app/Contents/MacOS/{{ app_name }} -install"
+- name: install {{ app_name }}
+  command: "{{ install_archives }}/{{ app_name }}_Installer.app/Contents/MacOS/{{ app_name }} -install"
   args:
     creates: "/Library/Objective-See/BlockBlock"
   become: yes
