@@ -179,7 +179,7 @@
 - include: knockknock.yml
   when: harden_darwin_knockknock
 - include: lulu.yml
-  when: harden_darwin_lulu
+  when: harden_darwin_lulu and ansible_distribution_version | version_compare( '10.12', '>=')
 
 - include: immutable.yml
 - include: darwin-openbsm.yml
