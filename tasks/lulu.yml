@@ -1,0 +1,29 @@
+---
+
+## https://www.objective-see.com/products/lulu.html
+## kernel extension so probably issue with upcoming high sierra
+
+- name: git clone Lulu repo
+  git:
+    url: https://github.com/objective-see/LuLu.git
+    dest: "{{ install_archives }}"
+
+## ignore_errors because of santa
+- name: configure and install Lulu
+  command: "configure.sh -install"
+  args:
+    chdir: "{{ install_archives }}/configure"
+  become: yes
+  ignore_errors: true
+
+- block:
+    - include: "google-santa-whitelist.yml type=hash path={{ item }} action=whitelist match=White"
+      with_items:
+        - "/Applications/LuLu.app/Contents/MacOS/LuLu"
+  when: harden_darwin_santa is defined and harden_darwin_santa and harden_darwin_santa_mode == 2
+
+- name: install Lulu
+  command: "/Applications/LuLu.app/Contents/MacOS/LuLu -install"
+#  args:
+#    creates: "/Library/XXXX"
+  become: yes

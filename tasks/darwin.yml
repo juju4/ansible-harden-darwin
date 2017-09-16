@@ -178,6 +178,8 @@
   when: harden_darwin_blockblock
 - include: knockknock.yml
   when: harden_darwin_knockknock
+- include: lulu.yml
+  when: harden_darwin_lulu
 
 - include: immutable.yml
 - include: darwin-openbsm.yml
