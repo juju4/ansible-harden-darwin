@@ -10,7 +10,7 @@
 
 ## ignore_errors because of santa
 - name: configure and install Lulu
-  command: "configure.sh -install"
+  command: "./configure.sh -install"
   args:
     chdir: "{{ install_archives }}/lulu/configure"
   become: yes
