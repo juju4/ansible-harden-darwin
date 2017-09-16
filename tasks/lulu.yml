@@ -5,7 +5,7 @@
 
 - name: git clone Lulu repo
   git:
-    url: https://github.com/objective-see/LuLu.git
+    repo: https://github.com/objective-see/LuLu.git
     dest: "{{ install_archives }}"
 
 ## ignore_errors because of santa
