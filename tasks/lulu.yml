@@ -6,13 +6,13 @@
 - name: git clone Lulu repo
   git:
     repo: https://github.com/objective-see/LuLu.git
-    dest: "{{ install_archives }}"
+    dest: "{{ install_archives }}/lulu"
 
 ## ignore_errors because of santa
 - name: configure and install Lulu
   command: "configure.sh -install"
   args:
-    chdir: "{{ install_archives }}/configure"
+    chdir: "{{ install_archives }}/lulu/configure"
   become: yes
   ignore_errors: true
 
