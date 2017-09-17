@@ -330,7 +330,7 @@ harden_darwin_certificates_cn_denytrust:
 ## no common name??? TW
 #  - ePKI Root Certification Authority      ## not working
   - Federal Common Policy CA
-  - GeoTrust Global CA
+#  - GeoTrust Global CA                     # www.google.com, www.youtube.com
   - GeoTrust Primary Certification Authority
   - GeoTrust Primary Certification Authority - G2
   - GeoTrust Primary Certification Authority - G3
