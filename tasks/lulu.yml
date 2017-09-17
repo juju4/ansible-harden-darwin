@@ -12,7 +12,8 @@
 - name: configure and install Lulu
   command: "./configure.sh -install"
   args:
-    chdir: "{{ install_archives }}/lulu/configure"
+    chdir: "{{ install_archives }}/lulu/deploy"
+    creates: "/Applications/LuLu.app/Contents/MacOS/LuLu"
   become: yes
   ignore_errors: true
 

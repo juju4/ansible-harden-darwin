@@ -36,10 +36,4 @@
     creates: "/Library/Objective-See/BlockBlock"
   become: yes
 
-- block:
-    - include: "google-santa-whitelist.yml type=hash path={{ item }} action=whitelist match=White"
-      with_items:
-        - "/Library/Objective-See/BlockBlock"
-  when: harden_darwin_santa is defined and harden_darwin_santa and harden_darwin_santa_mode == 2
-
 # /Library/Objective-See/BlockBlock/whitelist.plist ?
