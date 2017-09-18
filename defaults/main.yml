@@ -315,7 +315,7 @@ harden_darwin_certificates_cn_denytrust:
   - DigiCert Global Root CA
   - DigiCert Global Root G2
   - DigiCert Global Root G3
-  - DigiCert High Assurance EV Root CA
+#  - DigiCert High Assurance EV Root CA # github.com
   - DigiCert Trusted Root G4
   - DST ACES CA X6
 #  - DST Root CA X3         # Let's Encrypt Authority X3
