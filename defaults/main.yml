@@ -337,7 +337,7 @@ harden_darwin_certificates_cn_denytrust:
   - Global Chambersign Root
   - Global Chambersign Root - 2008
 #  - GlobalSign                             # www.sophos.com
-  - GlobalSign Root CA                      # www.buzzfeed.com
+#  - GlobalSign Root CA                      # www.buzzfeed.com, www.sans.org
 ## no common name??? TW
 #  - Government Root Certification Authority      ## multiple/not working
   - Hellenic Academic and Research Institutions RootCA 2011
