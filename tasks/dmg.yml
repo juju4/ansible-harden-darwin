@@ -43,4 +43,3 @@
     - include: dmginstall.yml
       when: "{{ version | version_compare( currentversion.stdout, '>') }}"
   when: app.stat.exists
-
