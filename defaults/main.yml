@@ -452,4 +452,5 @@ harden_darwin_mobileconfigs: []
 install_archives: /private/var/_install
 backupdir: /var/_backup
 
-
+harden_darwin_testing: false
+harden_darwin_testing_inspec: true

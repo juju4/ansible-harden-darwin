@@ -1,0 +1,21 @@
+---
+
+- block:
+# macports? brew?
+#    - name: testing | Ensure ruby is present
+#      package:
+#        name: ruby
+#        state: present
+
+    - name: testing | Ensure inspec is present
+      gem:
+        name: inspec
+        state: present
+
+    - name: testing | run macos-baseline
+      shell: "inspec exec https://github.com/juju4/macos-baseline | tee /var/log/inspec.log"
+      ignore_errors: true
+      register: inspeclog
+    - debug: var=inspeclog.stdout_lines
+
+  when: harden_testing_inspec

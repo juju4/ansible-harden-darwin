@@ -12,3 +12,5 @@
   include: darwin.yml
   when: ansible_os_family == "Darwin"
 
+- include: testing.yml
+  when: harden_darwin_testing
