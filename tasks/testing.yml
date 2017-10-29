@@ -18,4 +18,4 @@
       register: inspeclog
     - debug: var=inspeclog.stdout_lines
 
-  when: harden_testing_inspec
+  when: harden_darwin_testing_inspec
