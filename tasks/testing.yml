@@ -1,11 +1,12 @@
 ---
 
 - block:
+# base ruby/travis/macos 10.11 = 2.0. inspec requires 2.2+
 # macports? brew?
-#    - name: testing | Ensure ruby is present
-#      package:
-#        name: ruby
-#        state: present
+    - name: testing | Ensure recent ruby is present
+      homebrew:
+        name: ruby
+        state: present
 
     - name: testing | Ensure inspec is present
       gem:
