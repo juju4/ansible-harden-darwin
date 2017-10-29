@@ -3,10 +3,10 @@
   // Configure the daemon below:
   "options": {
     // Select the osquery config plugin.
-    "config_plugin": "filesystem",
+    "config_plugin": "{{ harden_darwin_osquery_config_plugin }}",
 
     // Select the osquery logging plugin.
-    "logger_plugin": "filesystem",
+    "logger_plugin": "{{ harden_darwin_osquery_logger_plugin }}",
 
     // The log directory stores info, warning, and errors.
     // If the daemon uses the 'filesystem' logging retriever then the log_dir
@@ -68,7 +68,7 @@
 //      "query": "select target_path, category, time, action from file_events;",
       "query": "select * from file_events;",
       "removed": false,
-      "interval": 300
+      "interval": {{ harden_darwin_osquery_fim_interval }}
     }{% if harden_darwin_osquery_hw_events or harden_darwin_osquery_disk_events %},{% endif %}
 
 {% endif %}
@@ -89,23 +89,27 @@
 
 {% if harden_darwin_osquery_fim %}
   "file_paths": {
-    "homes": [
-      "/var/root/.ssh/%%",
-      "/Users/%/.ssh/%%"
-    ],
-    "etc": [
-      "/private/etc/%%"
-    ],
-    "tmp": [
-      "/private/tmp/%%"
-    ],
-    "bin": [
-      "/bin/%%",
-      "/sbin/%%"
-    ],
-    "webroot": [
-      "/var/www/%%"
-    ]
+{% for item in harden_darwin_osquery_fim_filepaths %}
+    "{{ item.name }}": [
+{% for entry in item.list %}
+      "{{ entry }}"{% if not loop.last %},{% endif %}
+
+{% endfor %}
+    ]{% if not loop.last %},{% endif %}
+
+{% endfor %}
+  },
+  "exclude_paths": {
+{% for item in harden_darwin_osquery_fim_excludepaths %}
+    "{{ item.name }}": [
+{% for entry in item.list %}
+      "{{ entry }}"{% if not loop.last %},{% endif %}
+
+{% endfor %}
+    ]{% if not loop.last %},{% endif %}
+
+{% endfor %}
+
   },
 
 {% endif %}
