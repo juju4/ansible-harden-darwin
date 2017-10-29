@@ -204,6 +204,8 @@ harden_darwin_osquery_template: 'osquery.conf.j2'
 ## fim on macos requires kernel module and extra actions
 ## Process file access is Experimental: https://osquery.readthedocs.io/en/stable/deployment/file-integrity-monitoring/
 harden_darwin_osquery_fim: false
+harden_darwin_osquery_hw_events: false
+harden_darwin_osquery_disk_events: false
 ## extra files to upload as packs
 harden_darwin_osquery_upload_packs:
     - "osquery-darwin-pack"
