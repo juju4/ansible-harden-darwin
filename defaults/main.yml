@@ -205,7 +205,9 @@ harden_darwin_osquery_template: 'osquery.conf.j2'
 ## Process file access is Experimental: https://osquery.readthedocs.io/en/stable/deployment/file-integrity-monitoring/
 harden_darwin_osquery_fim: false
 ## extra files to upload as packs
-harden_darwin_osquery_upload_packs: []
+harden_darwin_osquery_upload_packs:
+    - "osquery-darwin-pack"
+    - "osquery-darwin-snapshots-pack"
 harden_darwin_osquery_packs:
     - "osquery-monitoring"
     - "incident-response"
@@ -213,6 +215,7 @@ harden_darwin_osquery_packs:
     - "osx-attacks"
     - "vuln-management"
     - "hardware-monitoring"
+    - "osquery-darwin-pack"
     - "osquery-darwin-snapshots-pack"
 harden_darwin_osquery_snapshot_interval: 604800
 harden_darwin_osquery_snapshot_interval2: 604800
@@ -260,6 +263,7 @@ harden_darwin_certificates_cn_delete: []
 ## $ openssl s_client -showcerts -connect advancedhomeserver.com:443 |grep issuer= GoDaddy???
 ##          www.siemplify.co? www.osfi-bsif.gc.ca?
 ## https://support.apple.com/en-us/HT205204
+## + init.itunes.apple.com
 #harden_darwin_certificates_cn_denytrust: []
 harden_darwin_certificates_cn_denytrust:
 ## To be completed... from ElCapitan/10.11
