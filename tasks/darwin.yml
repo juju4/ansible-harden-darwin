@@ -5,6 +5,13 @@
 ## just to ensure playbook doesn't get block by google santa during provisioning
 - include: "google-santa-whitelist.yml type=hash path=/System/Library/Frameworks/Python.framework/Versions/2.7/Resources/Python.app/Contents/MacOS/Python action=whitelist match=White"
 
+- name: Check if developer tools are installed
+  stat:
+    path: /Applications/Xcode.app
+  register: devtools
+- fail: msg="FATAL! Missing Xcode and developper tools."
+  when: harden_darwin_hard_fail_developertools
+
 - name: ensure archives directory exists
   file: dest="{{ install_archives }}" mode=0755 state=directory
   become: yes
@@ -13,10 +20,11 @@
 
 - name: check wake for network access status
   command: "/usr/sbin/systemsetup -getwakeonnetworkaccess"
+  changed_when: false
   register: wakestate
 - name: disable wake for network access
   command: "/usr/sbin/systemsetup -setwakeonnetworkaccess off"
-  when: "'Off' not in wakestate.stdout"
+  when: "'Off' not in wakestate.stdout and 'Not supported on this machine.' not in wakestate.stdout"
 
 ## http://www.macos.utah.edu/documentation/administration/pmset.html
 ## FIXME! not idempotent
@@ -139,7 +147,7 @@
   git:
     repo=https://github.com/nowsecure/fsmon.git
     dest={{ install_archives }}/fsmon
-  when: not fsmon.stat.exists
+  when: not fsmon.stat.exists and devtools.stat.exists
 
 ## https://github.com/iSECPartners/yontma-mac
 
@@ -179,7 +187,7 @@
 - include: knockknock.yml
   when: harden_darwin_knockknock
 - include: lulu.yml
-  when: harden_darwin_lulu and ansible_distribution_version | version_compare( '10.12', '>=')
+  when: harden_darwin_lulu and ansible_distribution_version | version_compare( '10.12', '>=') and devtools.stat.exists
 
 - include: immutable.yml
 - include: darwin-openbsm.yml
