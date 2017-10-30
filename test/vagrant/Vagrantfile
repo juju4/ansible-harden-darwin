@@ -1,0 +1,34 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+VAGRANTFILE_API_VERSION = "2"
+ENV['VAGRANT_DEFAULT_PROVIDER'] = 'virtualbox'
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+    # Testing only. trust or not trust...
+    config.vm.box = "jhcook/macos-sierra"
+    #config.vm.box = "iseo_tech/OS-X-10.11-El-Capitan-Xcode-8.2"
+
+    config.vm.provision :ansible do |ansible|
+       ansible.playbook = "site.yml"
+       ansible.verbose = "vv"
+       #ansible.host_key_checking = false
+       #ansible.limit = 'all'
+       ansible.become = true
+       ansible.extra_vars = { ansible_ssh_user: 'vagrant' }
+       ansible.groups = {
+          "vagrantselect" => ["vhardendarwin" ],
+       }
+    end
+
+    config.vm.define "vhardendarwin" do |vhardendarwin|
+        vhardendarwin.vm.hostname = "vhardendarwin"
+        vhardendarwin.vm.provider "virtualbox" do |v|
+          v.memory = 2048
+        end
+    end
+
+    # shared folder not working on elcapitan
+    config.vm.synced_folder ".", "/vagrant", disabled: true
+end
+
