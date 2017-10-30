@@ -1,25 +1,8 @@
 ---
 
 - block:
-    - set_fact:
-        testing_user: travis
-      when: travisci
-# base ruby/travis/macos 10.11 = 2.0. inspec requires 2.2+
-# macports? brew?
-    - name: testing | Ensure recent ruby is present
-      homebrew:
-        name: ruby
-        state: present
-      become: yes
-      become_user: "{{ testing_user }}"
-
-    - name: testing | Ensure inspec is present
-      gem:
-        name: inspec
-        state: present
-
     - name: testing | run macos-baseline
-      shell: "inspec exec https://github.com/juju4/macos-baseline | tee /var/log/inspec.log"
+      shell: "/usr/local/bin/inspec exec https://github.com/juju4/macos-baseline | tee /var/log/inspec.log"
       ignore_errors: true
       register: inspeclog
     - debug: var=inspeclog.stdout_lines
