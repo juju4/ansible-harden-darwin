@@ -38,6 +38,12 @@
       "interval" : "{{ harden_darwin_osquery_snapshot_interval }}",
       "snapshot": true
     },
+    "interface_addresses": {
+      "query" : "select * from interface_addresses;",
+      "description" : "Retrieves interface addresses.",
+      "interval" : "{{ harden_darwin_osquery_snapshot_interval }}",
+      "snapshot": true
+    },
     "interface_details": {
       "query" : "select * from interface_details;",
       "description" : "Retrieves interface details.",
