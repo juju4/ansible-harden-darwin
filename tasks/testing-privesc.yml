@@ -17,8 +17,10 @@
   unarchive:
     src: /tmp/unix-privesc-check-1.4.tar.gz
     dest: /tmp/
-  become: yes
-  become_user: _test
+    owner: _test
+# Failed to set permissions on the temporary files Ansible needs to create when becoming an unprivileged user (rc: 1, err: chown: /tmp/ansible-tmp-XXX: Operation not permitted\nchown: /tmp/ansible-tmp-XXX/stat.py: Operation not permitted\n}). For information on working around this, see https://docs.ansible.com/ansible/become.html#becoming-an-unprivileged-user
+#  become: yes
+#  become_user: _test
 
 - name: execute unix-privesc-check
   shell: "/tmp/unix-privesc-check-1.4/unix-privesc-check detailed | tee /tmp/unix-privesc-check.out"
