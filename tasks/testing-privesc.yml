@@ -1,0 +1,78 @@
+---
+# https://isc.sans.edu/forums/diary/Finding+Privilege+Escalation+Flaws+in+Linux/19207
+
+- name: Ensure user _test is present
+  user:
+    name: _test
+    state: present
+
+- name: retrieve unix-privesc-check
+  get_url:
+    url: http://pentestmonkey.net/tools/unix-privesc-check/unix-privesc-check-1.4.tar.gz
+    dest: /tmp/unix-privesc-check-1.4.tar.gz
+    checksum: 'sha256:e1f85e7f69fabadd23756a3d76a0e3d864b21e28763b60ce2e6181290d1c1969'
+    mode: '0644'
+
+- name: unarchive unix-privesc-check
+  unarchive:
+    src: /tmp/unix-privesc-check-1.4.tar.gz
+    dest: /tmp/
+  become: yes
+  become_user: _test
+
+- name: execute unix-privesc-check
+  shell: "/tmp/unix-privesc-check-1.4/unix-privesc-check detailed | tee /tmp/unix-privesc-check.out"
+  ignore_errors: true
+  register: privcheck
+  args:
+    creates: /tmp/unix-privesc-check.out
+  become: yes
+  become_user: _test
+
+#- debug: var=privcheck.stdout_lines
+- name: grep error+warning of unix-privesc
+  shell: egrep --color=always '(ERROR|WARNING)' /tmp/unix-privesc-check.out | grep -v "Can't find full path of running program:" | sort | uniq
+  changed_when: false
+  ignore_errors: true
+
+- name: retrieve linuxprivchecker
+  get_url:
+    url: http://www.securitysift.com/download/linuxprivchecker.py
+    dest: /tmp/linuxprivchecker.py
+    checksum: 'sha256:d5002d499e3b3653a9505b2781f51d6d38507816b7eb9e9367d2c59fadfcac8c'
+    mode: '0644'
+  become: yes
+  become_user: _test
+
+- name: execute unix-privesc-check
+  shell: "python /tmp/linuxprivchecker.py | tee /tmp/linuxprivchecker.out"
+  ignore_errors: true
+  register: linuxprivchecker
+  args:
+    creates: /tmp/linuxprivchecker.out
+  become: yes
+  become_user: _test
+
+#- debug: var=linuxprivchecker.stdout_lines
+
+# http://www.kitploit.com/2017/11/kernelpop-kernel-privilege-escalation.html
+# https://github.com/spencerdodd/kernelpop
+- name: retrieve kernelpop
+  git:
+    repo: 'https://github.com/spencerdodd/kernelpop'
+    dest: /home/_test/kernelpop
+    version: HEAD
+  become: yes
+  become_user: _test
+
+- name: ensure python3 is present
+  package:
+    name: python3
+    state: present
+
+- name: execute kernelpop
+  shell: "python3 kernelpop.py -b | tee /tmp/kernelpop.out"
+  args:
+    chdir: /home/_test/kernelpop
+  become: yes
+  become_user: _test

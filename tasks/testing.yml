@@ -8,3 +8,6 @@
     - debug: var=inspeclog.stdout_lines
 
   when: harden_darwin_testing_inspec
+
+- include: testing-privesc.yml
+  when: harden_darwin_testing_privesc
