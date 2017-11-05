@@ -13,11 +13,16 @@
     checksum: 'sha256:e1f85e7f69fabadd23756a3d76a0e3d864b21e28763b60ce2e6181290d1c1969'
     mode: '0644'
 
+# Make sure the required command to extract the file is installed. Command \"/usr/bin/tar\" detected as tar type bsd. GNU tar required.
 - name: unarchive unix-privesc-check
-  unarchive:
-    src: /tmp/unix-privesc-check-1.4.tar.gz
-    dest: /tmp/
-    owner: _test
+#  unarchive:
+#    src: /tmp/unix-privesc-check-1.4.tar.gz
+#    dest: /tmp/
+#    owner: _test
+  shell: gunzip -c /tmp/unix-privesc-check-1.4.tar.gz | tar xf
+  args:
+    chdir: /tmp
+    creates: /tmp/unix-privesc-check-1.4/unix-privesc-check
 # Failed to set permissions on the temporary files Ansible needs to create when becoming an unprivileged user (rc: 1, err: chown: /tmp/ansible-tmp-XXX: Operation not permitted\nchown: /tmp/ansible-tmp-XXX/stat.py: Operation not permitted\n}). For information on working around this, see https://docs.ansible.com/ansible/become.html#becoming-an-unprivileged-user
 #  become: yes
 #  become_user: _test
