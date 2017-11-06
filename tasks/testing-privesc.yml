@@ -19,7 +19,7 @@
 #    src: /tmp/unix-privesc-check-1.4.tar.gz
 #    dest: /tmp/
 #    owner: _test
-  shell: gunzip -c /tmp/unix-privesc-check-1.4.tar.gz | tar xf
+  shell: gunzip -c /tmp/unix-privesc-check-1.4.tar.gz | tar xf -
   args:
     chdir: /tmp
     creates: /tmp/unix-privesc-check-1.4/unix-privesc-check
