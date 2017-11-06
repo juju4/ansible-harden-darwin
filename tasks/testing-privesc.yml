@@ -48,6 +48,7 @@
     dest: /tmp/linuxprivchecker.py
     checksum: 'sha256:d5002d499e3b3653a9505b2781f51d6d38507816b7eb9e9367d2c59fadfcac8c'
     mode: '0644'
+    validate_certs: false
 #  become: yes
 #  become_user: _test
   ignore_errors: true
@@ -69,7 +70,7 @@
 - name: retrieve kernelpop
   git:
     repo: 'https://github.com/spencerdodd/kernelpop'
-    dest: /home/_test/kernelpop
+    dest: /Users/_test/kernelpop
     version: HEAD
 #  become: yes
 #  become_user: _test
@@ -82,6 +83,6 @@
 - name: execute kernelpop
   shell: "python3 kernelpop.py -b | tee /tmp/kernelpop.out"
   args:
-    chdir: /home/_test/kernelpop
+    chdir: /Users/_test/kernelpop
 #  become: yes
 #  become_user: _test
