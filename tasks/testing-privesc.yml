@@ -33,8 +33,8 @@
   register: privcheck
   args:
     creates: /tmp/unix-privesc-check.out
-  become: yes
-  become_user: _test
+#  become: yes
+#  become_user: _test
 
 #- debug: var=privcheck.stdout_lines
 - name: grep error+warning of unix-privesc
@@ -57,8 +57,8 @@
   register: linuxprivchecker
   args:
     creates: /tmp/linuxprivchecker.out
-  become: yes
-  become_user: _test
+#  become: yes
+#  become_user: _test
 
 #- debug: var=linuxprivchecker.stdout_lines
 
@@ -69,8 +69,8 @@
     repo: 'https://github.com/spencerdodd/kernelpop'
     dest: /home/_test/kernelpop
     version: HEAD
-  become: yes
-  become_user: _test
+#  become: yes
+#  become_user: _test
 
 - name: ensure python3 is present
   package:
@@ -81,5 +81,5 @@
   shell: "python3 kernelpop.py -b | tee /tmp/kernelpop.out"
   args:
     chdir: /home/_test/kernelpop
-  become: yes
-  become_user: _test
+#  become: yes
+#  become_user: _test
