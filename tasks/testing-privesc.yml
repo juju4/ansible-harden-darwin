@@ -50,6 +50,7 @@
     mode: '0644'
 #  become: yes
 #  become_user: _test
+  ignore_errors: true
 
 - name: execute unix-privesc-check
   shell: "python /tmp/linuxprivchecker.py | tee /tmp/linuxprivchecker.out"
@@ -59,6 +60,7 @@
     creates: /tmp/linuxprivchecker.out
 #  become: yes
 #  become_user: _test
+  ignore_errors: true
 
 #- debug: var=linuxprivchecker.stdout_lines
 
