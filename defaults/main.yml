@@ -305,7 +305,7 @@ harden_darwin_certificates_cn_denytrust:
   - AddTrust Class 1 CA Root
 #  - AddTrust External CA Root      # = news.ycombinator.com, isc.sans.edu
   - Admin-Root-CA
-  - AffirmTrust Commercial         # www.trendmicro.com, blog.trendmicro.com
+#  - AffirmTrust Commercial         # www.trendmicro.com, blog.trendmicro.com, zerodayinitiative.com
   - AffirmTrust Networking
   - AffirmTrust Premium
   - AffirmTrust Premium ECC
