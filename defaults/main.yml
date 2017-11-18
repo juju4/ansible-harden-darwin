@@ -219,6 +219,7 @@ harden_darwin_osquery_packs:
     - "osx-attacks"
     - "vuln-management"
     - "hardware-monitoring"
+    - unwanted-chrome-extensions
     - "osquery-darwin-pack"
     - "osquery-darwin-snapshots-pack"
 harden_darwin_osquery_snapshot_interval: 604800
