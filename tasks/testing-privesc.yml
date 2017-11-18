@@ -84,7 +84,7 @@
     state: present
 
 - name: execute kernelpop
-  shell: "python36 kernelpop.py -b | tee /tmp/kernelpop.out"
+  shell: "/opt/local/bin/python36 kernelpop.py -b | tee /tmp/kernelpop.out"
   args:
     chdir: /Users/_test/kernelpop
 #  become: yes
