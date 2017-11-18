@@ -77,7 +77,7 @@
 
 - name: ensure python3 is present
   macports:
-    name: python3
+    name: python36
     state: present
 
 - name: execute kernelpop
