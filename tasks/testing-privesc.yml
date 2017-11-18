@@ -75,6 +75,7 @@
     repo: 'https://github.com/spencerdodd/kernelpop'
     dest: /Users/_test/kernelpop
     version: HEAD
+    update: no
 #  become: yes
 #  become_user: _test
 
