@@ -50,7 +50,7 @@
 #    checksum: 'sha256:d5002d499e3b3653a9505b2781f51d6d38507816b7eb9e9367d2c59fadfcac8c'
 #    mode: '0644'
 #    validate_certs: false
-   command: "curl -O /tmp/linuxprivchecker.py https://www.securitysift.com/download/linuxprivchecker.py"
+  command: "curl -so /tmp/linuxprivchecker.py https://www.securitysift.com/download/linuxprivchecker.py"
 #  become: yes
 #  become_user: _test
   ignore_errors: true
