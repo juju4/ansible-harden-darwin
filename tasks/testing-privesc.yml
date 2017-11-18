@@ -55,15 +55,16 @@
 #  become_user: _test
   ignore_errors: true
 
-- name: execute unix-privesc-check
-  shell: "python /tmp/linuxprivchecker.py | tee /tmp/linuxprivchecker.out"
-  ignore_errors: true
-  register: linuxprivchecker
-  args:
-    creates: /tmp/linuxprivchecker.out
-#  become: yes
-#  become_user: _test
-  ignore_errors: true
+## FIXME! silent??? No output has been received in the last 10m0s
+#- name: execute unix-privesc-check
+#  shell: "python /tmp/linuxprivchecker.py | tee /tmp/linuxprivchecker.out"
+#  ignore_errors: true
+#  register: linuxprivchecker
+#  args:
+#    creates: /tmp/linuxprivchecker.out
+##  become: yes
+##  become_user: _test
+#  ignore_errors: true
 
 #- debug: var=linuxprivchecker.stdout_lines
 
