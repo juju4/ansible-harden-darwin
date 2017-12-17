@@ -23,8 +23,8 @@
         - "/Applications/LuLu.app/Contents/MacOS/LuLu"
   when: harden_darwin_santa is defined and harden_darwin_santa and harden_darwin_santa_mode == 2
 
-- name: install Lulu
-  command: "/Applications/LuLu.app/Contents/MacOS/LuLu -install"
+#- name: install Lulu
+#  command: "/Applications/LuLu.app/Contents/MacOS/LuLu -install"
 #  args:
 #    creates: "/Library/XXXX"
-  become: yes
+#  become: yes
