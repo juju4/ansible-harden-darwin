@@ -83,8 +83,6 @@
   macports:
     name: python36
     state: present
-  environment:
-    PATH: /opt/local/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin
 
 - name: execute kernelpop
   shell: "/opt/local/bin/python3.6 kernelpop.py -b | tee /tmp/kernelpop.out"
