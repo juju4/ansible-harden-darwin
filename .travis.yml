@@ -13,7 +13,6 @@ install:
   - uname -a
   - python --version
   - brew update
-  - brew install python3
 #  - which pip
 ## error: could not create '/Library/Python/2.7/site-packages/ansible': Permission denied
 #  - pip install ansible ansible-lint
