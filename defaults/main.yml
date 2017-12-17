@@ -97,8 +97,6 @@ harden_darwin_osxconfigcheck: false
 
 
 ### extra tools (use role juju4.macos-apps-install for application install, only doing configuration)
-## dnscrypt
-harden_darwin_dnscrypt: true
 
 ## install google santa. mode 0 = Monitor, 1 = Blacklist, 2 = Whitelist
 harden_darwin_santa: true

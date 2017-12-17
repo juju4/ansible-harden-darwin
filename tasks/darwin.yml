@@ -161,9 +161,6 @@
 - include: wpad-disable.yml
   when: harden_darwin_disable_wpad is defined and harden_darwin_disable_wpad
 
-- include: dnscrypt.yml
-  when: harden_darwin_dnscrypt is defined and harden_darwin_dnscrypt
-
 - include: osxlockdown.yml
   when: harden_darwin_osxlockdown is defined and harden_darwin_osxlockdown
 
