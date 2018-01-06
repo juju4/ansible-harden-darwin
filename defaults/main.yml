@@ -486,5 +486,6 @@ backupdir: /var/_backup
 harden_darwin_testing: false
 harden_darwin_testing_inspec: true
 harden_darwin_testing_privesc: true
+harden_darwin_testing_speculative: true
 
 harden_darwin_hard_fail_developertools: true

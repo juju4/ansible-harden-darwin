@@ -11,3 +11,6 @@
 
 - include: testing-privesc.yml
   when: harden_darwin_testing_privesc
+
+- include: testing-speculative.yml
+  when: harden_darwin_testing_speculative
