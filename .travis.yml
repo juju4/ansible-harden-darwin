@@ -6,8 +6,8 @@ os:
 #language: python
 #python: "2.7"
 before_install:
- - ln -s ansible-harden-darwin ../juju4.harden-darwin
- - "[ -f get-dependencies.sh ] && sh -x get-dependencies.sh"
+  - ln -s ansible-harden-darwin ../juju4.harden-darwin
+  - "[ -f get-dependencies.sh ] && sh -x get-dependencies.sh"
   - sw_vers
   - uname -a
   - brew update
