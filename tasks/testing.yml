@@ -2,9 +2,11 @@
 
 - block:
     - name: testing | run macos-baseline
-      shell: "/usr/local/bin/inspec exec https://github.com/juju4/macos-baseline | tee /var/log/inspec.log"
+      shell: "/usr/local/bin/inspec exec https://github.com/juju4/macos-baseline/archive/master.tar.gz | tee /var/log/inspec.log"
       ignore_errors: true
       register: inspeclog
+      args:
+        creates: /var/log/inspec.log
     - debug: var=inspeclog.stdout_lines
 
   when: harden_darwin_testing_inspec
