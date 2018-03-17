@@ -15,8 +15,10 @@ before_install:
   - brew install openssl
   - brew upgrade openssl
   - brew ls --verbose openssl
-  - brew install python3
-  - brew doctor
+#  - brew install python3
+  - brew upgrade python
+  - brew update
+  - brew doctor || true
   - python --version
 #  - pip --version
   - python -c "import ssl; print(ssl.OPENSSL_VERSION)"
@@ -34,6 +36,7 @@ install:
   - brew install ansible
 #  - pip3 install ansible
   - ansible --version
+  - which ansible
   - "{ echo '[defaults]'; echo 'roles_path = ../'; } >> ansible.cfg"
 script:
   - "echo \"[test-kitchen]\nlocalhost\" > inventory"
