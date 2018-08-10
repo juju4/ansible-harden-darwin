@@ -3,7 +3,14 @@
 ## http://csrc.nist.gov/publications/drafts/800-179/sp800_179_draft.pdf
 
 ## just to ensure playbook doesn't get block by google santa during provisioning
+# OSX 10.13+: can't do it without GUI interaction...
+- name: check santa kernel driver is loaded
+  shell: "kextstat | grep -q com.google.santa-driver"
+  changed_when: false
+  ignore_errors: true
+  register: santakext
 - include: "google-santa-whitelist.yml type=hash path=/System/Library/Frameworks/Python.framework/Versions/2.7/Resources/Python.app/Contents/MacOS/Python action=whitelist match=White"
+  when: santakext.rc == 0
 
 - name: Check if developer tools are installed
   stat:
