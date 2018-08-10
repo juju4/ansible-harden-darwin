@@ -398,7 +398,7 @@ harden_darwin_certificates_cn_denytrust:
 #  - Security Communication EV RootCA1      ## not working
 #  - Security Communication RootCA1      ## not working
 #  - Security Communication RootCA2      ## not working
-  - Sonera Class1 CA
+#  - Sonera Class1 CA                    ## not working, macos 10.13
   - Sonera Class2 CA
   - Staat der Nederlanden EV Root CA
   - Staat der Nederlanden Root CA - G2
@@ -436,12 +436,12 @@ harden_darwin_certificates_cn_denytrust:
   - UTN - DATACorp SGC
   - UTN-USERFirst-Client Authentication and Email
   - UTN-USERFirst-Hardware
-  - UTN-USERFirst-Network Applications
+#  - UTN-USERFirst-Network Applications          ## not working, macos 10.13
   - UTN-USERFirst-Object
   - Visa eCommerce Root
   - Visa Information Delivery Root CA
   - VRK Gov. Root CA
-  - WellsSecure Public Root Certificate Authority
+#  - WellsSecure Public Root Certificate Authority ## not working, macos 10.13
   - XRamp Global Certification Authority
 ## present in 10.11 but not in 10.12
 #  - AddTrust Public CA Root
