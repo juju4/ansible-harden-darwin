@@ -6,6 +6,13 @@
   stat: path=/var/db/santa
   register: hasSanta
 
+# OSX 10.13+: can't do it without GUI interaction...
+- name: check santa kernel driver is loaded
+  shell: "kextstat | grep -q com.google.santa-driver"
+  changed_when: false
+  ignore_errors: true
+  register: santakext
+
 - block:
 
     # conf?
@@ -51,5 +58,5 @@
       notify:
         - restart santa
 
-  when: hasSanta.stat.exists
+  when: hasSanta.stat.exists and santakext.rc == 0
 
