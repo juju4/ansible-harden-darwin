@@ -20,21 +20,22 @@
   pre_tasks:
     - debug: var=ansible_distribution
     - debug: var=ansible_distribution_version
+    - debug: var=ansible_distribution_version.split('.')[1]
     - set_fact:
         macos_apps_install_list:
           - "{{ macos_apps_install_list }}"
           - { u: 'https://distfiles.macports.org/MacPorts/MacPorts-2.5.3-10.13-HighSierra.pkg', f: 'MacPorts-2.5.3-10.13-HighSierra.pkg', v: true, s: 'a81df393af2ac6bc1c880ca9e7ff4a0f0a4c629a1ff5601ae369f859fae6a244', n: 'MacPorts', t: 'pkgonly', version: '2.5.3', to: '/opt/local/bin/ports' }
-      when: ansible_distribution == 'MacOSX' and ansible_distribution_version.split('.')[1] == 13
+      when: ansible_distribution == 'MacOSX' and ansible_distribution_version.split('.')[1] == '13'
     - set_fact:
         macos_apps_install_list:
           - "{{ macos_apps_install_list }}"
           - { u: 'https://github.com/macports/macports-base/releases/download/v2.4.4/MacPorts-2.4.4-10.12-Sierra.pkg', f: 'MacPorts-2.4.4-10.12-Sierra.pkg', v: true, s: '3a8fee56254c650fbf56c5b131a10e4fc8b86d4e5de4a1b5bb5a5a64d27cf461', n: 'MacPorts', t: 'pkgonly', version: '2.4.4', to: '/opt/local/bin/ports' }
-      when: ansible_distribution == 'MacOSX' and ansible_distribution_version.split('.')[1] == 12
+      when: ansible_distribution == 'MacOSX' and ansible_distribution_version.split('.')[1] == '12'
     - set_fact:
         macos_apps_install_list:
           - "{{ macos_apps_install_list }}"
           - { u: 'https://github.com/macports/macports-base/releases/download/v2.4.2/MacPorts-2.4.2-10.11-ElCapitan.pkg', v: true, s: '9763a407a9e7d3fcfb85280927d47ae0d3c291fe78a5bc0debf2134ca6ca9953', n: 'MacPorts', t: 'pkgonly', version: '2.4.2', versioncmd: '', to: '/opt/local/bin/ports' }
-      when: ansible_distribution == 'MacOSX' and ansible_distribution_version.split('.')[1] == 11
+      when: ansible_distribution == 'MacOSX' and ansible_distribution_version.split('.')[1] == '11'
   roles:
     - juju4.macos-apps-install
     - juju4.harden-darwin
