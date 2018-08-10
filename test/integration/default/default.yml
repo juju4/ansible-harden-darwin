@@ -18,6 +18,8 @@
 #    - harden_darwin_oversight: false
 #    - harden_darwin_blockblock: false
   pre_tasks:
+    - debug: var=ansible_distribution
+    - debug: var=ansible_distribution_version
     - set_fact:
         macos_apps_install_list:
           - "{{ macos_apps_install_list }}"
