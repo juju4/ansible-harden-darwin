@@ -119,9 +119,9 @@
       when: tccdb.stat.exists and not ('com.apple.RemoteDesktopAgent' in tccselect.stdout)
     - debug: msg="WARNING! didn't found /Library/Application\ Support/com.apple.TCC/TCC.db"
       when: not tccdb.stat.exists
-  when: ansible_distribution_version | version_compare( '10.12', '<')
+  when: ansible_distribution_version is version_compare( '10.12', '<')
 - debug: msg='Warning! macOS Sierra+ accessibility can\'t be enable from command line.'
-  when: ansible_distribution_version | version_compare( '10.12', '>=')
+  when: ansible_distribution_version is version_compare( '10.12', '>=')
 
 - name: disable IPv6 noise
   sysctl: name="{{ item.k }}" value="{{ item.v }}" state=present reload=no
@@ -191,7 +191,7 @@
 - include: knockknock.yml
   when: harden_darwin_knockknock
 - include: lulu.yml
-  when: harden_darwin_lulu and ansible_distribution_version | version_compare( '10.12', '>=') and devtools.stat.exists
+  when: harden_darwin_lulu and ansible_distribution_version is version_compare( '10.12', '>=') and devtools.stat.exists
 
 - include: immutable.yml
 - include: darwin-openbsm.yml
