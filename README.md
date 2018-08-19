@@ -12,12 +12,17 @@ Depending on settings, very detailed activity log can be created.
 Only apply to your own system else for most countries (ex: Europe), user must have been warned and agreed (usually through internal policy, code of conduct...)
 Whitelisting and certificates trust removal are part of most impacting tasks.
 
+Alternative tools
+* https://github.com/SummitRoute/osxlockdown
+* https://github.com/0xmachos/mOSL
+
 ## Requirements & Dependencies
 
 ### Ansible
 It was tested on the following versions:
  * 2.0
  * 2.2
+ * 2.6
 
 ### Operating systems
 
