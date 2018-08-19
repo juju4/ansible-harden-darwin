@@ -3,7 +3,7 @@
 # https://github.com/objective-see/DoNotDisturb
 
 - set_fact:
-    app_name: DoNotDisturb
+    app_name: Do Not Disturb
     app_url: https://bitbucket.org/objective-see/deploy/downloads/DoNotDisturb_1.2.2.zip
     app_checksum: 'sha1:8B3C57CFAC13BB56F05713971E9560C3C37980A3'
 
@@ -31,7 +31,7 @@
   when: harden_darwin_santa is defined and harden_darwin_santa and harden_darwin_santa_mode == 2
 
 - name: install {{ app_name }}
-  command: "\"{{ install_archives }}/{{ app_name }}_Installer.app/Contents/MacOS/{{ app_name }} Installer\" -install"
+  command: "\"{{ install_archives }}/{{ app_name }} Installer.app/Contents/MacOS/{{ app_name }} Installer\" -install"
   args:
     creates: "/Library/Objective-See/DND"
   become: yes
