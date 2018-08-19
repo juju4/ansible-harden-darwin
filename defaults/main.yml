@@ -86,6 +86,7 @@ harden_darwin_ransomwhere: true
 harden_darwin_oversight: true
 harden_darwin_blockblock: true
 harden_darwin_knockknock: true
+harden_darwin_dnd: true
 harden_darwin_lulu: true
 harden_darwin_fixmacosleak: false
 
