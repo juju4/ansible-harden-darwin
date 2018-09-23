@@ -22,10 +22,10 @@ before_install:
   - brew install libidn2
   - brew install openssl
   - brew outdated
-  - if (brew outdated | grep openssl); then brew upgrade openssl; fi
+# xcode9.2: force python upgrade...
+  - if (brew outdated | grep python > /dev/null); then brew upgrade python || brew link --overwrite python@2; fi
+  - if (brew outdated | grep openssl > /dev/null); then brew upgrade openssl || true; fi
   - brew ls --verbose openssl
-#  - brew install python3
-  - brew upgrade python
   - brew update
   - brew doctor || true
   - python --version
@@ -41,6 +41,7 @@ before_install:
   - env
   - find . -ls
 #  - find $HOME/Library $HOME/.local -ls || true
+
 install:
   - brew install ansible
 #  - pip3 install ansible
