@@ -32,7 +32,7 @@
   when: harden_darwin_santa is defined and harden_darwin_santa and harden_darwin_santa_mode == 2
 
 - name: install Lulu
-  command: "{{ install_archives }}/LuLu\ Installer.app/Contents/MacOS/LuLu\ Installer -install"
+  command: "\"{{ install_archives }}/LuLu Installer.app/Contents/MacOS/LuLu Installer\" -install"
   args:
     creates: "/Library/Objective-See/LuLu/LuLu.bundle"
   become: yes
