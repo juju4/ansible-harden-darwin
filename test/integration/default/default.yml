@@ -14,6 +14,7 @@
       - { u: 'https://packages.chef.io/files/stable/inspec/2.1.72/mac_os_x/10.13/inspec-2.1.72-1.dmg', v: true, s: '97dd92798ca94784c5d41f5e63c1c070671e89f2a3b6b132eb79f2ab053c0dd2', n: 'inspec', t: 'pkg', m: '/Volumes/InSpec', version: '2.1.72', exec_name: 'inspec-2.1.72-1.pkg', versioncmd: 'inspec --version 2>&1 | tail -1' }
 #      - { u: '', f: '', v: true, s: 'aaaa', n: '', t: 'app', m: '/Volumes/app', version: '', versioncmd: '', to: '/Applications/example.app' }
     - harden_darwin_testing: true
+    - harden_darwin_testing_privesc: false
     - harden_darwin_hard_fail_developertools: false
 #    - harden_darwin_oversight: false
 #    - harden_darwin_blockblock: false
