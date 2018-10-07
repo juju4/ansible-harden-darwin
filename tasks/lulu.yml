@@ -3,28 +3,36 @@
 ## https://www.objective-see.com/products/lulu.html
 ## kernel extension so probably issue with upcoming high sierra
 
-- name: git clone Lulu repo
-  git:
-    repo: https://github.com/objective-see/LuLu.git
-    dest: "{{ install_archives }}/lulu"
+- set_fact:
+    app_name: Lulu
+    app_url: https://github.com/objective-see/LuLu/releases/download/1.1.1/LuLu_1.1.1.zip
+    app_checksum: 'sha256:88ad8042b711a2f17f93ea9423f45927c4358af73f78feedf02c7885e795e817'
 
-## ignore_errors because of santa
-- name: configure and install Lulu
-  command: "./configure.sh -install"
-  args:
-    chdir: "{{ install_archives }}/lulu/deploy"
-    creates: "/Applications/LuLu.app/Contents/MacOS/LuLu"
+- name: download {{ app_name }}
+  get_url:
+    url: "{{ app_url }}"
+    dest: "{{ install_archives }}/{{ app_url | basename }}"
+    mode: '0644'
+    checksum: "{{ app_checksum }}"
   become: yes
-  ignore_errors: true
+
+- name: decompress {{ app_name }}
+#  unarchive:
+#    src: "{{ install_archives }}/{{ app_url | basename }}"
+#    dest: "{{ install_archives }}"
+  command: "unzip -d {{ install_archives }} {{ install_archives }}/{{ app_url | basename }}"
+  args:
+    creates: "{{ install_archives }}/{{ app_name }} Installer.app/Contents/MacOS/{{ app_name }} Installer"
+  become: yes
 
 - block:
     - include: "google-santa-whitelist.yml type=hash path={{ item }} action=whitelist match=White"
       with_items:
-        - "/Applications/LuLu.app/Contents/MacOS/LuLu"
+        - "{{ install_archives }}/{{ app_name }} Installer.app/Contents/MacOS/{{ app_name }} Installer"
   when: harden_darwin_santa is defined and harden_darwin_santa and harden_darwin_santa_mode == 2
 
-#- name: install Lulu
-#  command: "/Applications/LuLu.app/Contents/MacOS/LuLu -install"
-#  args:
-#    creates: "/Library/XXXX"
-#  become: yes
+- name: install Lulu
+  command: "{{ install_archives }}/LuLu\ Installer.app/Contents/MacOS/LuLu\ Installer -install"
+  args:
+    creates: "/Library/Objective-See/LuLu/LuLu.bundle"
+  become: yes
