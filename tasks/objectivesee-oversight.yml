@@ -1,9 +1,10 @@
 ---
+## https://objective-see.com/products/oversight.html
 
 - set_fact:
-    app_name: KnockKnock
-    app_url: https://bitbucket.org/objective-see/deploy/downloads/KnockKnock_1.9.0.zip
-    app_checksum: 'sha1:86701b501fa9e37ad1b119df3c48dbbc132c81ed'
+    app_name: OverSight_Installer
+    app_url: https://bitbucket.org/objective-see/deploy/downloads/OverSight_1.2.0.zip
+    app_checksum: 'sha1:adae7e8a2d4f78489205d6b0c3017c3ebf733f6f'
 
 - name: download {{ app_name }}
   get_url:
@@ -26,4 +27,17 @@
     - include: "google-santa-whitelist.yml type=hash path={{ item }} action=whitelist match=White"
       with_items:
         - "{{ install_archives }}/{{ app_name }}.app/Contents/MacOS/{{ app_name }}"
+  when: harden_darwin_santa is defined and harden_darwin_santa and harden_darwin_santa_mode == 2
+
+## FIXME! always return 'install ok' and rc = 0
+- name: install oversight
+  command: "{{ install_archives }}/{{ app_name }}.app/Contents/MacOS/{{ app_name }} -install"
+  args:
+    creates: "/OverSight_Helper.app/Contents/XPCServices"
+  become: yes
+
+- block:
+    - include: "google-santa-whitelist.yml type=hash path={{ item }} action=whitelist match=White"
+      with_items:
+        - "/Applications/OverSight.app/Contents/Library/LoginItems/OverSightXPC.xpc"
   when: harden_darwin_santa is defined and harden_darwin_santa and harden_darwin_santa_mode == 2

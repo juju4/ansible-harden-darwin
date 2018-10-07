@@ -1,0 +1,8 @@
+---
+# https://blog.filippo.io/captive-browser/
+# https://github.com/FiloSottile/captive-browser
+# Requires golang
+
+#go get -u github.com/FiloSottile/captive-browser
+#cp $(go env GOPATH)/src/github.com/FiloSottile/captive-browser/captive-browser-mac-chrome.toml ~/.config/captive-browser.toml
+#$(go env GOPATH)/bin/captive-browser

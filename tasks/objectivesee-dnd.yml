@@ -4,8 +4,8 @@
 
 - set_fact:
     app_name: Do Not Disturb
-    app_url: https://bitbucket.org/objective-see/deploy/downloads/DoNotDisturb_1.2.2.zip
-    app_checksum: 'sha1:8B3C57CFAC13BB56F05713971E9560C3C37980A3'
+    app_url: https://bitbucket.org/objective-see/deploy/downloads/DoNotDisturb_1.3.0.zip
+    app_checksum: 'sha1:15037CC79AFE797EFFA3506914243E5DE8F71C68'
 
 - name: download {{ app_name }}
   get_url:

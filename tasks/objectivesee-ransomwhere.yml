@@ -3,8 +3,8 @@
 ## https://objective-see.com/products/ransomwhere.html
 - set_fact:
     app_name: RansomWhere
-    app_url: https://bitbucket.org/objective-see/deploy/downloads/RansomWhere_1.1.0.zip
-    app_checksum: 'sha256:7b18e17abd8fb40d7c25f29f65d64a1f65c758d61c9f67c11d9722d1d7486ea9'
+    app_url: https://bitbucket.org/objective-see/deploy/downloads/RansomWhere_1.2.5.zip
+    app_checksum: 'sha256:091a61bb99f5fe73944cda2b6ad26efb6d7ffaf8ddd391d237b82afb10b46a67'
 
 - name: download {{ app_name }}
   get_url:

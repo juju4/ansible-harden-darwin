@@ -182,17 +182,17 @@
 - include: osquery.yml
   when: harden_darwin_osquery is defined and harden_darwin_osquery
 
-- include: ransomwhere.yml
+- include: objectivesee-ransomwhere.yml
   when: harden_darwin_ransomwhere
-- include: oversight.yml
+- include: objectivesee-oversight.yml
   when: harden_darwin_oversight
-- include: blockblock.yml
+- include: objectivesee-blockblock.yml
   when: harden_darwin_blockblock
-- include: knockknock.yml
+- include: objectivesee-knockknock.yml
   when: harden_darwin_knockknock
 - include: objectivesee-dnd.yml
   when: harden_darwin_dnd
-- include: lulu.yml
+- include: objectivesee-lulu.yml
   when: harden_darwin_lulu and ansible_distribution_version is version_compare( '10.12', '>=') and devtools.stat.exists
 
 - include: immutable.yml
