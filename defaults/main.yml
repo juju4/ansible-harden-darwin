@@ -91,7 +91,8 @@ harden_darwin_lulu: true
 harden_darwin_fixmacosleak: false
 
 ## Audit Tools
-harden_darwin_osxlockdown: 'audit'
+# FIXME! golang dependency
+#harden_darwin_osxlockdown: 'audit'
 #harden_darwin_osxlockdown: 'run'
 ## FAILED! => {"changed": false, "cmd": ["/usr/bin/git", "fetch", "--tags", "origin"], "failed": true, "msg": "Failed to download remote objects and refs:  fatal: unable to access 'https://github.com/kristovatlas/osx-config-check/': The requested URL returned error: 504\n"}
 harden_darwin_osxconfigcheck: false
