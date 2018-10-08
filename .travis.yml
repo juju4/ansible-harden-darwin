@@ -46,7 +46,8 @@ before_install:
 ## workaround to openssl mess
   - sudo install -d -o travis -m755 /private/var/_install
   - brew install curl
-  - curl -o /private/var/_install/LuLu_1.1.1.zip https://github.com/objective-see/LuLu/releases/download/1.1.1/LuLu_1.1.1.zip
+  - [ "X$TRAVIS_OSX_IMAGE" = "Xxcode9.2" ] && curl -o /private/var/_install/LuLu_1.1.1.zip https://github.com/objective-see/LuLu/releases/download/1.1.1/LuLu_1.1.1.zip || true
+  - [ "X$TRAVIS_OSX_IMAGE" = "Xxcode9.2" ] && zipinfo /var/_install/LuLu_1.1.1.zip || true
 
 install:
   - brew install ansible
