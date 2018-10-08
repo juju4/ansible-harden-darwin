@@ -8,6 +8,10 @@
     app_url: https://github.com/objective-see/LuLu/releases/download/1.1.1/LuLu_1.1.1.zip
     app_checksum: 'sha256:88ad8042b711a2f17f93ea9423f45927c4358af73f78feedf02c7885e795e817'
 
+- name: check if lulu archive is present
+  stat:
+    path: "{{ install_archives }}/{{ app_url | basename }}"
+  register: luluarchive
 - name: download {{ app_name }}
   get_url:
     url: "{{ app_url }}"
@@ -16,6 +20,7 @@
     checksum: "{{ app_checksum }}"
     validate_certs: "{{ harden_darwin_github_sslcert_validate | default(true) }}"
   become: yes
+  when: not luluarchive.stat.exists
 
 - name: decompress {{ app_name }}
 #  unarchive:
