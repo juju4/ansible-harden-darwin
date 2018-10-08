@@ -41,6 +41,12 @@ before_install:
   - env
   - find . -ls
 #  - find $HOME/Library $HOME/.local -ls || true
+  - openssl s_client -connect github.com:443  -cipher 'ALL' < /dev/null || true
+  - $(brew --prefix)/opt/openssl/bin/openssl s_client -connect github.com:443  -cipher 'ALL' < /dev/null || true
+## workaround to openssl mess
+  - sudo install -d -o travis -m755 /private/var/_install
+  - brew install curl
+  - curl -o /private/var/_install/LuLu_1.1.1.zip https://github.com/objective-see/LuLu/releases/download/1.1.1/LuLu_1.1.1.zip
 
 install:
   - brew install ansible
