@@ -59,4 +59,3 @@
         - restart santa
 
   when: hasSanta.stat.exists and santakext.rc == 0
-

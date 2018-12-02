@@ -35,4 +35,3 @@
 - name: disable pf
   command: pfctl -d
   when: "not 'Disabled' in pfstatus.stdout and not harden_darwin_fw_pf"
-

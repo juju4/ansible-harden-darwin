@@ -5,4 +5,3 @@
 darwin_booltype: 'bool'
 darwin_booltype_false: 0
 darwin_booltype_true: 1
-

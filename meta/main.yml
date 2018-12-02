@@ -1,5 +1,6 @@
 ---
 galaxy_info:
+  role_name: harden-darwin
   author: juju4
   description: MacOS/Darwin Hardening role
   license: BSD
@@ -15,4 +16,3 @@ galaxy_info:
     - system
     - security
 dependencies: []
-

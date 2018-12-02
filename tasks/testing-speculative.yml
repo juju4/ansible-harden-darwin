@@ -26,4 +26,3 @@
   ignore_errors: true
 
 - debug: var=spectre
-

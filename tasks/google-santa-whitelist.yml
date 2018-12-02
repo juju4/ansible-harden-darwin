@@ -27,4 +27,3 @@
       when: not (match + 'listed (Binary)' in fileinfo.stdout) and type == 'hash'
 
   when: filestat.stat.exists
-

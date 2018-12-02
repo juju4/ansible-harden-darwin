@@ -10,4 +10,3 @@
   command: "networksetup -setproxyautodiscovery \"{{ if }}\" off"
   become: yes
   when: ifstate.stdout.find("Off") == -1
-

@@ -15,4 +15,3 @@
   sysctl: name="kern.securelevel" value="{{ harden_darwin_sysctl_kernsecurelevel | default(0) }}" state=present reload=no
 
 ## alternative to use SIP/System Integration Protection? how to add file?
-

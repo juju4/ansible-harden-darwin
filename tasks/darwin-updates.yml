@@ -1,11 +1,25 @@
 ---
 
 - name: Configure Updates automatic check
-  osx_defaults: domain=/Library/Preferences/com.apple.SoftwareUpdate key=AutomaticCheckEnabled type=bool value={{ harden_darwin_autocheckupdate }} state=present
+  osx_defaults:
+    domain: /Library/Preferences/com.apple.SoftwareUpdate
+    key: AutomaticCheckEnabled
+    type: bool
+    value: "{{ harden_darwin_autocheckupdate }}"
+    state: present
 
 - name: Configure Auto-Update
-  osx_defaults: domain=/Library/Preferences/com.apple.commerce key=AutoUpdate type=bool value={{ harden_darwin_autoupdate_apps }} state=present
+  osx_defaults:
+    domain: /Library/Preferences/com.apple.commerce
+    key: AutoUpdate
+    type: bool
+    value: "{{ harden_darwin_autoupdate_apps }}"
+    state: present
 
 - name: Configure Auto-Update RestartRequired
-  osx_defaults: domain=/Library/Preferences/com.apple.commerce key=AutoUpdateRestartRequired type=bool value={{ harden_darwin_autoupdate_restartrequired }} state=present
-
+  osx_defaults:
+    domain: /Library/Preferences/com.apple.commerce
+    key: AutoUpdateRestartRequired
+    type: bool
+    value: "{{ harden_darwin_autoupdate_restartrequired }}"
+    state: present

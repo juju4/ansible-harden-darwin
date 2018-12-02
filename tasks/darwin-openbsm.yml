@@ -15,4 +15,3 @@
 ## no validate option in auditd
   notify:
     - restart auditd
-

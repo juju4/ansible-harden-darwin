@@ -54,5 +54,3 @@
       command: "/usr/local/bin/osqueryctl start"
       when: launchctllist is defined and launchctllist.stdout is defined and launchctllist.stdout.find("com.facebook.osqueryd") == -1
   when: hasOsquery.stat.exists
-
-

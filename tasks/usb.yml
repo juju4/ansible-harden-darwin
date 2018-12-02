@@ -29,5 +29,3 @@
         state: touch
       when: rmkext.changed
   when: harden_darwin_usb_remove_massstoragekext
-
-

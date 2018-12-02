@@ -80,8 +80,10 @@
     GOPATH: "/tmp/gowork"
   become: yes
   register: osxlout
-  when: ansible_distribution_version.find('10.11') != -1 and not osxlfile.stat.exists and harden_darwin_osxlockdown == 'audit'
+  when: >
+    ansible_distribution_version.find('10.11') != -1 and
+    not osxlfile.stat.exists and
+    harden_darwin_osxlockdown == 'audit'
   ignore_errors: true
 - debug: var=osxlout.stdout_lines
   when: ansible_distribution_version.find('10.11') != -1 and not osxlfile.stat.exists
-

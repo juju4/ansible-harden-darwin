@@ -44,4 +44,3 @@
   when: harden_darwin_santa is defined and harden_darwin_santa and harden_darwin_santa_mode == 2
 
 ## can eventually replicate /Library/RansomWhere/approvedBinaries.plist
-

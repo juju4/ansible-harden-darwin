@@ -12,13 +12,20 @@
     - "{{ backupdir }}"
 
 - name: Backup certificate keychains
-  command: "install -m 0400 {{ item }} {{ backupdir }}/{{ item | regex_replace('/', '-') }}-{{ ansible_date_time.date }} creates={{ backupdir }}/{{ item | regex_replace('/', '-') }}-{{ ansible_date_time.date }}"
+  command: >
+    install -m 0400 {{ item }}
+      {{ backupdir }}/{{ item | regex_replace('/', '-') }}-{{ ansible_date_time.date }}
+  args:
+    creates: "{{ backupdir }}/{{ item | regex_replace('/', '-') }}-{{ ansible_date_time.date }}"
   with_items:
 ## Note: SIP prevents us from writing in /System
     - /System/Library/Keychains/SystemRootCertificates.keychain
     - /Library/Keychains/System.keychain
 - name: Export trust settings
-  command: "security trust-settings-export -d {{ backupdir }}/trust_settings-{{ ansible_date_time.date }}.plist creates={{ backupdir }}/trust_settings-{{ ansible_date_time.date }}.plist"
+  command: >
+    security trust-settings-export -d {{ backupdir }}/trust_settings-{{ ansible_date_time.date }}.plist
+  args:
+    creates: "{{ backupdir }}/trust_settings-{{ ansible_date_time.date }}.plist"
 ## travis: "stderr": "SecTrustSettingsCreateExternalRepresentation: No Trust Settings were found."
   ignore_errors: true
 
@@ -44,34 +51,48 @@
   changed_when: false
 ## Not allowed... 'security: SecKeychainItemDelete: UNIX[Operation not permitted]'
 - name: remove certificate to keychain - admin store (hash)
-  command: "security delete-certificate -Z '{{ item }}' /System/Library/Keychains/SystemRootCertificates.keychain"
+  command: >
+    security delete-certificate -Z '{{ item }}' /System/Library/Keychains/SystemRootCertificates.keychain
   with_items: "{{ harden_darwin_certificates_hash_delete }}"
 - name: remove certificate to keychain - admin store (common name)
-  command: "security delete-certificate -c '{{ item }}' /System/Library/Keychains/SystemRootCertificates.keychain"
+  command: >
+    security delete-certificate -c '{{ item }}' /System/Library/Keychains/SystemRootCertificates.keychain
   with_items: "{{ harden_darwin_certificates_cn_delete }}"
 
 ## FIXME! not idempotent
 ## Can't select by hash or cn
 #$ security export -k /System/Library/Keychains/SystemRootCertificates.keychain -t certs -o /tmp/certs.pm
 ## No hash selection, only cn
-#$ security find-certificate -a -p -c Izenpe.com /System/Library/Keychains/SystemRootCertificates.keychain > /tmp/certs.pm
-#$ security add-trusted-cert -d -r deny -k "/Library/Keychains/System.keychain" certname.cer
 - name: Keychain | switch certificate to deny trust
-  shell: "security find-certificate -a -p -c '{{ item }}' /System/Library/Keychains/SystemRootCertificates.keychain > /tmp/certs.pm; security add-trusted-cert -d -r deny -k /Library/Keychains/System.keychain /tmp/certs.pm"
+  shell: >
+    security find-certificate -a -p -c '{{ item }}'
+      /System/Library/Keychains/SystemRootCertificates.keychain
+      > /tmp/certs.pm;
+    security add-trusted-cert -d -r deny -k /Library/Keychains/System.keychain /tmp/certs.pm
   with_items: "{{ harden_darwin_certificates_cn_denytrust }}"
 
 - name: Keychain | switch certificate to unspecified trust
-  shell: "security find-certificate -a -p -c '{{ item }}' /System/Library/Keychains/SystemRootCertificates.keychain > /tmp/certs.pm; security add-trusted-cert -d -r unspecified -k /Library/Keychains/System.keychain /tmp/certs.pm"
+  shell: >
+    security find-certificate -a -p -c '{{ item }}'
+      /System/Library/Keychains/SystemRootCertificates.keychain
+      > /tmp/certs.pm;
+    security add-trusted-cert -d -r unspecified -k /Library/Keychains/System.keychain /tmp/certs.pm
   with_items: "{{ harden_darwin_certificates_cn_unspecifiedtrust }}"
 
 - name: Keychain | switch certificate to trust
-  shell: "security find-certificate -a -p -c '{{ item }}' /System/Library/Keychains/SystemRootCertificates.keychain > /tmp/certs.pm; security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain /tmp/certs.pm"
+  shell: >
+    security find-certificate -a -p -c '{{ item }}'
+      /System/Library/Keychains/SystemRootCertificates.keychain > /tmp/certs.pm;
+    security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain /tmp/certs.pm
   with_items: "{{ harden_darwin_certificates_cn_trust }}"
 
 - name: Keychain | trust extra certificates from orchestrator
-  shell: "security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain {{ backupdir }}/{{ item | basename }}"
+  shell: >
+    security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain
+      {{ backupdir }}/{{ item | basename }}
   with_items: "{{ harden_darwin_certificates_files }}"
 - name: Keychain | trust extra certificates from Internet
-  shell: "security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain {{ backupdir }}/{{ item.u | basename }}"
+  shell: >
+    security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain
+      {{ backupdir }}/{{ item.u | basename }}
   with_items: "{{ harden_darwin_certificates_dl }}"
-
