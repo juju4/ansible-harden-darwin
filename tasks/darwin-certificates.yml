@@ -65,24 +65,19 @@
 ## No hash selection, only cn
 - name: Keychain | switch certificate to deny trust
   shell: >
-    security find-certificate -a -p -c '{{ item }}'
-      /System/Library/Keychains/SystemRootCertificates.keychain
-      > /tmp/certs.pm;
+    security find-certificate -a -p -c '{{ item }}' /System/Library/Keychains/SystemRootCertificates.keychain > /tmp/certs.pm;
     security add-trusted-cert -d -r deny -k /Library/Keychains/System.keychain /tmp/certs.pm
   with_items: "{{ harden_darwin_certificates_cn_denytrust }}"
 
 - name: Keychain | switch certificate to unspecified trust
   shell: >
-    security find-certificate -a -p -c '{{ item }}'
-      /System/Library/Keychains/SystemRootCertificates.keychain
-      > /tmp/certs.pm;
+    security find-certificate -a -p -c '{{ item }}' /System/Library/Keychains/SystemRootCertificates.keychain > /tmp/certs.pm;
     security add-trusted-cert -d -r unspecified -k /Library/Keychains/System.keychain /tmp/certs.pm
   with_items: "{{ harden_darwin_certificates_cn_unspecifiedtrust }}"
 
 - name: Keychain | switch certificate to trust
   shell: >
-    security find-certificate -a -p -c '{{ item }}'
-      /System/Library/Keychains/SystemRootCertificates.keychain > /tmp/certs.pm;
+    security find-certificate -a -p -c '{{ item }}' /System/Library/Keychains/SystemRootCertificates.keychain > /tmp/certs.pm;
     security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain /tmp/certs.pm
   with_items: "{{ harden_darwin_certificates_cn_trust }}"
 
