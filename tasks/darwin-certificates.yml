@@ -83,11 +83,9 @@
 
 - name: Keychain | trust extra certificates from orchestrator
   shell: >
-    security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain
-      {{ backupdir }}/{{ item | basename }}
+    security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain {{ backupdir }}/{{ item | basename }}
   with_items: "{{ harden_darwin_certificates_files }}"
 - name: Keychain | trust extra certificates from Internet
   shell: >
-    security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain
-      {{ backupdir }}/{{ item.u | basename }}
+    security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain {{ backupdir }}/{{ item.u | basename }}
   with_items: "{{ harden_darwin_certificates_dl }}"
