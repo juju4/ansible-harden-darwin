@@ -7,3 +7,5 @@ darwin_booltype_true: true
 
 harden_darwin_github_sslcert_validate: false
 ransomwhere_url_validate_certs: false
+# Request failed: <urlopen error [SSL: UNSUPPORTED_PROTOCOL] unsupported protocol (_ssl.c:590)>
+harden_darwin_ransomwhere: false
