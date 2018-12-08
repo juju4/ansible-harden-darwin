@@ -233,15 +233,15 @@
   when: harden_darwin_osquery is defined and harden_darwin_osquery
 
 - include: objectivesee-ransomwhere.yml
-  when: harden_darwin_ransomwhere
+  when: harden_darwin_ransomwhere and harden_darwin_bitbucket_download
 - include: objectivesee-oversight.yml
-  when: harden_darwin_oversight
+  when: harden_darwin_oversight and harden_darwin_bitbucket_download
 - include: objectivesee-blockblock.yml
-  when: harden_darwin_blockblock
+  when: harden_darwin_blockblock and harden_darwin_bitbucket_download
 - include: objectivesee-knockknock.yml
-  when: harden_darwin_knockknock
+  when: harden_darwin_knockknock and harden_darwin_bitbucket_download
 - include: objectivesee-dnd.yml
-  when: harden_darwin_dnd
+  when: harden_darwin_dnd and harden_darwin_bitbucket_download
 - include: objectivesee-lulu.yml
   when: >
     harden_darwin_lulu and ansible_distribution_version is version_compare( '10.12', '>=') and

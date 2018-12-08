@@ -12,6 +12,7 @@
     dest: "{{ install_archives }}/{{ app_url | basename }}"
     mode: '0644'
     checksum: "{{ app_checksum }}"
+    validate_certs: "{{ harden_darwin_bitbucket_sslcert_validate | default(true) }}"
   become: yes
 
 - name: decompress {{ app_name }}
