@@ -1,10 +1,13 @@
 ---
 
-- fail: "FATAL! unrecognized action {{ action }}"
+- name: FATAL
+  fail: "FATAL! unrecognized action {{ action }}"
   when: not (action == 'whitelist' or action == 'blacklist')
 
 - name: recover file info for {{ path }}
-  stat: path={{ path }} checksum_algorithm=sha256
+  stat:
+    path: "{{ path }}"
+    checksum_algorithm: sha256
   register: filestat
 
 - block:

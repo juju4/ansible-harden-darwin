@@ -3,7 +3,8 @@
 ## https://www.objective-see.com/products/lulu.html
 ## kernel extension so probably issue with upcoming high sierra
 
-- set_fact:
+- name: Set variables for Lulu
+  set_fact:
     app_name: Lulu
     app_url: https://github.com/objective-see/LuLu/releases/download/1.1.1/LuLu_1.1.1.zip
     app_checksum: 'sha256:88ad8042b711a2f17f93ea9423f45927c4358af73f78feedf02c7885e795e817'

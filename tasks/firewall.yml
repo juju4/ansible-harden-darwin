@@ -14,7 +14,9 @@
   osx_defaults: domain=/Library/Preferences/com.apple.alf key=loggingenabled type=int value=1 state=present
 
 ## FIXME! key might have changed, type not consistent?
-- name: Allow or block ({{ harden_darwin_firewall_allow_signedapps }}) signed apps from being auto-permitted to listen through firewall
+- name: >
+    Block ({{ harden_darwin_firewall_allow_signedapps }}) signed apps from being auto-permitted
+    to listen through firewall
 #  osx_defaults:
 #    domain: /Library/Preferences/com.apple.alf
 #    key: allowsignedenabled
@@ -23,7 +25,8 @@
 #    state: present
   osx_defaults: domain=/Library/Preferences/com.apple.alf key=allowsignedenabled type=int value=0 state=present
   when: not harden_darwin_firewall_allow_signedapps
-- osx_defaults: domain=/Library/Preferences/com.apple.alf key=allowsignedenabled type=int value=1 state=present
+- name: Allow signed apps from being auto-permitted on firewall
+  osx_defaults: domain=/Library/Preferences/com.apple.alf key=allowsignedenabled type=int value=1 state=present
   when: harden_darwin_firewall_allow_signedapps
 
 - name: Block all incoming connections

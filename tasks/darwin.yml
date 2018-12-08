@@ -9,7 +9,12 @@
   changed_when: false
   ignore_errors: true
   register: santakext
-- include: "google-santa-whitelist.yml type=hash path=/System/Library/Frameworks/Python.framework/Versions/2.7/Resources/Python.app/Contents/MacOS/Python action=whitelist match=White"
+- include: >
+    google-santa-whitelist.yml
+    type=hash
+    path=/System/Library/Frameworks/Python.framework/Versions/2.7/Resources/Python.app/Contents/MacOS/Python
+    action=whitelist
+    match=White
   when: santakext.rc == 0
 
 - name: Check if developer tools are installed
@@ -144,7 +149,8 @@
 #  with_items: "{{ harden_darwin_users }}"
 
 ## http://jacobsalmela.com/bash-script-enable-access-assistive-devices-programmatically-os-x-mavericks-10-9-x-simulate-keystrokes/
-- stat: path='/Library/Application Support/com.apple.TCC/TCC.db'
+- name: Check if TCC.db file exists
+  stat: path='/Library/Application Support/com.apple.TCC/TCC.db'
   register: tccdb
 ## incompatible with 10.12+, https://github.com/Homebrew/brew/pull/1029
 - block:
@@ -198,12 +204,14 @@
 #  command: 'python {{ install_archives }}/fix-macosx.py'
   when: harden_darwin_fixmacosleak
 
-- stat: path={{ install_archives }}/fsmon
+- name: Check if fsmon is present
+  stat: path={{ install_archives }}/fsmon
   register: fsmon
 - name: git clone fsmon
   git:
-    repo=https://github.com/nowsecure/fsmon.git
-    dest={{ install_archives }}/fsmon
+    repo: https://github.com/nowsecure/fsmon.git
+    dest: "{{ install_archives }}/fsmon"
+    version: HEAD
   when: not fsmon.stat.exists and devtools.stat.exists
 
 ## https://github.com/iSECPartners/yontma-mac
@@ -253,4 +261,4 @@
   when: harden_darwin_certificates
 - include: mobileconfig.yml
 - include: darwin-hostname.yml
-  when: harden_darwin_hostname is defined and harden_darwin_hostname != ''
+  when: harden_darwin_hostname is defined and harden_darwin_hostname

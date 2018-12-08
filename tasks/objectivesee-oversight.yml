@@ -1,7 +1,8 @@
 ---
 ## https://objective-see.com/products/oversight.html
 
-- set_fact:
+- name: Set variables for Oversight
+  set_fact:
     app_name: OverSight_Installer
     app_url: https://bitbucket.org/objective-see/deploy/downloads/OverSight_1.2.0.zip
     app_checksum: 'sha1:adae7e8a2d4f78489205d6b0c3017c3ebf733f6f'

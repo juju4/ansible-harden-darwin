@@ -1,7 +1,8 @@
 ---
 
 ## https://www.objective-see.com/products/blockblock.html
-- set_fact:
+- name: Set variables for BlockBlock
+  set_fact:
     app_name: BlockBlock
     app_url: https://bitbucket.org/objective-see/deploy/downloads/BlockBlock_0.9.9.4.zip
     app_checksum: 'sha1:4E7342597893A61CCE317B61C48C1F7210BD8CB3'

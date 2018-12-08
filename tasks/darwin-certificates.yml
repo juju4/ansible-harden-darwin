@@ -7,7 +7,10 @@
 ## https://apple.stackexchange.com/questions/24640/how-do-i-remove-many-system-roots-from-apple-system-keychain
 
 - name: Ensure backup directory exists
-  file: "dest={{ item }} mode=0755 state=directory"
+  file:
+    dest: "{{ item }}"
+    mode: '0755'
+    state: directory
   with_items:
     - "{{ backupdir }}"
 

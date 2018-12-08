@@ -37,7 +37,7 @@
         key: BlacklistRegex
         value: "{{ harden_darwin_santa_blacklist_path }}"
         state: present
-      when: harden_darwin_santa_blacklist_path != ''
+      when: harden_darwin_santa_blacklist_path
 
     - name: santa | whitelist macports build path
       osx_defaults:
@@ -45,7 +45,7 @@
         key: WhitelistRegex
         value: "{{ harden_darwin_santa_whitelist_path }}"
         state: present
-      when: harden_darwin_santa_whitelist_path != ''
+      when: harden_darwin_santa_whitelist_path
 
     ## default is monitor mode only
     - name: ensure config set to desired mode = {{ harden_darwin_santa_mode }}

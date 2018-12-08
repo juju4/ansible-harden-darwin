@@ -12,6 +12,10 @@
 ## Macos 10.4-: 1
 ## Macos 10.5+: 0
 - name: Review kern.securelevel
-  sysctl: name="kern.securelevel" value="{{ harden_darwin_sysctl_kernsecurelevel | default(0) }}" state=present reload=no
+  sysctl:
+    name: "kern.securelevel"
+    value: "{{ harden_darwin_sysctl_kernsecurelevel | default(0) }}"
+    state: present
+    reload: no
 
 ## alternative to use SIP/System Integration Protection? how to add file?

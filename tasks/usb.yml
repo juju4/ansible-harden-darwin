@@ -10,7 +10,8 @@
     - IOUSBMassStorageClass.kext
     - IOFireWireSerialBusProtocolTransport.KEXT
 
-## 10.6/Snow Leopard, Apple's Security Configuration guide for Mac OS X: https://support.apple.com/en-us/HT201216 (no update for 10.12, it seems)
+## 10.6/Snow Leopard, Apple's Security Configuration guide for Mac OS X:
+##  https://support.apple.com/en-us/HT201216 (no update for 10.12, it seems)
 ## http://images.apple.com/server/macosx/docs/Leopard_Security_Config_20080530.pdf
 ## until 10.9 (https://stackoverflow.com/questions/28348963/mac-os-x-10-10-disable-usb-ports)
 ## need to reboot

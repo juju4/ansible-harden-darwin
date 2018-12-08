@@ -23,9 +23,16 @@
         replace: "{{ item.rep }}"
         backup: yes
       with_items:
-## The browser_plugins table returns data based on the current user by default, consider JOINing against the users table
-        - { d: '/var/osquery/packs/it-compliance.conf', re: '"select \* from browser_plugins;"', rep: '"select browser_plugins.* from users join browser_plugins using (uid);"' }
-        - { d: '/var/osquery/packs/incident-response.conf', re: '"select \* from shell_history;"', rep: '"select shell_history.* from users join shell_history using (uid);"' }
+## The browser_plugins table returns data based on the current user by default,
+##      consider JOINing against the users table
+        - { d: '/var/osquery/packs/it-compliance.conf',
+            re: '"select \* from browser_plugins;"',
+            rep: '"select browser_plugins.* from users join browser_plugins using (uid);"'
+          }
+        - { d: '/var/osquery/packs/incident-response.conf',
+            re: '"select \* from shell_history;"',
+            rep: '"select shell_history.* from users join shell_history using (uid);"'
+          }
     - name: configure osquery
       template:
         src: "{{ harden_darwin_osquery_template }}"
@@ -39,11 +46,20 @@
         PATH: '/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin'
 ## https://github.com/facebook/osquery/issues/302
     - name: configure newsyslog for osquery
-      template: src=newsyslog-osquery.conf.j2 dest=/private/etc/newsyslog.d/osquery.conf mode=0644 backup=yes validate='newsyslog -N -f %s'
+      template:
+        src: newsyslog-osquery.conf.j2
+        dest: /private/etc/newsyslog.d/osquery.conf
+        mode: '0644'
+        backup: yes
+        validate: 'newsyslog -N -f %s'
 #      notify:
 #        - restart newsyslog
     - name: configure Launchd for osquery
-      copy: src=/var/osquery/com.facebook.osqueryd.plist dest=/Library/LaunchDaemons/ mode=0644 remote_src=true
+      copy:
+        src: /var/osquery/com.facebook.osqueryd.plist
+        dest: /Library/LaunchDaemons/
+        mode: '0644'
+        remote_src: true
     - name: check if service is loaded
       command: "launchctl list"
       changed_when: false
@@ -52,5 +68,8 @@
 #      service: name=osqueryd state=started enabled=yes
 #      command: "launchctl load /Library/LaunchDaemons/com.facebook.osqueryd.plist"
       command: "/usr/local/bin/osqueryctl start"
-      when: launchctllist is defined and launchctllist.stdout is defined and launchctllist.stdout.find("com.facebook.osqueryd") == -1
+      when: >
+        launchctllist is defined and
+        launchctllist.stdout is defined and
+        launchctllist.stdout.find("com.facebook.osqueryd") == -1
   when: hasOsquery.stat.exists

@@ -1,12 +1,14 @@
 ---
 
-- stat: path=/etc/ssh/ssh_host_ed25519_key
+- name: Check if /etc/ssh/ssh_host_ed25519_key is present
+  stat: path=/etc/ssh/ssh_host_ed25519_key
   register: sshkey
 - name: Generate any missing SSH host key
   command: ssh-keygen -A
-  when: not sshkey.stat.exists and ((ansible_os_family == "RedHat" and ansible_distribution_version == '7') or ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu')
+  when: not sshkey.stat.exists
 
-- stat: path=/etc/ssh/sshd_config
+- name: Check if /etc/ssh/sshd_config exists
+  stat: path=/etc/ssh/sshd_config
   register: sshdconf
 - block:
     - name: Restrict sshd config (1)

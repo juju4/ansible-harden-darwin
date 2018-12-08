@@ -1,19 +1,23 @@
 ---
 
 ## https://github.com/SummitRoute/osxlockdown only osx 10.11/El Capitan
-- stat: path={{ install_archives }}/osxlockdown
+- name: Check if osxlockdown is present
+  stat: path={{ install_archives }}/osxlockdown
   register: osxl
 - name: git clone osxlockdown
   git:
-    repo=https://github.com/SummitRoute/osxlockdown
-    dest={{ install_archives }}/osxlockdown
+    repo: https://github.com/SummitRoute/osxlockdown
+    dest: "{{ install_archives }}/osxlockdown"
+    version: HEAD
 #  when: "{{ ansible_distribution_version | regex_replace('^(\d+)\.(\d+)\.(\d+)$', '\\1.\\2') }}" == '10.11'
   when: ansible_distribution_version.find('10.11') != -1 and not osxl.stat.exists
 
 ## go install with macport or homebrew
-- stat: path=/opt/local/bin/port
+- name: Check if macports is present
+  stat: path=/opt/local/bin/port
   register: mp
-- stat: path=/opt/local/bin/go
+- name: Check if macports golang package is present
+  stat: path=/opt/local/bin/go
   register: mpgo
 - block:
     - block:
@@ -44,7 +48,8 @@
         GOROOT: /opt/local/lib/go
   when: mp.stat.exists and not mpgo.stat.exists
 
-- stat: path=/usr/local/bin/brew
+- name: Check if homebrew is present
+  stat: path=/usr/local/bin/brew
   register: brew
 - block:
     - name: homebrew go package install
@@ -58,7 +63,8 @@
         GOROOT: /usr/local/opt/go/libexec
   when: brew.stat.exists and not mp.stat.exists and ansible_user is defined and ansible_user != 'root'
 
-- stat: path=/private/var/root/osxlockdown.audit
+- name: Check if existing osxlockdown.audit file
+  stat: path=/private/var/root/osxlockdown.audit
   register: osxlfile
 - name: build osxlockdown
   shell: "{{ item.c }} chdir={{ item.d }}"

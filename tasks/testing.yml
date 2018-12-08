@@ -2,7 +2,9 @@
 
 - block:
     - name: testing | run macos-baseline
-      shell: "/usr/local/bin/inspec exec https://github.com/juju4/macos-baseline/archive/master.tar.gz | tee /var/log/inspec.log"
+      shell: >
+        /usr/local/bin/inspec exec https://github.com/juju4/macos-baseline/archive/master.tar.gz |
+            tee /var/log/inspec.log
       ignore_errors: true
       register: inspeclog
       args:

@@ -2,7 +2,8 @@
 # https://objective-see.com/products/dnd.html
 # https://github.com/objective-see/DoNotDisturb
 
-- set_fact:
+- name: Set variables for DoNotDisturb
+  set_fact:
     app_name: Do Not Disturb
     app_url: https://bitbucket.org/objective-see/deploy/downloads/DoNotDisturb_1.3.0.zip
     app_checksum: 'sha1:15037CC79AFE797EFFA3506914243E5DE8F71C68'
