@@ -82,6 +82,7 @@ harden_darwin_safari_javascript: false
 ## Experimental/Care! Will remove mass storage kext!
 harden_darwin_disable_usb: false
 
+harden_darwin_bitbucket_download: true
 harden_darwin_ransomwhere: true
 harden_darwin_oversight: true
 harden_darwin_blockblock: true
