@@ -73,7 +73,9 @@
   stat: path=/private/var/root/osxlockdown.audit
   register: osxlfile
 - name: build osxlockdown
-  shell: "{{ item.c }} chdir={{ item.d }}"
+  command: "{{ item.c }}"
+  args:
+    chdir: "{{ item.d }}"
   with_items:
     - { c: "go get gopkg.in/yaml.v2", d: "{{ install_archives }}/osxlockdown" }
     - { c: "go build osxlockdown", d: "{{ install_archives }}/osxlockdown" }
