@@ -21,8 +21,6 @@
   unarchive:
     src: "{{ install_archives }}/{{ app_url | basename }}"
     dest: "{{ install_archives }}"
-#  command: "unzip -d {{ install_archives }} {{ install_archives }}/{{ app_url | basename }}"
-#  args:
     creates: "{{ install_archives }}/{{ app_name }}_Installer.app/Contents/MacOS/{{ app_name }}_Installer"
   become: yes
 
