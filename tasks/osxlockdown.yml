@@ -44,7 +44,8 @@
             type: "{{ harden_darwin_santa_db_type }}"
           when: (harden_darwin_santa_mode == 'LOCKDOWN' or harden_darwin_santa_mode == 2)
 
-    - set_fact:
+    - name: Set fact GOROOT for osxlockdown build
+      set_fact:
         GOROOT: /opt/local/lib/go
   when: mp.stat.exists and not mpgo.stat.exists
 
