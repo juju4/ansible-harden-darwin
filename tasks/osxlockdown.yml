@@ -8,7 +8,7 @@
   git:
     repo: https://github.com/SummitRoute/osxlockdown
     dest: "{{ install_archives }}/osxlockdown"
-    version: HEAD
+    version: "{{ osxlockdown_version | default('eff7eb67db81991fb5a6b59d88b97bb721c9a907') }}"
 #  when: "{{ ansible_distribution_version | regex_replace('^(\d+)\.(\d+)\.(\d+)$', '\\1.\\2') }}" == '10.11'
   when: ansible_distribution_version.find('10.11') != -1 and not osxl.stat.exists
 
@@ -56,10 +56,15 @@
       homebrew:
         name: go
         state: present
-## Error: Running Homebrew as root is extremely dangerous and no longer supported.\nAs Homebrew does not drop privileges on installation you would be giving all\nbuild scripts full access to your system.
+## Error: Running Homebrew as root is extremely dangerous and no longer supported.
+##      As Homebrew does not drop privileges on installation you would be giving all
+##      build scripts full access to your system.
       become: yes
       become_user: "{{ ansible_user | default('travis') }}"
-    - set_fact:
+      register: pkg_result
+      until: pkg_result is success
+    - name: Set fact GOROOT for osxlockdown build
+      set_fact:
         GOROOT: /usr/local/opt/go/libexec
   when: brew.stat.exists and not mp.stat.exists and ansible_user is defined and ansible_user != 'root'
 

@@ -78,7 +78,7 @@
   git:
     repo: 'https://github.com/spencerdodd/kernelpop'
     dest: /Users/_test/kernelpop
-    version: HEAD
+    version: "{{ kernelpop_version | default('b3467d3c64f9657a822c1f3c0d70769efabebf60') }}"
     update: no
 #  become: yes
 #  become_user: _test
@@ -87,6 +87,8 @@
   macports:
     name: python36
     state: present
+  register: pkg_result
+  until: pkg_result is success
 
 - name: execute kernelpop
   shell: "/opt/local/bin/python3.6 kernelpop.py -b | tee /tmp/kernelpop.out"

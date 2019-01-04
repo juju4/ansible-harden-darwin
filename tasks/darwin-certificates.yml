@@ -8,11 +8,9 @@
 
 - name: Ensure backup directory exists
   file:
-    dest: "{{ item }}"
+    dest: "{{ backupdir }}"
     mode: '0755'
     state: directory
-  with_items:
-    - "{{ backupdir }}"
 
 - name: Backup certificate keychains
   command: >

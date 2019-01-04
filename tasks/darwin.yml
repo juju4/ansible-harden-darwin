@@ -211,7 +211,7 @@
   git:
     repo: https://github.com/nowsecure/fsmon.git
     dest: "{{ install_archives }}/fsmon"
-    version: HEAD
+    version: "{{ fsmon_version | default('51f1ea7019c3b5f0ab2e646c68a3174fc9ff8931') }}"
   when: not fsmon.stat.exists and devtools.stat.exists
 
 ## https://github.com/iSECPartners/yontma-mac
