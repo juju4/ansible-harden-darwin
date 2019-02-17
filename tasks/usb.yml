@@ -4,11 +4,18 @@
 ## best: enable filevault, force hibernate mode and close/hibernate when leaving system
 ## http://patrickmosca.com/root-a-mac-in-10-seconds-or-less/
 
+- name: Check loaded kernel drivers
+  command: kextstat
+  changed_when: false
+  register: kextstat
+
 - name: USB+Firewire | Disable mass storage with kextunload
-  command: "kextunload /System/Library/Extensions/{{ item }}"
+  command: "kextunload /System/Library/Extensions/{{ item }}.kext"
   with_items:
-    - IOUSBMassStorageClass.kext
-    - IOFireWireSerialBusProtocolTransport.KEXT
+    - IOUSBMassStorageClass
+    - IOUSBMassStorageDriver
+    - IOFireWireSerialBusProtocolTransport
+  when: "'{{ item }}' in kextstat.stdout"
 
 ## 10.6/Snow Leopard, Apple's Security Configuration guide for Mac OS X:
 ##  https://support.apple.com/en-us/HT201216 (no update for 10.12, it seems)
@@ -18,11 +25,11 @@
 - block:
     - name: USB+Firewire | Remove kernel extension from USB Mass storage
       file:
-        dest: "/System/Library/Extensions/{{ item }}"
+        dest: "/System/Library/Extensions/{{ item }}.kext"
         state: absent
       with_items:
-        - IOUSBMassStorageClass.kext
-        - IOFireWireSerialBusProtocolTransport.KEXT
+        - IOUSBMassStorageClass
+        - IOFireWireSerialBusProtocolTransport
       register: rmkext
     - name: USB+Firewire | force refresh of Extensions cache at next reboot
       file:

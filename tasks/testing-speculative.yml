@@ -11,12 +11,12 @@
     owner: nobody
 
 - name: compile sample code
-  shell: gcc -std=c99 -O0 spectre.c -o spectre
+  command: gcc -std=c99 -O0 spectre.c -o spectre
   args:
     chdir: /tmp
 
 - name: run sample code
-  shell: ./spectre
+  command: ./spectre
   args:
     chdir: /tmp
 # Failed to set permissions on the temporary files Ansible needs to create when becoming an unprivileged user

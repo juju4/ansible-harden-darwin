@@ -24,11 +24,9 @@
   when: not luluarchive.stat.exists
 
 - name: decompress {{ app_name }}
-#  unarchive:
-#    src: "{{ install_archives }}/{{ app_url | basename }}"
-#    dest: "{{ install_archives }}"
-  command: "unzip -d {{ install_archives }} {{ install_archives }}/{{ app_url | basename }}"
-  args:
+  unarchive:
+    src: "{{ install_archives }}/{{ app_url | basename }}"
+    dest: "{{ install_archives }}"
     creates: "{{ install_archives }}/{{ app_name }} Installer.app/Contents/MacOS/{{ app_name }} Installer"
   become: yes
 
