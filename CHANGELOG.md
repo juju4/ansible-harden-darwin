@@ -6,11 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.9.0] - 2019-02-17
+
 ### Changed
 - Heavy lint following galaxy new rules following adoption of ansible-lint
 https://groups.google.com/forum/#!topic/ansible-project/ehrb6AEptzA
 https://docs.ansible.com/ansible-lint/rules/default_rules.html
 https://github.com/ansible/ansible-lint
+- add gitignore
 
 ## [v0.8] - 2018-06-02
 
