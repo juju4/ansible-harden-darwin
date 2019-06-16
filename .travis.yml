@@ -50,8 +50,9 @@ before_install:
   - '[ "X$TRAVIS_OSX_IMAGE" = "Xxcode9.2" ] && zipinfo /var/_install/KnockKnock_1.9.3.zip || true'
 
 install:
-  - brew install ansible
+#  - brew install ansible
 #  - pip3 install ansible
+  - pip3 install --user git+https://github.com/ansible/ansible.git@devel
   - python -c 'import ssl; ssl.PROTOCOL_TLSv1_2' || true
   - python3 -c 'import ssl; ssl.PROTOCOL_TLSv1_2'
   - ansible --version
