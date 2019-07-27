@@ -4,55 +4,56 @@
   vars:
     - macos_apps_install_list:
   ## osxfuse is required for veracrypt
-      - { u: 'https://github.com/osxfuse/osxfuse/releases/download/osxfuse-3.8.0/osxfuse-3.8.0.dmg',
+      - { u: 'https://github.com/osxfuse/osxfuse/releases/download/osxfuse-3.9.2/osxfuse-3.9.2.dmg',
           v: true,
-          s: '4661f160e678e46d83a9a63fd0b7eb10903f688f7d37ea066c543a37781a0007',
+          s: 'de45388f6aceb547f08112e24f2ed49a2160725ed4590adcc8488a5d5d3f0067',
           n: 'FUSE',
           t: 'pkg',
           m: '/Volumes/FUSE for macOS',
-          version: '3.8.0',
+          version: '3.9.2',
           to: '/Library/Filesystems/osxfuse.fs',
           exec_name: 'FUSE for macOS.pkg',
           versioncmd: '/usr/libexec/PlistBuddy -c "print :CFBundleVersion" "/Library/Filesystems/osxfuse.fs/Contents/Info.plist"'
         }
-      - { u: 'https://launchpad.net/veracrypt/trunk/1.22/+download/VeraCrypt_1.22.dmg',
+      - { u: 'https://launchpad.net/veracrypt/trunk/1.23/+download/VeraCrypt_1.23.dmg',
           v: true,
-          s: 'c72257380f5653e6130d4efdd88297b328f29819f4bad82f5563cb906679e2b7',
+          s: '8c5ba5e8a19de5a33461f3cd84617140736d7cb38e306d0ac4b1c058940227f3',
           n: 'VeraCrypt',
           t: 'pkg',
           m: '/Volumes/VeraCrypt for OSX',
-          version: '1.22',
+          version: '1.23',
           exec_name: 'VeraCrypt_Installer.pkg'
         }
-      - { u: 'https://github.com/google/santa/releases/download/0.9.25/santa-0.9.25.dmg',
+      - { u: 'https://github.com/google/santa/releases/download/0.9.31/santa-0.9.31.dmg',
           v: false,
-          s: '7a27ec37d9a6b27d54b723f2b01293343986f041785bdd69e3c0e26d86a876c9',
-          n: 'santa-0.9.25',
+          s: '6843afe8a924c0a9498d07d40acac4d5daafa0177dbf70181bc6be97e0067645',
+          n: 'santa-0.9.31',
           t: 'pkg',
-          version: '0.9.25',
-          versioncmd: '/usr/local/bin/santactl version | sed "1 s/.*| //;q"', to: '/usr/local/bin/santactl'
+          version: '0.9.31',
+          versioncmd: '/usr/local/bin/santactl version | sed "1 s/.*| //;q"',
+          to: '/usr/local/bin/santactl'
         }
-      - { u: 'https://pkg.osquery.io/darwin/osquery-3.2.4.pkg',
+      - { u: 'https://pkg.osquery.io/darwin/osquery-3.3.2.pkg',
           v: true,
-          s: '953ebeaec271bb1aaefa80df266a27f1364ea46d3db8dbd4c9f463204131a943',
+          s: '6ac1baa9bd13fcf3bd4c1b20a020479d51e26a8ec81783be7a8692d2c4a9926a',
           n: 'osquery',
           t: 'pkgonly',
-          version: '3.2.4',
+          version: '3.3.2',
           versioncmd: '/usr/local/bin/osqueryi --version | sed "s/osqueryi version //"',
           to: '/usr/local/bin/osqueryi'
         }
-#      - { u: 'https://releases.gpgtools.org/GPG_Suite-2017.2.dmg',
+#      - { u: 'https://releases.gpgtools.org/GPG_Suite-2018.5.dmg',
 #          v: false,
-#          s: 'e48275495006c135aab647833e6a7a383f7e153fa657147723939c0a75dfa2f2'
+#          s: 'c66ecf48ccf709f704f02097cf9d68ba97b0efba24f7a0b7b46adfd1133cb86a'
 #        }
-      - { u: 'https://packages.chef.io/files/stable/inspec/2.1.72/mac_os_x/10.13/inspec-2.1.72-1.dmg',
+      - { u: 'https://packages.chef.io/files/stable/inspec/4.6.9/mac_os_x/10.14/inspec-4.6.9-1.dmg',
           v: true,
-          s: '97dd92798ca94784c5d41f5e63c1c070671e89f2a3b6b132eb79f2ab053c0dd2',
+          s: 'e61361498a010b83881308df9b7f0f862bccf5a73fdbf9c4bf96c48b7a4c74df',
           n: 'inspec',
           t: 'pkg',
           m: '/Volumes/InSpec',
-          version: '2.1.72',
-          exec_name: 'inspec-2.1.72-1.pkg',
+          version: '4.6.9',
+          exec_name: 'inspec-4.6.9-1.pkg',
           versioncmd: 'inspec --version 2>&1 | tail -1'
         }
 #      - { u: '', f: '', v: true, s: 'aaaa', n: '', t: 'app', m: '/Volumes/app', version: '', versioncmd: '', to: '/Applications/example.app' }
@@ -65,13 +66,24 @@
     - set_fact:
         macos_apps_install_list:
           - "{{ macos_apps_install_list }}"
-          - { u: 'https://distfiles.macports.org/MacPorts/MacPorts-2.5.3-10.13-HighSierra.pkg',
-              f: 'MacPorts-2.5.3-10.13-HighSierra.pkg',
-              v: true,
-              s: 'a81df393af2ac6bc1c880ca9e7ff4a0f0a4c629a1ff5601ae369f859fae6a244',
+          - { u: 'https://distfiles.macports.org/MacPorts/MacPorts-2.5.4-10.14-Mojave.pkg',
+              v: false,
+              s: '93033663bd2eb9d59df87468ed6693bf641a413799088275d16b21a9d82c6d15',
               n: 'MacPorts',
               t: 'pkgonly',
-              version: '2.5.3',
+              version: '2.5.4',
+              to: '/opt/local/bin/ports'
+            }
+      when: ansible_distribution == 'MacOSX' and ansible_distribution_version.split('.')[1] == '13'
+    - set_fact:
+        macos_apps_install_list:
+          - "{{ macos_apps_install_list }}"
+          - { u: 'https://distfiles.macports.org/MacPorts/MacPorts-2.5.4-10.13-HighSierra.pkg',
+              v: false,
+              s: '07c5c8a62e61c5cb8506cd3b9784dbb06a8fa48c3c6f1e3954f96a82fcb3b77c',
+              n: 'MacPorts',
+              t: 'pkgonly',
+              version: '2.5.4',
               to: '/opt/local/bin/ports'
             }
       when: ansible_distribution == 'MacOSX' and ansible_distribution_version.split('.')[1] == '13'
