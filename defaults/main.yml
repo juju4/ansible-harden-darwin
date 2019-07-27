@@ -343,7 +343,7 @@ harden_darwin_certificates_cn_denytrust:
   - Chambers of Commerce Root - 2008        # www.ccn-cert.cni.es
   - Cisco Root CA 2048
   - Class 2 Primary CA      # paiement.systempay.fr, www.caisse-epargne.fr
-  - Common Policy
+#  - Common Policy
   - ComSign CA
   - ComSign Global Root CA
   - ComSign Secured CA
@@ -358,7 +358,7 @@ harden_darwin_certificates_cn_denytrust:
   - DigiCert Global Root G3
 #  - DigiCert High Assurance EV Root CA # github.com
   - DigiCert Trusted Root G4
-  - DST ACES CA X6
+#  - DST ACES CA X6
 #  - DST Root CA X3         # Let's Encrypt Authority X3
   - DST Root CA X4
   - E-Tugra Certification Authority
@@ -370,7 +370,7 @@ harden_darwin_certificates_cn_denytrust:
   - Entrust.net Certification Authority (2048)
 ## no common name??? TW
 #  - ePKI Root Certification Authority      ## not working
-  - Federal Common Policy CA
+#  - Federal Common Policy CA
 #  - GeoTrust Global CA                     # www.google.com, www.youtube.com
   - GeoTrust Primary Certification Authority
   - GeoTrust Primary Certification Authority - G2
@@ -432,8 +432,8 @@ harden_darwin_certificates_cn_denytrust:
 #  - thawte Primary Root CA - G3        # www.usenix.org
   - TRUST2408 OCES Primary CA
 #  - Trustis FPS Root CA      ## not working
-  - TÜBİTAK UEKAE Kök Sertifika Hizmet Sağlayıcısı - Sürüm 3
-  - TÜRKTRUST Elektronik Sertifika Hizmet Sağlayıcısı
+#  - TÜBİTAK UEKAE Kök Sertifika Hizmet Sağlayıcısı - Sürüm 3
+#  - TÜRKTRUST Elektronik Sertifika Hizmet Sağlayıcısı
   - TWCA Global Root CA
   - TWCA Root Certification Authority
   - UCA Global Root
