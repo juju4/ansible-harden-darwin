@@ -141,6 +141,22 @@
     value: YES
     state: present
 
+- name: Review CrashReporter configuration
+  osx_defaults:
+    domain: com.apple.CrashReporter
+    key: DialogType
+    type: string
+    value: "{{ harden_darwin_crashreporter }}"
+    state: present
+
+- name: Review CrashReporter configuration - use Notifications
+  osx_defaults:
+    domain: com.apple.CrashReporter
+    key: UseUNC
+    type: int
+    value: "{{ harden_darwin_crashreporter_useunc }}"
+    state: present
+
 ## per user settings
 #- include: darwin-user.yml
 ## FIXME! https://github.com/ansible/ansible/issues/19729
