@@ -74,7 +74,7 @@
               version: '2.5.4',
               to: '/opt/local/bin/ports'
             }
-      when: ansible_distribution == 'MacOSX' and ansible_distribution_version.split('.')[1] == '13'
+      when: ansible_distribution == 'MacOSX' and ansible_distribution_version.split('.')[1] == '14'
     - set_fact:
         macos_apps_install_list:
           - "{{ macos_apps_install_list }}"
