@@ -75,7 +75,7 @@ harden_darwin_disable_wpad: true
 harden_darwin_disable_airdrop: true
 harden_darwin_disable_iclouddrive: true
 harden_darwin_captiveportal: false
-harden_darwin_crashreporter: 'crashreport'
+#harden_darwin_crashreporter: 'crashreport'
 harden_darwin_crashreporter: 'none'
 harden_darwin_crashreporter_useunc: 1
 harden_darwin_fastuserswitching: 'YES'
