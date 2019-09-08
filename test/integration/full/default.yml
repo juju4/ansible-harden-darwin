@@ -130,5 +130,5 @@
   roles:
     - juju4.macos-apps-install
     - juju4.harden-darwin
-    - juju4.chrome-config
-    - juju4.firefox-config
+    - juju4.chrome_config
+    - juju4.firefox_config
