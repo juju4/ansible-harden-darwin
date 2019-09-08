@@ -84,6 +84,6 @@ script:
 after_script:
   - "ls -lhA /Applications/"
   - "[ -f /private/var/root/osxlockdown.audit ] && sudo cat /private/var/root/osxlockdown.audit || true"
-  - "ls -lA /Library/Application Support/Google/Chrome/External Extensions"
-  - "cat \"/Library/Managed Preferences/com.google.Chrome.plist\""
+  - "ls -lA \"/Library/Application Support/Google/Chrome/External Extensions\""
+  - "cp \"/Library/Managed Preferences/com.google.Chrome.plist\" /tmp/chrome.plist && plutil -convert xml1 /tmp/chrome.plist && cat /tmp/chrome.plist"
   - "cat /Applications/Firefox.app/Contents/Resources/distribution/policies.json"
