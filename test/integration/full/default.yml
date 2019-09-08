@@ -76,6 +76,7 @@
     - harden_darwin_hard_fail_developertools: false
 #    - harden_darwin_oversight: false
 #    - harden_darwin_blockblock: false
+    - fxext_list: []
   pre_tasks:
     - set_fact:
         macos_apps_install_list:
