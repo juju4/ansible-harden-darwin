@@ -1,0 +1,134 @@
+---
+
+- hosts: all
+  vars:
+    - macos_apps_install_list:
+  ## osxfuse is required for veracrypt
+      - { u: 'https://github.com/osxfuse/osxfuse/releases/download/osxfuse-3.9.2/osxfuse-3.9.2.dmg',
+          v: true,
+          s: 'de45388f6aceb547f08112e24f2ed49a2160725ed4590adcc8488a5d5d3f0067',
+          n: 'FUSE',
+          t: 'pkg',
+          m: '/Volumes/FUSE for macOS',
+          version: '3.9.2',
+          to: '/Library/Filesystems/osxfuse.fs',
+          exec_name: 'FUSE for macOS.pkg',
+          versioncmd: '/usr/libexec/PlistBuddy -c "print :CFBundleVersion" "/Library/Filesystems/osxfuse.fs/Contents/Info.plist"'
+        }
+      - { u: 'https://launchpad.net/veracrypt/trunk/1.23/+download/VeraCrypt_1.23.dmg',
+          v: true,
+          s: '8c5ba5e8a19de5a33461f3cd84617140736d7cb38e306d0ac4b1c058940227f3',
+          n: 'VeraCrypt',
+          t: 'pkg',
+          m: '/Volumes/VeraCrypt for OSX',
+          version: '1.23',
+          exec_name: 'VeraCrypt_Installer.pkg'
+        }
+      - { u: 'https://github.com/google/santa/releases/download/0.9.31/santa-0.9.31.dmg',
+          v: false,
+          s: '6843afe8a924c0a9498d07d40acac4d5daafa0177dbf70181bc6be97e0067645',
+          n: 'santa-0.9.31',
+          t: 'pkg',
+          version: '0.9.31',
+          versioncmd: '/usr/local/bin/santactl version | sed "1 s/.*| //;q"',
+          to: '/usr/local/bin/santactl'
+        }
+      - { u: 'https://pkg.osquery.io/darwin/osquery-3.3.2.pkg',
+          v: true,
+          s: '6ac1baa9bd13fcf3bd4c1b20a020479d51e26a8ec81783be7a8692d2c4a9926a',
+          n: 'osquery',
+          t: 'pkgonly',
+          version: '3.3.2',
+          versioncmd: '/usr/local/bin/osqueryi --version | sed "s/osqueryi version //"',
+          to: '/usr/local/bin/osqueryi'
+        }
+#      - { u: 'https://releases.gpgtools.org/GPG_Suite-2018.5.dmg',
+#          v: false,
+#          s: 'c66ecf48ccf709f704f02097cf9d68ba97b0efba24f7a0b7b46adfd1133cb86a'
+#        }
+      - { u: 'https://packages.chef.io/files/stable/inspec/4.6.9/mac_os_x/10.14/inspec-4.6.9-1.dmg',
+          v: true,
+          s: 'e61361498a010b83881308df9b7f0f862bccf5a73fdbf9c4bf96c48b7a4c74df',
+          n: 'inspec',
+          t: 'pkg',
+          m: '/Volumes/InSpec',
+          version: '4.6.9',
+          exec_name: 'inspec-4.6.9-1.pkg',
+          versioncmd: 'inspec --version 2>&1 | tail -1'
+        }
+      - { u: 'https://download.mozilla.org/?product=firefox-69.0-SSL&os=osx&lang=en-US',
+          f: 'firefox-69.0-SSL-en-US.dmg',
+          v: true,
+          s: 'bfa9ae88ac188276c9ed17ff2e5f6e2440d6513710a32002d51be9b620d3e71c',
+          n: 'Firefox',
+          t: 'app',
+          version: '69.0'
+        }
+      - { u: 'https://dl.google.com/chrome/mac/stable/GGRO/googlechrome.dmg',
+          v: true, s: '64d20453923386f48bffe1d7597036ed92e0121f88adc74a59a7ffb52f226bbc',
+          n: 'Google Chrome',
+          t: 'app',
+          version: '76.0'
+        }
+#      - { u: '', f: '', v: true, s: 'aaaa', n: '', t: 'app', m: '/Volumes/app', version: '', versioncmd: '', to: '/Applications/example.app' }
+    - harden_darwin_testing: true
+    - harden_darwin_testing_privesc: false
+    - harden_darwin_hard_fail_developertools: false
+#    - harden_darwin_oversight: false
+#    - harden_darwin_blockblock: false
+  pre_tasks:
+    - set_fact:
+        macos_apps_install_list:
+          - "{{ macos_apps_install_list }}"
+          - { u: 'https://distfiles.macports.org/MacPorts/MacPorts-2.5.4-10.14-Mojave.pkg',
+              v: false,
+              s: '93033663bd2eb9d59df87468ed6693bf641a413799088275d16b21a9d82c6d15',
+              n: 'MacPorts',
+              t: 'pkgonly',
+              version: '2.5.4',
+              to: '/opt/local/bin/ports'
+            }
+      when: ansible_distribution == 'MacOSX' and ansible_distribution_version.split('.')[1] == '14'
+    - set_fact:
+        macos_apps_install_list:
+          - "{{ macos_apps_install_list }}"
+          - { u: 'https://distfiles.macports.org/MacPorts/MacPorts-2.5.4-10.13-HighSierra.pkg',
+              v: false,
+              s: '07c5c8a62e61c5cb8506cd3b9784dbb06a8fa48c3c6f1e3954f96a82fcb3b77c',
+              n: 'MacPorts',
+              t: 'pkgonly',
+              version: '2.5.4',
+              to: '/opt/local/bin/ports'
+            }
+      when: ansible_distribution == 'MacOSX' and ansible_distribution_version.split('.')[1] == '13'
+    - set_fact:
+        macos_apps_install_list:
+          - "{{ macos_apps_install_list }}"
+          - { u: 'https://github.com/macports/macports-base/releases/download/v2.4.4/MacPorts-2.4.4-10.12-Sierra.pkg',
+              f: 'MacPorts-2.4.4-10.12-Sierra.pkg',
+              v: true,
+              s: '3a8fee56254c650fbf56c5b131a10e4fc8b86d4e5de4a1b5bb5a5a64d27cf461',
+              n: 'MacPorts',
+              t: 'pkgonly',
+              version: '2.4.4',
+              to: '/opt/local/bin/ports'
+            }
+      when: ansible_distribution == 'MacOSX' and ansible_distribution_version.split('.')[1] == '12'
+    - set_fact:
+        macos_apps_install_list:
+          - "{{ macos_apps_install_list }}"
+          - { u: 'https://github.com/macports/macports-base/releases/download/v2.4.2/MacPorts-2.4.2-10.11-ElCapitan.pkg',
+              v: true,
+              s: '9763a407a9e7d3fcfb85280927d47ae0d3c291fe78a5bc0debf2134ca6ca9953',
+              n: 'MacPorts',
+              t: 'pkgonly',
+              version: '2.4.2',
+              versioncmd: '',
+              to: '/opt/local/bin/ports'
+            }
+      when: ansible_distribution == 'MacOSX' and ansible_distribution_version.split('.')[1] == '11'
+  roles:
+    - juju4.macos-apps-install
+    - juju4.harden-darwin
+    - juju4.chrome-config
+    - juju4.firefox-config

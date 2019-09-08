@@ -3,13 +3,18 @@
 os:
   - osx
 
-osx_image:
+env:
 # OS X 10.14
-  - xcode11
+  - osx_image: xcode11
+    suite: default
 # OS X 10.13
-  - xcode9.4
+  - osx_image: xcode9.4
+    suite: default
 # OS X 10.12
-  - xcode9.2
+  - osx_image: xcode9.2
+    suite: default
+  - osx_image: xcode11
+    suite: full
 
 #language: python
 #python: "2.7"
@@ -60,20 +65,25 @@ install:
   - ansible --version
   - which ansible
   - "{ echo '[defaults]'; echo 'roles_path = ../'; } >> ansible.cfg"
+
 script:
   - "echo \"localhost\" > inventory"
 
 #  - "ansible-lint tasks/main.yml"
 
 # Check the role/playbook's syntax.
-  - "ansible-playbook -i inventory --syntax-check test/integration/default/default.yml"
+  - "ansible-playbook -i inventory --syntax-check test/integration/${suite}/default.yml"
 
 # Run the role/playbook with ansible-playbook.
-  - "ansible-playbook -i inventory --connection=local --become -vvvv test/integration/default/default.yml"
+  - "ansible-playbook -i inventory --connection=local --become -vvvv test/integration/${suite}/default.yml"
 
 # Run the role/playbook again, checking to make sure it's idempotent.
 ## FIXME! known fail
-#  - "ansible-playbook -i inventory test/integration/default/default.yml --connection=local --become | tee /tmp/idempotency.log | grep -q 'changed=0.*failed=0'  && (echo 'Idempotence test: pass' && exit 0)  || (echo 'Idempotence test: fail' && cat /tmp/idempotency.log && exit 0)"
+#  - "ansible-playbook -i inventory test/integration/${suite}/default.yml --connection=local --become | tee /tmp/idempotency.log | grep -q 'changed=0.*failed=0'  && (echo 'Idempotence test: pass' && exit 0)  || (echo 'Idempotence test: fail' && cat /tmp/idempotency.log && exit 0)"
 
+after_script:
   - "ls -lhA /Applications/"
   - "[ -f /private/var/root/osxlockdown.audit ] && sudo cat /private/var/root/osxlockdown.audit || true"
+  - "ls -lA /Library/Application Support/Google/Chrome/External Extensions"
+  - "cat \"/Library/Managed Preferences/com.google.Chrome.plist\""
+  - "cat /Applications/Firefox.app/Contents/Resources/distribution/policies.json"
