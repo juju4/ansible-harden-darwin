@@ -64,11 +64,12 @@
           t: 'app',
           version: '69.0'
         }
+# https://chromereleases.googleblog.com/
       - { u: 'https://dl.google.com/chrome/mac/stable/GGRO/googlechrome.dmg',
-          v: true, s: '64d20453923386f48bffe1d7597036ed92e0121f88adc74a59a7ffb52f226bbc',
+          v: true, s: 'e3ead183224df789738b020cc22f754fe401197bbf8cee46edf2f04ef519b8ef',
           n: 'Google Chrome',
           t: 'app',
-          version: '76.0'
+          version: '77.0'
         }
 #      - { u: '', f: '', v: true, s: 'aaaa', n: '', t: 'app', m: '/Volumes/app', version: '', versioncmd: '', to: '/Applications/example.app' }
     - harden_darwin_testing: true
