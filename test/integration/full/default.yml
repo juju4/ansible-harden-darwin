@@ -66,7 +66,7 @@
         }
 # https://chromereleases.googleblog.com/
       - { u: 'https://dl.google.com/chrome/mac/stable/GGRO/googlechrome.dmg',
-          v: true, s: '5dc15eb52b27d42efe2d8a946762d15321df8bc6441c86d72429608f69f32bf3',
+          v: true, s: '',
           n: 'Google Chrome',
           t: 'app',
           version: '77.0'
