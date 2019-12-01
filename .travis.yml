@@ -35,7 +35,7 @@ before_install:
   - brew doctor || true
   - python --version
 #  - pip --version
-  - python -c "import ssl; print(ssl.OPENSSL_VERSION)"
+  - python -c "import ssl; print(ssl.OPENSSL_VERSION)" || true
   - python3 --version
   - python3 -c "import ssl; print(ssl.OPENSSL_VERSION)"
   - pip3 --version || true
