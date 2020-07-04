@@ -4,24 +4,24 @@
   vars:
     - macos_apps_install_list:
   ## osxfuse is required for veracrypt
-      - { u: 'https://github.com/osxfuse/osxfuse/releases/download/osxfuse-3.10.4/osxfuse-3.10.4.dmg',
+      - { u: 'https://github.com/osxfuse/osxfuse/releases/download/osxfuse-3.10.6/osxfuse-3.10.6.dmg',
           v: true,
-          s: '654da9e58b622e24d65ffb9f7180c50f518cfa8c07e48d883d6761dbcd11787c',
+          s: 'E84D3836D46612783248BB70225791374B7C3B68E32D1171159ED4DCF1FD3624',
           n: 'FUSE',
           t: 'pkg',
           m: '/Volumes/FUSE for macOS',
-          version: '3.10.4',
+          version: '3.10.6',
           to: '/Library/Filesystems/osxfuse.fs',
           exec_name: 'FUSE for macOS.pkg',
           versioncmd: '/usr/libexec/PlistBuddy -c "print :CFBundleVersion" "/Library/Filesystems/osxfuse.fs/Contents/Info.plist"'
         }
-      - { u: 'https://launchpad.net/veracrypt/trunk/1.23/+download/VeraCrypt_1.23.dmg',
+      - { u: 'https://launchpad.net/veracrypt/trunk/1.24-update4/+download/VeraCrypt_1.24-Update4.dmg'
           v: true,
-          s: '8c5ba5e8a19de5a33461f3cd84617140736d7cb38e306d0ac4b1c058940227f3',
+          s: 'E84D3836D46612783248BB70225791374B7C3B68E32D1171159ED4DCF1FD3624',
           n: 'VeraCrypt',
           t: 'pkg',
           m: '/Volumes/VeraCrypt for OSX',
-          version: '1.23',
+          version: '1.24',
           exec_name: 'VeraCrypt_Installer.pkg'
         }
       - { u: 'https://github.com/google/santa/releases/download/1.13/santa-1.13.dmg',
@@ -33,12 +33,12 @@
           versioncmd: '/usr/local/bin/santactl version | sed "1 s/.*| //;q"',
           to: '/usr/local/bin/santactl'
         }
-      - { u: 'https://pkg.osquery.io/darwin/osquery-3.3.2.pkg',
+      - { u: 'https://pkg.osquery.io/darwin/osquery-4.3.0.pkg',
           v: true,
-          s: '6ac1baa9bd13fcf3bd4c1b20a020479d51e26a8ec81783be7a8692d2c4a9926a',
+          s: '197eae9624ec830bf3fec53b79b11e084792a04a461c3241d95cf6aebd3e6ac2',
           n: 'osquery',
           t: 'pkgonly',
-          version: '3.3.2',
+          version: '4.3.0',
           versioncmd: '/usr/local/bin/osqueryi --version | sed "s/osqueryi version //"',
           to: '/usr/local/bin/osqueryi'
         }
@@ -56,20 +56,20 @@
           exec_name: 'inspec-4.6.9-1.pkg',
           versioncmd: 'inspec --version 2>&1 | tail -1'
         }
-      - { u: 'https://download.mozilla.org/?product=firefox-69.0-SSL&os=osx&lang=en-US',
-          f: 'firefox-69.0-SSL-en-US.dmg',
+      - { u: 'https://download.mozilla.org/?product=firefox-latest-ssl&os=osx&lang=en-US',
+          f: 'firefox-latest-ssl-en-US.dmg',
           v: true,
-          s: 'bfa9ae88ac188276c9ed17ff2e5f6e2440d6513710a32002d51be9b620d3e71c',
+          s: '',
           n: 'Firefox',
           t: 'app',
-          version: '69.0'
+          version: '78.0.1'
         }
 # https://chromereleases.googleblog.com/
       - { u: 'https://dl.google.com/chrome/mac/stable/GGRO/googlechrome.dmg',
           v: true, s: '',
           n: 'Google Chrome',
           t: 'app',
-          version: '77.0'
+          version: '83.0'
         }
 #      - { u: '', f: '', v: true, s: 'aaaa', n: '', t: 'app', m: '/Volumes/app', version: '', versioncmd: '', to: '/Applications/example.app' }
     - harden_darwin_testing: true
