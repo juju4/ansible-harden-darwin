@@ -15,7 +15,7 @@
           exec_name: 'FUSE for macOS.pkg',
           versioncmd: '/usr/libexec/PlistBuddy -c "print :CFBundleVersion" "/Library/Filesystems/osxfuse.fs/Contents/Info.plist"'
         }
-      - { u: 'https://launchpad.net/veracrypt/trunk/1.24-update4/+download/VeraCrypt_1.24-Update4.dmg'
+      - { u: 'https://launchpad.net/veracrypt/trunk/1.24-update4/+download/VeraCrypt_1.24-Update4.dmg',
           v: true,
           s: 'E84D3836D46612783248BB70225791374B7C3B68E32D1171159ED4DCF1FD3624',
           n: 'VeraCrypt',
