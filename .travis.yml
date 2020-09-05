@@ -7,14 +7,17 @@ env:
 # OS X 10.14
   - osx_image: xcode11.2
     suite: default
+    ansible_args: -vvvv
 # OS X 10.13
   - osx_image: xcode10.1
     suite: default
+    ansible_args: -vvvv
 # OS X 10.12
 #  - osx_image: xcode9.2
 #    suite: default
   - osx_image: xcode11.2
     suite: full
+    ansible_args: -vvv
 
 #language: python
 #python: "2.7"
@@ -75,7 +78,7 @@ script:
   - "ansible-playbook -i inventory --syntax-check test/integration/${suite}/default.yml"
 
 # Run the role/playbook with ansible-playbook.
-  - "ansible-playbook -i inventory --connection=local --become -vvvv test/integration/${suite}/default.yml"
+  - "ansible-playbook -i inventory --connection=local --become ${ansible_args} test/integration/${suite}/default.yml"
 
 # Run the role/playbook again, checking to make sure it's idempotent.
 ## FIXME! known fail
