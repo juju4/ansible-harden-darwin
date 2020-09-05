@@ -17,7 +17,7 @@ env:
 #    suite: default
   - osx_image: xcode11.2
     suite: full
-    ansible_args: -vvv
+    ansible_args: -vv
 
 #language: python
 #python: "2.7"
