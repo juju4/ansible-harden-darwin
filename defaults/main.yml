@@ -319,8 +319,8 @@ harden_darwin_certificates_cn_denytrust:
   # - Apple Root CA - G3
   # - Apple Software Update Certification Authority
   # - Apple Root Certificate Authority
-  - ApplicationCA
-  - ApplicationCA2 Root
+  # - ApplicationCA
+  # - ApplicationCA2 Root
   # - Atos TrustedRoot 2011      # Not working
   - Autoridad de Certificacion Firmaprofesional CIF A62634068
   - Autoridad de Certificacion Raiz del Estado Venezolano
@@ -418,11 +418,11 @@ harden_darwin_certificates_cn_denytrust:
   - Swisscom Root CA 2
   - Swisscom Root EV CA 2
   - SwissSign Gold CA - G2
-  - SwissSign Gold Root CA - G3
+  # - SwissSign Gold Root CA - G3
   - SwissSign Platinum CA - G2
-  - SwissSign Platinum Root CA - G3
+  # - SwissSign Platinum Root CA - G3
   - SwissSign Silver CA - G2
-  - SwissSign Silver Root CA - G3
+  # - SwissSign Silver Root CA - G3
   - SZAFIR ROOT CA
   - T-TeleSec GlobalRoot Class 2
   - T-TeleSec GlobalRoot Class 3
