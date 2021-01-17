@@ -10,7 +10,7 @@
 - name: add TLP:YELLOW category
   osx_defaults:
     domain: '/Users/*/Library/Application Support/com.apple.sharedfilelist/com.apple.LSSharedFileList.ProjectsItems.sfl'
-#    key: AppleLanguages
+    # key: AppleLanguages
     key: '$objects'
     type: string
     value: 'x-apple-findertag:TLP%3AYELLOW'

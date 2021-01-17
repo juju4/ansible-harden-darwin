@@ -15,7 +15,7 @@
     - IOUSBMassStorageClass
     - IOUSBMassStorageDriver
     - IOFireWireSerialBusProtocolTransport
-  when: "'{{ item }}' in kextstat.stdout"
+  when: "item in kextstat.stdout"
 
 ## 10.6/Snow Leopard, Apple's Security Configuration guide for Mac OS X:
 ##  https://support.apple.com/en-us/HT201216 (no update for 10.12, it seems)
@@ -34,6 +34,7 @@
     - name: USB+Firewire | force refresh of Extensions cache at next reboot
       file:
         dest: /System/Library/Extensions
+        mode: '0644'
         state: touch
       when: rmkext.changed
   when: harden_darwin_usb_remove_massstoragekext

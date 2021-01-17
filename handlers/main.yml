@@ -2,7 +2,7 @@
 
 ## not sure it is needed, as sshd is managed by launchd/inetd-like
 - name: restart sshd
-#  service: name={{ ssh_svc }} state=restarted
+  # service: name={{ ssh_svc }} state=restarted
   command: >
     launchctl stop -w /System/Library/LaunchDaemons/ssh.plist;
     launchctl start -w /System/Library/LaunchDaemons/ssh.plist
@@ -17,7 +17,7 @@
   ignore_errors: true
 
 - name: restart osquery
-#  service: name=osqueryd state=restarted
+  # service: name=osqueryd state=restarted
   command: >
     launchctl stop -w /Library/LaunchDaemons/com.facebook.osqueryd.plist;
     launchctl start -w /Library/LaunchDaemons/com.facebook.osqueryd.plist

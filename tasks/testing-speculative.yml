@@ -14,17 +14,18 @@
   command: gcc -std=c99 -O0 spectre.c -o spectre
   args:
     chdir: /tmp
+    creates: /tmp/spectre
 
 - name: run sample code
-  command: ./spectre
+  command: ./spectre  # noqa 301
   args:
     chdir: /tmp
-# Failed to set permissions on the temporary files Ansible needs to create when becoming an unprivileged user
-#   (rc: 1, err: chown: /tmp/ansible-tmp-1515230731.18-128064885271625/: Operation not permitted\nchown:
-#   /tmp/ansible-tmp-1515230731.18-128064885271625/command.py: Operation not permitted\n}). For information
-#   on working around this, see https://docs.ansible.com/ansible/become.html#becoming-an-unprivileged-user
-#  become: yes
-#  become_user: nobody
+  # Failed to set permissions on the temporary files Ansible needs to create when becoming an unprivileged user
+  #   (rc: 1, err: chown: /tmp/ansible-tmp-1515230731.18-128064885271625/: Operation not permitted\nchown:
+  #   /tmp/ansible-tmp-1515230731.18-128064885271625/command.py: Operation not permitted\n}). For information
+  #   on working around this, see https://docs.ansible.com/ansible/become.html#becoming-an-unprivileged-user
+  # become: yes
+  # become_user: nobody
   register: spectre
   ignore_errors: true
 

@@ -3,7 +3,7 @@
 ## configuration?
 # /var/osquery/osquery.conf
 # /var/osquery/osquery.example.conf
-#osqueryctl config-check
+# osqueryctl config-check
 
 - name: check if osquery is present
   stat: path=/var/osquery
@@ -13,26 +13,28 @@
       template:
         src: "{{ item }}.conf.j2"
         dest: "/var/osquery/packs/{{ item | basename }}.conf"
+        mode: '0644'
       with_items: "{{ harden_darwin_osquery_upload_packs }}"
       notify:
         - restart osquery
     - name: review default packs configuration
       replace:
-        dest: "{{ item.d }}"
+        dest: "{{ item.d }}"
         regexp: "{{ item.re }}"
-        replace: "{{ item.rep }}"
+        replace: "{{ item.rep }}"
+        mode: '0644'
         backup: yes
       with_items:
-## The browser_plugins table returns data based on the current user by default,
-##      consider JOINing against the users table
+        ## The browser_plugins table returns data based on the current user by default,
+        ##      consider JOINing against the users table
         - { d: '/var/osquery/packs/it-compliance.conf',
             re: '"select \* from browser_plugins;"',
             rep: '"select browser_plugins.* from users join browser_plugins using (uid);"'
-          }
+        }
         - { d: '/var/osquery/packs/incident-response.conf',
             re: '"select \* from shell_history;"',
             rep: '"select shell_history.* from users join shell_history using (uid);"'
-          }
+        }
     - name: configure osquery
       template:
         src: "{{ harden_darwin_osquery_template }}"
@@ -44,7 +46,7 @@
         - restart osquery
       environment:
         PATH: '/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin'
-## https://github.com/facebook/osquery/issues/302
+    ## https://github.com/facebook/osquery/issues/302
     - name: configure newsyslog for osquery
       template:
         src: newsyslog-osquery.conf.j2
@@ -52,8 +54,8 @@
         mode: '0644'
         backup: yes
         validate: 'newsyslog -N -f %s'
-#      notify:
-#        - restart newsyslog
+        # notify:
+        #   - restart newsyslog
     - name: configure Launchd for osquery
       copy:
         src: /var/osquery/com.facebook.osqueryd.plist
@@ -65,8 +67,8 @@
       changed_when: false
       register: launchctllist
     - name: ensure service is enabled and started
-#      service: name=osqueryd state=started enabled=yes
-#      command: "launchctl load /Library/LaunchDaemons/com.facebook.osqueryd.plist"
+      # service: name=osqueryd state=started enabled=yes
+      # command: "launchctl load /Library/LaunchDaemons/com.facebook.osqueryd.plist"
       command: "/usr/local/bin/osqueryctl start"
       when: >
         launchctllist is defined and

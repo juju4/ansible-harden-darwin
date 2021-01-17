@@ -4,13 +4,13 @@ harden_darwin_hostname: ''
 
 harden_use_forwarding: false
 harden_umask: '022'
-#harden_umask: '027'
+# harden_umask: '027'
 harden_init_aidedb: false
 harden_darwin_logrotate_days: 90
 
 ## TODO: firewall rules? avoid to lock yourself
 harden_darwin_fw_pf: false
-#harden_darwin_fw_pf: true
+# harden_darwin_fw_pf: true
 harden_darwin_fw_template: pf.conf.j2
 harden_darwin_fw_ssh_port: 22
 harden_darwin_fw_snmp_restricted:
@@ -31,7 +31,7 @@ harden_darwin_infrared: false
 ## https://support.apple.com/en-us/HT202842, OS X: How to disable automatic login when FileVault is enabled
 ## YES = double login
 harden_darwin_disablefdeautologin: 'YES'
-#harden_darwin_disablefdeautologin: 'NO'
+# harden_darwin_disablefdeautologin: 'NO'
 
 harden_darwin_auditconf: openbsm-security_control.j2
 
@@ -42,7 +42,7 @@ harden_darwin_firewall_allow_signedapps: false
 ## this is equivalent to value 2 and blocking ssh
 harden_darwin_firewall_blockall_apps_in: false
 harden_darwin_fw_program_allowed_in:
-## the sshd line and /{usr,System} apps are only necessary if we don't allow incoming to built-in software
+  ## the sshd line and /{usr,System} apps are only necessary if we don't allow incoming to built-in software
   - /usr/libexec/sshd-keygen-wrapper
   - /usr/sbin/netbiosd
   - /usr/libexec/sharingd
@@ -75,11 +75,11 @@ harden_darwin_disable_wpad: true
 harden_darwin_disable_airdrop: true
 harden_darwin_disable_iclouddrive: true
 harden_darwin_captiveportal: false
-#harden_darwin_crashreporter: 'crashreport'
+# harden_darwin_crashreporter: 'crashreport'
 harden_darwin_crashreporter: 'none'
 harden_darwin_crashreporter_useunc: 1
 harden_darwin_fastuserswitching: 'YES'
-#harden_darwin_fastuserswitching: 'NO'
+# harden_darwin_fastuserswitching: 'NO'
 harden_darwin_safari_javascript: false
 
 ## Experimental/Care! Will remove mass storage kext!
@@ -96,8 +96,8 @@ harden_darwin_fixmacosleak: false
 
 ## Audit Tools
 # FIXME! golang dependency
-#harden_darwin_osxlockdown: 'audit'
-#harden_darwin_osxlockdown: 'run'
+# harden_darwin_osxlockdown: 'audit'
+# harden_darwin_osxlockdown: 'run'
 ## FAILED! => {"changed": false, "cmd": ["/usr/bin/git", "fetch", "--tags", "origin"], "failed": true, "msg": "Failed to download remote objects and refs:  fatal: unable to access 'https://github.com/kristovatlas/osx-config-check/': The requested URL returned error: 504\n"}
 harden_darwin_osxconfigcheck: false
 
@@ -107,21 +107,21 @@ harden_darwin_osxconfigcheck: false
 ## install google santa. mode 0 = Monitor, 1 = Blacklist, 2 = Whitelist
 harden_darwin_santa: true
 ## ?ElCapitan/0.9.17
-#harden_darwin_santa_db_type: int
+# harden_darwin_santa_db_type: int
 ## Sierra/0.9.17
 # "msg": "Type mismatch. Type in defaults: str"
 # "msg": "value of type must be one of: array,bool,boolean,date,float,int,integer,string, got: str"
 # "failed": true, "msg": "Type mismatch. Type in defaults: int"
 harden_darwin_santa_db_type: string
-#harden_darwin_santa: false
+# harden_darwin_santa: false
 harden_darwin_santa_mode: 0
 ## Be careful when activating! be sure to fit whitelist to YOUR context.
-#harden_darwin_santa_mode: 2
+# harden_darwin_santa_mode: 2
 harden_darwin_santa_blacklist_path: "'^(?:/Users|/private/tmp)/.*'"
 harden_darwin_santa_whitelist_path: "'^(?:/opt/local/var/macports/build/.*/work)/.*'"
-#$ cat /var/log/santa.log | awk -F'|' '/path=/ { gsub(/path=/, "", $5); print $5 }'| sort | uniq -c | sort -nr | head -10
-#$ cat /var/log/santa.log | awk -F'|' '/path=/ && /reason=UNKNOWN/ { gsub(/path=/, "", $5); print $5 }'| sort | uniq -c | sort -nr | head -100
-#decision ALLOW, DISKAPPEAR/DISKDISAPPEAR (usb/dmg)
+# $ cat /var/log/santa.log | awk -F'|' '/path=/ { gsub(/path=/, "", $5); print $5 }'| sort | uniq -c | sort -nr | head -10
+# $ cat /var/log/santa.log | awk -F'|' '/path=/ && /reason=UNKNOWN/ { gsub(/path=/, "", $5); print $5 }'| sort | uniq -c | sort -nr | head -100
+# decision ALLOW, DISKAPPEAR/DISKDISAPPEAR (usb/dmg)
 ## If binary is not signed, it will have no effect. mush be added to hash list
 harden_darwin_santa_whitelist_cert:
   - /bin/sh
@@ -134,73 +134,73 @@ harden_darwin_santa_whitelist_cert:
   - /var/_install/RansomWhere.app/Contents/MacOS/RansomWhere
   - /Library/RansomWhere/RansomWhere
   - /Applications/Wireshark.app/Contents/MacOS/dumpcap
-#  - /Library/Application Support/Adobe/Flash Player Install Manager/fpsaud
-## Note: it seems, all applications from App Store are signed by Apple ou=null
+  # - /Library/Application Support/Adobe/Flash Player Install Manager/fpsaud
+  ## Note: it seems, all applications from App Store are signed by Apple ou=null
   - /Applications/Xcode.app/Contents/MacOS/Xcode
 
-#harden_darwin_santa_whitelist_hash: []
+# harden_darwin_santa_whitelist_hash: []
 harden_darwin_santa_whitelist_hash:
   - /System/Library/Frameworks/Python.framework/Versions/2.7/Resources/Python.app/Contents/MacOS/Python
-### mostly macports: keepass, smartmontools, nagios-plugins + jedda, interpreters
-### not signed: DNSCrypt, vagrant
-#  - /Applications/MacPorts/KeePassX.app/Contents/MacOS/KeePassX
-#  - /opt/local/sbin/smartctl
-#  - /opt/local/libexec/nagios/check_disk
-#  - /opt/local/libexec/nagios/check_dns
-#  - /opt/local/libexec/nagios/check_load
-#  - /opt/local/libexec/nagios/check_ntp_time
-#  - /opt/local/libexec/nagios/check_procs
-#  - /opt/local/libexec/nagios/check_users
-#  - /usr/local/share/OSX-Monitoring-Tools/check_osx_mem/build/Release/check_osx_mem
-#  - /usr/local/share/OSX-Monitoring-Tools/check_osx_smc/build/Release/check_osx_smc
-#  - /opt/local/libexec/macports/bin/tclsh8.5
-#  - /opt/local/bin/perl5.24
-#  - /opt/local/bin/daemondo
-#  - /opt/local/bin/sqlite3
-#  - /opt/local/bin/aide
-#  - /opt/local/bin/lftp
-#  - /opt/local/bin/clear
-### macports build and more...
-#  - /opt/local/bin/gsed
-#  - /opt/local/bin/yasm
-#  - /opt/local/bin/gawk
-#  - /opt/local/bin/openssl
-#  - /opt/local/bin/strip
-#  - /opt/local/bin/ar
-#  - /opt/local/bin/llvm-gcc-4.2
-#  - /opt/local/libexec/llvm-3.9/bin/llvm-objdump
-#  - /opt/local/libexec/llvm-3.9/bin/llvm-nm
-#  - /opt/local/bin/i686-apple-darwin15-llvm-gcc-4.2
-#  - /opt/local/bin/llvm-otool
-#  - /opt/local/bin/ld-latest
-#  - /opt/local/bin/pkg-config
-#  - /opt/local/bin/libtool
-#  - /opt/local/bin/msgfmt
-#  - /opt/local/bin/glib-compile-schemas
-#  - /opt/local/bin/gsx
-#  - /opt/local/bin/xgettext
-#  - /opt/local/bin/gmake
-#  - /opt/local/bin/cmake
-#  - /opt/local/bin/xsltproc
-#  - /opt/local/bin/msgmerge
-#  - /opt/local/bin/lua
-#  - /opt/local/bin/lipo
-### macports build (end)
-#  - /Applications/DNSCrypt Menubar.app/Contents/MacOS/DNSCrypt Menubar
-#  - /Library/PreferencePanes/DNSCrypt.prefPane/Contents/Resources/usr/bin/lockfile
-#  - /Library/PreferencePanes/DNSCrypt.prefPane/Contents/Resources/usr/sbin/dnscrypt-proxy
-#  - /Library/PreferencePanes/DNSCrypt.prefPane/Contents/Resources/usr/bin/alarmer
-#  - /Library/PreferencePanes/DNSCrypt.prefPane/Contents/Resources/usr/bin/minisign-verify
-#  - /opt/vagrant/bin/vagrant
-#  - /opt/vagrant/embedded/bin/ruby
-#  - /opt/vagrant/embedded/bin/curl
-#  - /opt/vagrant/embedded/bin/bsdtar
+  ### mostly macports: keepass, smartmontools, nagios-plugins + jedda, interpreters
+  ### not signed: DNSCrypt, vagrant
+  # - /Applications/MacPorts/KeePassX.app/Contents/MacOS/KeePassX
+  # - /opt/local/sbin/smartctl
+  # - /opt/local/libexec/nagios/check_disk
+  # - /opt/local/libexec/nagios/check_dns
+  # - /opt/local/libexec/nagios/check_load
+  # - /opt/local/libexec/nagios/check_ntp_time
+  # - /opt/local/libexec/nagios/check_procs
+  # - /opt/local/libexec/nagios/check_users
+  # - /usr/local/share/OSX-Monitoring-Tools/check_osx_mem/build/Release/check_osx_mem
+  # - /usr/local/share/OSX-Monitoring-Tools/check_osx_smc/build/Release/check_osx_smc
+  # - /opt/local/libexec/macports/bin/tclsh8.5
+  # - /opt/local/bin/perl5.24
+  # - /opt/local/bin/daemondo
+  # - /opt/local/bin/sqlite3
+  # - /opt/local/bin/aide
+  # - /opt/local/bin/lftp
+  # - /opt/local/bin/clear
+  ### macports build and more...
+  # - /opt/local/bin/gsed
+  # - /opt/local/bin/yasm
+  # - /opt/local/bin/gawk
+  # - /opt/local/bin/openssl
+  # - /opt/local/bin/strip
+  # - /opt/local/bin/ar
+  # - /opt/local/bin/llvm-gcc-4.2
+  # - /opt/local/libexec/llvm-3.9/bin/llvm-objdump
+  # - /opt/local/libexec/llvm-3.9/bin/llvm-nm
+  # - /opt/local/bin/i686-apple-darwin15-llvm-gcc-4.2
+  # - /opt/local/bin/llvm-otool
+  # - /opt/local/bin/ld-latest
+  # - /opt/local/bin/pkg-config
+  # - /opt/local/bin/libtool
+  # - /opt/local/bin/msgfmt
+  # - /opt/local/bin/glib-compile-schemas
+  # - /opt/local/bin/gsx
+  # - /opt/local/bin/xgettext
+  # - /opt/local/bin/gmake
+  # - /opt/local/bin/cmake
+  # - /opt/local/bin/xsltproc
+  # - /opt/local/bin/msgmerge
+  # - /opt/local/bin/lua
+  # - /opt/local/bin/lipo
+  ### macports build (end)
+  # - /Applications/DNSCrypt Menubar.app/Contents/MacOS/DNSCrypt Menubar
+  # - /Library/PreferencePanes/DNSCrypt.prefPane/Contents/Resources/usr/bin/lockfile
+  # - /Library/PreferencePanes/DNSCrypt.prefPane/Contents/Resources/usr/sbin/dnscrypt-proxy
+  # - /Library/PreferencePanes/DNSCrypt.prefPane/Contents/Resources/usr/bin/alarmer
+  # - /Library/PreferencePanes/DNSCrypt.prefPane/Contents/Resources/usr/bin/minisign-verify
+  # - /opt/vagrant/bin/vagrant
+  # - /opt/vagrant/embedded/bin/ruby
+  # - /opt/vagrant/embedded/bin/curl
+  # - /opt/vagrant/embedded/bin/bsdtar
 
 
 harden_darwin_santa_blacklist_hash: []
 ## for testing purpose
-#harden_darwin_santa_blacklist_hash:
-#  - /usr/bin/yes
+# harden_darwin_santa_blacklist_hash:
+#   - /usr/bin/yes
 
 harden_darwin_osquery: true
 harden_darwin_osquery_template: 'osquery.conf.j2'
@@ -213,18 +213,18 @@ harden_darwin_osquery_hw_events: false
 harden_darwin_osquery_disk_events: false
 ## extra files to upload as packs
 harden_darwin_osquery_upload_packs:
-    - "osquery-darwin-pack"
-    - "osquery-darwin-snapshots-pack"
+  - "osquery-darwin-pack"
+  - "osquery-darwin-snapshots-pack"
 harden_darwin_osquery_packs:
-    - "osquery-monitoring"
-    - "incident-response"
-    - "it-compliance"
-    - "osx-attacks"
-    - "vuln-management"
-    - "hardware-monitoring"
-    - unwanted-chrome-extensions
-    - "osquery-darwin-pack"
-    - "osquery-darwin-snapshots-pack"
+  - "osquery-monitoring"
+  - "incident-response"
+  - "it-compliance"
+  - "osx-attacks"
+  - "vuln-management"
+  - "hardware-monitoring"
+  - unwanted-chrome-extensions
+  - "osquery-darwin-pack"
+  - "osquery-darwin-snapshots-pack"
 harden_darwin_osquery_snapshot_interval: 604800
 harden_darwin_osquery_snapshot_interval2: 604800
 harden_darwin_osquery_fim_interval: 900
@@ -236,12 +236,12 @@ harden_darwin_osquery_fim_filepaths:
   - name: etc
     list:
       - "/private/etc/%%"
-## Take care if using a lot /tmp. can trigger
-## 'Expiring events for subscriber: file_events (overflowed limit 1000)'
-## => losing many queries results (fim or not)
-#  - name: tmp
-#    list:
-#      - "/tmp/%%"
+  ## Take care if using a lot /tmp. can trigger
+  ## 'Expiring events for subscriber: file_events (overflowed limit 1000)'
+  ## => losing many queries results (fim or not)
+  # - name: tmp
+  #   list:
+  #     - "/tmp/%%"
   - name: bin
     list:
       - "/bin/%%"
@@ -262,16 +262,16 @@ harden_darwin_osquery_fim_excludepaths:
 ## https://github.com/etsy/MIDAS/tree/pre_archive
 
 harden_darwin_launchd_services_unload: []
-#harden_darwin_launchd_services_unload:
-#  - /System/Library/LaunchDaemons/com.apple.RemoteDesktop.PrivilegeProxy.plist
-#  - /System/Library/LaunchDaemons/com.apple.apsd.plist
-#  - /System/Library/LaunchAgents/com.apple.NowPlayingTouchUI.plist
+# harden_darwin_launchd_services_unload:
+#   - /System/Library/LaunchDaemons/com.apple.RemoteDesktop.PrivilegeProxy.plist
+#   - /System/Library/LaunchDaemons/com.apple.apsd.plist
+#   - /System/Library/LaunchAgents/com.apple.NowPlayingTouchUI.plist
 ## https://vilimpoc.org/blog/2014/01/15/provisioning-os-x-and-disabling-unnecessary-services/
-#  - /System/Library/LaunchAgents/com.apple.soagent.plist
-#  - /System/Library/LaunchAgents/com.apple.SocialPushAgent.plist
+#   - /System/Library/LaunchAgents/com.apple.soagent.plist
+#   - /System/Library/LaunchAgents/com.apple.SocialPushAgent.plist
 
 harden_darwin_set_immutable: []
-#  - /var/db/santa/config.plist
+# - /var/db/santa/config.plist
 harden_darwin_set_notimmutable: []
 
 ## Keychain will only affect System, Apple applications like Safari, Chrome but not Firefox
@@ -301,49 +301,49 @@ harden_darwin_certificates_cn_delete: []
 ##          www.siemplify.co? www.osfi-bsif.gc.ca?
 ## https://support.apple.com/en-us/HT205204
 ## + init.itunes.apple.com
-#harden_darwin_certificates_cn_denytrust: []
+# harden_darwin_certificates_cn_denytrust: []
 harden_darwin_certificates_cn_denytrust:
-## To be completed... from ElCapitan/10.11
+  ## To be completed... from ElCapitan/10.11
   - AAA Certificate Services
   - Actalis Authentication Root CA
   - AddTrust Class 1 CA Root
-#  - AddTrust External CA Root      # = news.ycombinator.com, isc.sans.edu
+  # - AddTrust External CA Root      # = news.ycombinator.com, isc.sans.edu
   - Admin-Root-CA
-#  - AffirmTrust Commercial         # www.trendmicro.com, blog.trendmicro.com, zerodayinitiative.com
+  # - AffirmTrust Commercial         # www.trendmicro.com, blog.trendmicro.com, zerodayinitiative.com
   - AffirmTrust Networking
   - AffirmTrust Premium
   - AffirmTrust Premium ECC
   - ANF Global Root CA
-## Probably better to avoid disabling those 4...
-#  - Apple Root CA - G2
-#  - Apple Root CA - G3
-#  - Apple Software Update Certification Authority
-#  - Apple Root Certificate Authority
+  ## Probably better to avoid disabling those 4...
+  # - Apple Root CA - G2
+  # - Apple Root CA - G3
+  # - Apple Software Update Certification Authority
+  # - Apple Root Certificate Authority
   - ApplicationCA
   - ApplicationCA2 Root
-#  - Atos TrustedRoot 2011      # Not working
+  # - Atos TrustedRoot 2011      # Not working
   - Autoridad de Certificacion Firmaprofesional CIF A62634068
   - Autoridad de Certificacion Raiz del Estado Venezolano
-#  - Baltimore CyberTrust Root  # s3.amazonaws.com
+  # - Baltimore CyberTrust Root  # s3.amazonaws.com
   - Belgium Root CA2
   - Buypass Class 2 Root CA
   - Buypass Class 3 Root CA
   - CA Disig Root R1
   - CA Disig Root R2
   - Certigna
-## http://arstechnica.com/security/2013/12/french-agency-caught-minting-ssl-certificates-impersonating-google/
+  ## http://arstechnica.com/security/2013/12/french-agency-caught-minting-ssl-certificates-impersonating-google/
   - Certinomis - Autorité Racine
   - Certinomis - Root CA
-#  - certSIGN ROOT CA           # Not working
+  # - certSIGN ROOT CA           # Not working
   - Certum CA
   - Certum Trusted Network CA 2
   - Certum Trusted Network CA
-#  - CFCA EV ROOT               # Not working
+  # - CFCA EV ROOT               # Not working
   - Chambers of Commerce Root
   - Chambers of Commerce Root - 2008        # www.ccn-cert.cni.es
   - Cisco Root CA 2048
   - Class 2 Primary CA      # paiement.systempay.fr, www.caisse-epargne.fr
-#  - Common Policy
+  # - Common Policy
   - ComSign CA
   - ComSign Global Root CA
   - ComSign Secured CA
@@ -356,10 +356,10 @@ harden_darwin_certificates_cn_denytrust:
   - DigiCert Global Root CA
   - DigiCert Global Root G2
   - DigiCert Global Root G3
-#  - DigiCert High Assurance EV Root CA # github.com
+  # - DigiCert High Assurance EV Root CA # github.com
   - DigiCert Trusted Root G4
-#  - DST ACES CA X6
-#  - DST Root CA X3         # Let's Encrypt Authority X3
+  # - DST ACES CA X6
+  # - DST Root CA X3         # Let's Encrypt Authority X3
   - DST Root CA X4
   - E-Tugra Certification Authority
   - Echoworx Root CA2
@@ -368,19 +368,19 @@ harden_darwin_certificates_cn_denytrust:
   - Entrust Root Certification Authority - EC1
   - Entrust Root Certification Authority - G2
   - Entrust.net Certification Authority (2048)
-## no common name??? TW
-#  - ePKI Root Certification Authority      ## not working
-#  - Federal Common Policy CA
-#  - GeoTrust Global CA                     # www.google.com, www.youtube.com
+  ## no common name??? TW
+  # - ePKI Root Certification Authority      ## not working
+  # - Federal Common Policy CA
+  # - GeoTrust Global CA                     # www.google.com, www.youtube.com
   - GeoTrust Primary Certification Authority
   - GeoTrust Primary Certification Authority - G2
   - GeoTrust Primary Certification Authority - G3
   - Global Chambersign Root
   - Global Chambersign Root - 2008
-#  - GlobalSign                             # www.sophos.com
-#  - GlobalSign Root CA                      # www.buzzfeed.com, www.sans.org, meetup.com
-## no common name??? TW
-#  - Government Root Certification Authority      ## multiple/not working
+  # - GlobalSign                             # www.sophos.com
+  # - GlobalSign Root CA                      # www.buzzfeed.com, www.sans.org, meetup.com
+  ## no common name??? TW
+  # - Government Root Certification Authority      ## multiple/not working
   - Hellenic Academic and Research Institutions RootCA 2011
   - Hongkong Post Root CA 1
   - I.CA - Qualified Certification Authority, 09/2009
@@ -392,26 +392,26 @@ harden_darwin_certificates_cn_denytrust:
   - OISTE WISeKey Global Root GA CA
   - OISTE WISeKey Global Root GB CA
   - QuoVadis Root CA 1 G3
-#  - QuoVadis Root CA 2          # blogs.cisco.com, umbrella.cisco.com, supportforums.cisco.com, www.webex.com, www.repository.cam.ac.uk
+  # - QuoVadis Root CA 2          # blogs.cisco.com, umbrella.cisco.com, supportforums.cisco.com, www.webex.com, www.repository.cam.ac.uk
   - QuoVadis Root CA 2 G3       # auscert.org.au
   - QuoVadis Root CA 3
   - QuoVadis Root CA 3 G3
   - QuoVadis Root Certification Authority
-#  - RSA Security 2048 V3      ## not working
+  # - RSA Security 2048 V3      ## not working
   - Secure Global CA
-#  - SecureTrust CA              # www.thestar.com, www.trustwave.com
-## no common name??? JP
-#  - Security Communication EV RootCA1      ## not working
-#  - Security Communication RootCA1      ## not working
-#  - Security Communication RootCA2      ## not working
-#  - Sonera Class1 CA                    ## not working, macos 10.13
+  # - SecureTrust CA              # www.thestar.com, www.trustwave.com
+  ## no common name??? JP
+  # - Security Communication EV RootCA1      ## not working
+  # - Security Communication RootCA1      ## not working
+  # - Security Communication RootCA2      ## not working
+  # - Sonera Class1 CA                    ## not working, macos 10.13
   - Sonera Class2 CA
   - Staat der Nederlanden EV Root CA
   - Staat der Nederlanden Root CA - G2
   - Staat der Nederlanden Root CA - G3
-#  - Starfield Class 2 Certification Authority      ## not working
-#  - Starfield Root Certificate Authority - G2          # tools.ietf.org
-#  - Starfield Services Root Certificate Authority - G2  # www.scmagazineuk.com
+  # - Starfield Class 2 Certification Authority      ## not working
+  # - Starfield Root Certificate Authority - G2          # tools.ietf.org
+  # - Starfield Services Root Certificate Authority - G2  # www.scmagazineuk.com
   - StartCom Certification Authority
   - StartCom Certification Authority G2
   - Swisscom Root CA 1
@@ -427,55 +427,55 @@ harden_darwin_certificates_cn_denytrust:
   - T-TeleSec GlobalRoot Class 2
   - T-TeleSec GlobalRoot Class 3
   - TeliaSonera Root CA v1
-#  - thawte Primary Root CA
-#  - thawte Primary Root CA - G2
-#  - thawte Primary Root CA - G3        # www.usenix.org
+  # - thawte Primary Root CA
+  # - thawte Primary Root CA - G2
+  # - thawte Primary Root CA - G3        # www.usenix.org
   - TRUST2408 OCES Primary CA
-#  - Trustis FPS Root CA      ## not working
-#  - TÜBİTAK UEKAE Kök Sertifika Hizmet Sağlayıcısı - Sürüm 3
-#  - TÜRKTRUST Elektronik Sertifika Hizmet Sağlayıcısı
+  # - Trustis FPS Root CA      ## not working
+  # - TÜBİTAK UEKAE Kök Sertifika Hizmet Sağlayıcısı - Sürüm 3
+  # - TÜRKTRUST Elektronik Sertifika Hizmet Sağlayıcısı
   - TWCA Global Root CA
   - TWCA Root Certification Authority
   - UCA Global Root
   - UCA Root
-## usertrust.com = HTTP 403...
+  ## usertrust.com = HTTP 403...
   - UTN - DATACorp SGC
   - UTN-USERFirst-Client Authentication and Email
   - UTN-USERFirst-Hardware
-#  - UTN-USERFirst-Network Applications          ## not working, macos 10.13
+  # - UTN-USERFirst-Network Applications          ## not working, macos 10.13
   - UTN-USERFirst-Object
   - Visa eCommerce Root
   - Visa Information Delivery Root CA
   - VRK Gov. Root CA
-#  - WellsSecure Public Root Certificate Authority ## not working, macos 10.13
+  # - WellsSecure Public Root Certificate Authority ## not working, macos 10.13
   - XRamp Global Certification Authority
-## present in 10.11 but not in 10.12
-#  - AddTrust Public CA Root
-#  - AddTrust Qualified CA Root
-#  - DoD Root CA 2
-#  - NetLock Kozjegyzoi (Class A) Tanusitvanykiado
-#  - Secure Certificate Services
-#  - TC TrustCenter Class 2 CA II
-#  - TC TrustCenter Class 3 CA II
-#  - TC TrustCenter Class 4 CA II
-#  - TC TrustCenter Universal CA I
-#  - TC TrustCenter Universal CA II
-#  - TC TrustCenter Universal CA III
-#  - Trusted Certificate Services
-## 10.12 only
-#  - Atos TustedRoot 2011
-#  - Certigna
-#  - certSIGN ROOT CA
-#  - Certum CA
-#  - Certum Trusted Network CA
-#  - Certum Trusted Network CA 2
-#  - CFCA EV ROOT
+  ## present in 10.11 but not in 10.12
+  # - AddTrust Public CA Root
+  # - AddTrust Qualified CA Root
+  # - DoD Root CA 2
+  # - NetLock Kozjegyzoi (Class A) Tanusitvanykiado
+  # - Secure Certificate Services
+  # - TC TrustCenter Class 2 CA II
+  # - TC TrustCenter Class 3 CA II
+  # - TC TrustCenter Class 4 CA II
+  # - TC TrustCenter Universal CA I
+  # - TC TrustCenter Universal CA II
+  # - TC TrustCenter Universal CA III
+  # - Trusted Certificate Services
+  ## 10.12 only
+  # - Atos TustedRoot 2011
+  # - Certigna
+  # - certSIGN ROOT CA
+  # - Certum CA
+  # - Certum Trusted Network CA
+  # - Certum Trusted Network CA 2
+  # - CFCA EV ROOT
 
 ## Not altering what is in default Keychain here. You can always review in Keychain.app
 harden_darwin_certificates_cn_unspecifiedtrust: []
 harden_darwin_certificates_cn_trust: []
 
-#harden_darwin_certificates_dl: []
+# harden_darwin_certificates_dl: []
 harden_darwin_certificates_dl:
   - { u: 'https://www.cacert.org/certs/root.crt', validate: false, c: 'sha256:c0e0773a79dceb622ef6410577c19c1e177fb2eb9c623a49340de3c9f1de2560' }
   - { u: 'https://www.cacert.org/certs/class3.crt', validate: false, c: 'sha256:f5badaa5da1cc05b110a9492455a2c2790d00c7175dcf3a7bcb5441af71bf84f' }

@@ -12,6 +12,6 @@
     dest: /etc/security/audit_control
     mode: '0400'
     backup: yes
-## no validate option in auditd
+    ## no validate option in auditd
   notify:
     - restart auditd

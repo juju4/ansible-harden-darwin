@@ -26,8 +26,8 @@
   osx_defaults: domain=NSGlobalDomain key=NSDocumentSaveNewDocumentsToCloud type=bool value=false state=present
   when: harden_darwin_disable_iclouddrive
 
-#- osx_defaults: domain=com.apple.Safari key=IncludeInternalDebugMenu type=bool value=true state=present
-#- osx_defaults: domain=com.apple.Safari key=IncludeDevelopMenu type=bool value=true state=present
+# - osx_defaults: domain=com.apple.Safari key=IncludeInternalDebugMenu type=bool value=true state=present
+# - osx_defaults: domain=com.apple.Safari key=IncludeDevelopMenu type=bool value=true state=present
 - name: Safari - disable extensions
   osx_defaults: domain=~/Library/Preferences/com.apple.Safari key=ExtensionsEnabled type=bool value=false state=present
 - name: Safari - Warn about fraudulent websites
@@ -42,14 +42,14 @@
     domain: ~/Library/Preferences/com.apple.Safari
     key: com.apple.Safari.ContentPageGroupIdentifier.WebKit2JavaScriptEnabled
     type: bool
-    value: "{{ harden_darwin_safari_javascript | default(false) }}"
+    value: "{{ harden_darwin_safari_javascript | default(false) }}"
     state: present
 - name: Safari - configure javascript legacy
   osx_defaults:
     domain: ~/Library/Preferences/com.apple.Safari
     key: WebKitJavaScriptEnabled
     type: bool
-    value: "{{ harden_darwin_safari_javascript | default(false) }}"
+    value: "{{ harden_darwin_safari_javascript | default(false) }}"
     state: present
 - name: Safari - configure java
   osx_defaults:
@@ -125,9 +125,9 @@
 - name: Photos - disable auto-launching
   osx_defaults: domain=com.apple.ImageCapture key=disableHotPlug type=bool value=yes state=present
 
-##???
-#Make Crash Reporter appear as a notification
-#defaults write com.apple.CrashReporter UseUNC 1
-#Display the file extensions in Finder
-#defaults write NSGlobalDomain AppleShowAllExtensions -bool true
-#notify: killall Finder
+## ???
+# Make Crash Reporter appear as a notification
+# defaults write com.apple.CrashReporter UseUNC 1
+# Display the file extensions in Finder
+# defaults write NSGlobalDomain AppleShowAllExtensions -bool true
+# notify: killall Finder

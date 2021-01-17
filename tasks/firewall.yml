@@ -7,7 +7,7 @@
     domain: /Library/Preferences/com.apple.alf
     key: globalstate
     type: int
-    value: "{{ harden_darwin_firewall }}"
+    value: "{{ harden_darwin_firewall }}"
     state: present
 
 - name: Ensure logging is enabled
@@ -40,13 +40,13 @@
   register: appfwlist
 - name: add application to allow incoming
   command: "/usr/libexec/ApplicationFirewall/socketfilterfw --add {{ item }}"
-  with_items: "{{ harden_darwin_fw_program_allowed_in }}"
+  with_items: "{{ harden_darwin_fw_program_allowed_in }}"
   register: addallow
   changed_when: not "'The application is already a part of the firewall' in addallow.stdout"
 - name: add application to block incoming
   shell: >
     /usr/libexec/ApplicationFirewall/socketfilterfw --add {{ item }};
     /usr/libexec/ApplicationFirewall/socketfilterfw --blockapp {{ item }}
-  with_items: "{{ harden_darwin_fw_program_blocked_in }}"
+  with_items: "{{ harden_darwin_fw_program_blocked_in }}"
   register: addblock
   changed_when: not "'The application is already a part of the firewall' in addblock.stdout"

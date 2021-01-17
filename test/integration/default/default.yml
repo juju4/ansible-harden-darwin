@@ -3,65 +3,65 @@
 - hosts: all
   vars:
     - macos_apps_install_list:
-  ## osxfuse is required for veracrypt
-      - { u: 'https://github.com/osxfuse/osxfuse/releases/download/osxfuse-3.10.6/osxfuse-3.10.6.dmg',
-          v: true,
-          s: 'E84D3836D46612783248BB70225791374B7C3B68E32D1171159ED4DCF1FD3624',
-          n: 'FUSE',
-          t: 'pkg',
-          m: '/Volumes/FUSE for macOS',
-          version: '3.10.6',
-          to: '/Library/Filesystems/osxfuse.fs',
-          exec_name: 'FUSE for macOS.pkg',
-          versioncmd: '/usr/libexec/PlistBuddy -c "print :CFBundleVersion" "/Library/Filesystems/osxfuse.fs/Contents/Info.plist"'
+        ## osxfuse is required for veracrypt
+        - { u: 'https://github.com/osxfuse/osxfuse/releases/download/osxfuse-3.10.6/osxfuse-3.10.6.dmg',
+            v: true,
+            s: 'E84D3836D46612783248BB70225791374B7C3B68E32D1171159ED4DCF1FD3624',
+            n: 'FUSE',
+            t: 'pkg',
+            m: '/Volumes/FUSE for macOS',
+            version: '3.10.6',
+            to: '/Library/Filesystems/osxfuse.fs',
+            exec_name: 'FUSE for macOS.pkg',
+            versioncmd: '/usr/libexec/PlistBuddy -c "print :CFBundleVersion" "/Library/Filesystems/osxfuse.fs/Contents/Info.plist"'
         }
-      - { u: 'https://launchpad.net/veracrypt/trunk/1.24-update4/+download/VeraCrypt_1.24-Update4.dmg',
-          v: true,
-          s: 'E84D3836D46612783248BB70225791374B7C3B68E32D1171159ED4DCF1FD3624',
-          n: 'VeraCrypt',
-          t: 'pkg',
-          m: '/Volumes/VeraCrypt for OSX',
-          version: '1.24',
-          exec_name: 'VeraCrypt_Installer.pkg'
+        - { u: 'https://launchpad.net/veracrypt/trunk/1.24-update4/+download/VeraCrypt_1.24-Update4.dmg',
+            v: true,
+            s: 'E84D3836D46612783248BB70225791374B7C3B68E32D1171159ED4DCF1FD3624',
+            n: 'VeraCrypt',
+            t: 'pkg',
+            m: '/Volumes/VeraCrypt for OSX',
+            version: '1.24',
+            exec_name: 'VeraCrypt_Installer.pkg'
         }
-      - { u: 'https://github.com/google/santa/releases/download/1.13/santa-1.13.dmg',
-          v: false,
-          s: '37b3f9acfd02b4e1b23bf9e3288f9b14f350bbdbb54694fc8b07ee4e81b23057',
-          n: 'santa-1.13',
-          t: 'pkg',
-          version: '1.13',
-          versioncmd: '/usr/local/bin/santactl version | sed "1 s/.*| //;q"',
-          to: '/usr/local/bin/santactl'
+        - { u: 'https://github.com/google/santa/releases/download/1.13/santa-1.13.dmg',
+            v: false,
+            s: '37b3f9acfd02b4e1b23bf9e3288f9b14f350bbdbb54694fc8b07ee4e81b23057',
+            n: 'santa-1.13',
+            t: 'pkg',
+            version: '1.13',
+            versioncmd: '/usr/local/bin/santactl version | sed "1 s/.*| //;q"',
+            to: '/usr/local/bin/santactl'
         }
-      - { u: 'https://pkg.osquery.io/darwin/osquery-4.3.0.pkg',
-          v: true,
-          s: '197eae9624ec830bf3fec53b79b11e084792a04a461c3241d95cf6aebd3e6ac2',
-          n: 'osquery',
-          t: 'pkgonly',
-          version: '4.3.0',
-          versioncmd: '/usr/local/bin/osqueryi --version | sed "s/osqueryi version //"',
-          to: '/usr/local/bin/osqueryi'
+        - { u: 'https://pkg.osquery.io/darwin/osquery-4.3.0.pkg',
+            v: true,
+            s: '197eae9624ec830bf3fec53b79b11e084792a04a461c3241d95cf6aebd3e6ac2',
+            n: 'osquery',
+            t: 'pkgonly',
+            version: '4.3.0',
+            versioncmd: '/usr/local/bin/osqueryi --version | sed "s/osqueryi version //"',
+            to: '/usr/local/bin/osqueryi'
         }
-#      - { u: 'https://releases.gpgtools.org/GPG_Suite-2018.5.dmg',
-#          v: false,
-#          s: 'c66ecf48ccf709f704f02097cf9d68ba97b0efba24f7a0b7b46adfd1133cb86a'
-#        }
-      - { u: 'https://packages.chef.io/files/stable/inspec/4.6.9/mac_os_x/10.14/inspec-4.6.9-1.dmg',
-          v: true,
-          s: 'e61361498a010b83881308df9b7f0f862bccf5a73fdbf9c4bf96c48b7a4c74df',
-          n: 'inspec',
-          t: 'pkg',
-          m: '/Volumes/InSpec',
-          version: '4.6.9',
-          exec_name: 'inspec-4.6.9-1.pkg',
-          versioncmd: 'inspec --version 2>&1 | tail -1'
+        # - { u: 'https://releases.gpgtools.org/GPG_Suite-2018.5.dmg',
+        #     v: false,
+        #     s: 'c66ecf48ccf709f704f02097cf9d68ba97b0efba24f7a0b7b46adfd1133cb86a'
+        # }
+        - { u: 'https://packages.chef.io/files/stable/inspec/4.6.9/mac_os_x/10.14/inspec-4.6.9-1.dmg',
+            v: true,
+            s: 'e61361498a010b83881308df9b7f0f862bccf5a73fdbf9c4bf96c48b7a4c74df',
+            n: 'inspec',
+            t: 'pkg',
+            m: '/Volumes/InSpec',
+            version: '4.6.9',
+            exec_name: 'inspec-4.6.9-1.pkg',
+            versioncmd: 'inspec --version 2>&1 | tail -1'
         }
-#      - { u: '', f: '', v: true, s: 'aaaa', n: '', t: 'app', m: '/Volumes/app', version: '', versioncmd: '', to: '/Applications/example.app' }
+        # - { u: '', f: '', v: true, s: 'aaaa', n: '', t: 'app', m: '/Volumes/app', version: '', versioncmd: '', to: '/Applications/example.app' }
     - harden_darwin_testing: true
     - harden_darwin_testing_privesc: false
     - harden_darwin_hard_fail_developertools: false
-#    - harden_darwin_oversight: false
-#    - harden_darwin_blockblock: false
+    # - harden_darwin_oversight: false
+    # - harden_darwin_blockblock: false
   pre_tasks:
     - set_fact:
         macos_apps_install_list:
@@ -73,7 +73,7 @@
               t: 'pkgonly',
               version: '2.5.4',
               to: '/opt/local/bin/ports'
-            }
+          }
       when: ansible_distribution == 'MacOSX' and ansible_distribution_version.split('.')[1] == '14'
     - set_fact:
         macos_apps_install_list:
@@ -85,7 +85,7 @@
               t: 'pkgonly',
               version: '2.5.4',
               to: '/opt/local/bin/ports'
-            }
+          }
       when: ansible_distribution == 'MacOSX' and ansible_distribution_version.split('.')[1] == '13'
     - set_fact:
         macos_apps_install_list:
@@ -98,7 +98,7 @@
               t: 'pkgonly',
               version: '2.4.4',
               to: '/opt/local/bin/ports'
-            }
+          }
       when: ansible_distribution == 'MacOSX' and ansible_distribution_version.split('.')[1] == '12'
     - set_fact:
         macos_apps_install_list:
@@ -111,7 +111,7 @@
               version: '2.4.2',
               versioncmd: '',
               to: '/opt/local/bin/ports'
-            }
+          }
       when: ansible_distribution == 'MacOSX' and ansible_distribution_version.split('.')[1] == '11'
   roles:
     - juju4.macos-apps-install

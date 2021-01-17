@@ -12,7 +12,7 @@
 #  when: "{{ ansible_distribution_version | regex_replace('^(\d+)\.(\d+)\.(\d+)$', '\\1.\\2') }}" == '10.11'
 
 ## Note: report is written to ~/Documents/ ...
-- name: execute osx-config-check - audit mode only
+- name: execute osx-config-check - audit mode only  # noqa 306
   shell: >
     python app.py --report-only --disable-prompt | tee /private/var/root/osx-config-check.audit
   args:
@@ -22,4 +22,4 @@
   register: osxccout
 #  ignore_errors: true
 ## Note: long report
-#- debug: var=osxccout.stdout_lines
+# - debug: var=osxccout.stdout_lines

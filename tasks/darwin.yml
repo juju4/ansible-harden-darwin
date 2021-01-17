@@ -41,12 +41,12 @@
 
 ## http://www.macos.utah.edu/documentation/administration/pmset.html
 ## FIXME! not idempotent
-- name: enforce hibernation and evict Filevault keys from memory instead of traditional sleep to memory
+- name: enforce hibernation and evict Filevault keys from memory instead of traditional sleep to memory  # noqa 301
   command: "pmset -a {{ item.k }} {{ item.v }}"
   with_items:
     - { k: 'destroyfvkeyonstandby', v: '1' }
-## https://developer.apple.com/library/mac/documentation/Darwin/Reference/ManPages/man1/pmset.1.html
-## FIXME! ?10.10: makes mac hibernate directly. ok on 10.11+10.12
+    ## https://developer.apple.com/library/mac/documentation/Darwin/Reference/ManPages/man1/pmset.1.html
+    ## FIXME! ?10.10: makes mac hibernate directly. ok on 10.11+10.12
     - { k: 'hibernatemode', v: '25' }
 ## https://github.com/drduh/macOS-Security-and-Privacy-Guide/issues/124
 ## FIXME! The error was: 'dict object' has no attribute 'k' ???
@@ -55,10 +55,10 @@
 #    - { k: 'standbydelay', v: '0' }
 #    - { k: 'autopoweroff', v: '0' }
 
-#- name: Reset Accessibility settings
-#  command: tccutil reset Accessibility
+# - name: Reset Accessibility settings
+#   command: tccutil reset Accessibility
 
-#- osx_defaults: domain=NSGlobalDomain key=WebKitDeveloperExtras type=bool value=true state=present
+# - osx_defaults: domain=NSGlobalDomain key=WebKitDeveloperExtras type=bool value=true state=present
 - name: screen saver with password
   osx_defaults: domain=com.apple.screensaver key=askForPassword type=int value=1 state=present
 
@@ -73,7 +73,7 @@
   osx_defaults:
     domain: /Library/Preferences/com.apple.driver.AppleIRController
     key: DeviceEnabled
-    type: "{{ darwin_booltype }}"
+    type: "{{ darwin_booltype }}"
     value: "{{ darwin_booltype_true }}"
     state: present
   when: harden_darwin_infrared
@@ -81,7 +81,7 @@
   osx_defaults:
     domain: /Library/Preferences/com.apple.driver.AppleIRController
     key: DeviceEnabled
-    type: "{{ darwin_booltype }}"
+    type: "{{ darwin_booltype }}"
     value: "{{ darwin_booltype_false }}"
     state: present
   when: not harden_darwin_infrared
@@ -91,7 +91,7 @@
   osx_defaults:
     domain: /Library/Preferences/com.apple.Bluetooth
     key: ControllerPowerState
-    type: "{{ darwin_booltype }}"
+    type: "{{ darwin_booltype }}"
     value: "{{ darwin_booltype_true }}"
     state: present
   when: not harden_darwin_disable_bluetooth
@@ -100,7 +100,7 @@
   osx_defaults:
     domain: /Library/Preferences/com.apple.Bluetooth
     key: ControllerPowerState
-    type: "{{ darwin_booltype }}"
+    type: "{{ darwin_booltype }}"
     value: "{{ darwin_booltype_false }}"
     state: present
   when: harden_darwin_disable_bluetooth
@@ -122,15 +122,15 @@
     domain: /Library/Preferences/.GlobalPreferences
     key: MultipleSessionEnabled
     type: bool
-    value: "{{ harden_darwin_fastuserswitching }}"
+    value: "{{ harden_darwin_fastuserswitching }}"
     state: present
 
-- name: Configure Disable FDE AutoLogin (Filevault DoubleLogin) = {{ harden_darwin_disablefdeautologin }}
+- name: Configure Disable FDE AutoLogin (Filevault DoubleLogin) = {{ harden_darwin_disablefdeautologin }}
   osx_defaults:
     domain: /Library/Preferences/com.apple.loginwindow
     key: DisableFDEAutoLogin
     type: bool
-    value: "{{ harden_darwin_disablefdeautologin }}"
+    value: "{{ harden_darwin_disablefdeautologin }}"
     state: present
 
 - name: Disable bonjour multicast advertisements
@@ -158,11 +158,11 @@
     state: present
 
 ## per user settings
-#- include: darwin-user.yml
-## FIXME! https://github.com/ansible/ansible/issues/19729
-#  become: yes
-#  become_user: "{{ item }}"
-#  with_items: "{{ harden_darwin_users }}"
+# - include: darwin-user.yml
+#   # FIXME! https://github.com/ansible/ansible/issues/19729
+#   become: yes
+#   become_user: "{{ item }}"
+#   with_items: "{{ harden_darwin_users }}"
 
 ## http://jacobsalmela.com/bash-script-enable-access-assistive-devices-programmatically-os-x-mavericks-10-9-x-simulate-keystrokes/
 - name: Check if TCC.db file exists
@@ -175,7 +175,7 @@
       register: tccselect
       changed_when: false
     - name: Allow osascript to command keyboard/mouse
-    ## works on osx but not travis osx, latest osx (10.11 have 7 columns vs 6 before)
+      ## works on osx but not travis osx, latest osx (10.11 have 7 columns vs 6 before)
       command: >
         sqlite3 "/Library/Application Support/com.apple.TCC/TCC.db"
           "INSERT or REPLACE INTO access('service','client','client_type','allowed','prompt_count','csreq')
@@ -189,17 +189,21 @@
   when: ansible_distribution_version is version_compare( '10.12', '>=')
 
 - name: disable IPv6 noise
-  sysctl: name="{{ item.k }}" value="{{ item.v }}" state=present reload=no
+  sysctl:
+    name: "{{ item.k }}"
+    value: "{{ item.v }}"
+    state: present
+    reload: no
   with_items:
-## setting net.inet6.ip6.accept_rtadv failed: sysctl: oid 'net.inet6.ip6.accept_rtadv' is read only
-#    - { k: 'net.inet6.ip6.accept_rtadv', v: 0 }
+    ## setting net.inet6.ip6.accept_rtadv failed: sysctl: oid 'net.inet6.ip6.accept_rtadv' is read only
+    # - { k: 'net.inet6.ip6.accept_rtadv', v: 0 }
     - { k: 'net.inet6.icmp6.rediraccept', v: 0 }
     - { k: 'net.inet6.icmp6.nodeinfo', v: 0 }
     - { k: 'net.inet6.icmp6.nd6_accept_6to4', v: 0 }
 
 ## https://github.com/ansible/ansible-modules-extras/pull/995/files
 - block:
-## FIXME! not idempotent
+    ## FIXME! not idempotent
     - name: disable launchd services
       command: "launchctl unload -w {{ item }}"
       with_items: "{{ harden_darwin_launchd_services_unload }}"
@@ -215,10 +219,12 @@
     mode: '0755'
     sha256sum: "b5a07e12269a11341c21f5a1a0951d9b9dbb002681ea1c251a325dc04951b9b3"
     validate_certs: false
-## as your user?
-#- name: execute fix-macosx.py
-#  command: 'python {{ install_archives }}/fix-macosx.py'
   when: harden_darwin_fixmacosleak
+
+## as your user?
+# - name: execute fix-macosx.py
+#   command: 'python {{ install_archives }}/fix-macosx.py'
+#   when: harden_darwin_fixmacosleak
 
 - name: Check if fsmon is present
   stat: path={{ install_archives }}/fsmon

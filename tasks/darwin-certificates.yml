@@ -14,12 +14,12 @@
 
 - name: Backup certificate keychains
   command: >
-    install -m 0400 {{ item }}
+    install -m 0400 {{ item }}
       {{ backupdir }}/{{ item | regex_replace('/', '-') }}-{{ ansible_date_time.date }}
   args:
     creates: "{{ backupdir }}/{{ item | regex_replace('/', '-') }}-{{ ansible_date_time.date }}"
   with_items:
-## Note: SIP prevents us from writing in /System
+    ## Note: SIP prevents us from writing in /System
     - /System/Library/Keychains/SystemRootCertificates.keychain
     - /Library/Keychains/System.keychain
 - name: Export trust settings
@@ -27,22 +27,22 @@
     security trust-settings-export -d {{ backupdir }}/trust_settings-{{ ansible_date_time.date }}.plist
   args:
     creates: "{{ backupdir }}/trust_settings-{{ ansible_date_time.date }}.plist"
-## travis: "stderr": "SecTrustSettingsCreateExternalRepresentation: No Trust Settings were found."
+  ## travis: "stderr": "SecTrustSettingsCreateExternalRepresentation: No Trust Settings were found."
   ignore_errors: true
 
 - name: Download extra certificates
   get_url:
     url: "{{ item.u }}"
-    dest: "{{ backupdir }}/{{ item.u | basename }}"
+    dest: "{{ backupdir }}/{{ item.u | basename }}"
     mode: '0644'
-    validate_certs: "{{ item.validate }}"
+    validate_certs: "{{ item.validate }}"
     checksum: "{{ item.c }}"
   with_items: "{{ harden_darwin_certificates_dl }}"
 
 - name: Copy extra certificates from orchestrator
   copy:
-    src: "{{ item }}"
-    dest: "{{ backupdir }}/{{ item | basename }}"
+    src: "{{ item }}"
+    dest: "{{ backupdir }}/{{ item | basename }}"
     mode: '0644'
   with_items: "{{ harden_darwin_certificates_files }}"
 
@@ -51,42 +51,42 @@
   register: systemrootcert
   changed_when: false
 ## Not allowed... 'security: SecKeychainItemDelete: UNIX[Operation not permitted]'
-- name: remove certificate to keychain - admin store (hash)
+- name: remove certificate to keychain - admin store (hash)  # noqa 301
   command: >
     security delete-certificate -Z '{{ item }}' /System/Library/Keychains/SystemRootCertificates.keychain
   with_items: "{{ harden_darwin_certificates_hash_delete }}"
-- name: remove certificate to keychain - admin store (common name)
+- name: remove certificate to keychain - admin store (common name)  # noqa 301
   command: >
     security delete-certificate -c '{{ item }}' /System/Library/Keychains/SystemRootCertificates.keychain
   with_items: "{{ harden_darwin_certificates_cn_delete }}"
 
 ## FIXME! not idempotent
 ## Can't select by hash or cn
-#$ security export -k /System/Library/Keychains/SystemRootCertificates.keychain -t certs -o /tmp/certs.pm
+# $ security export -k /System/Library/Keychains/SystemRootCertificates.keychain -t certs -o /tmp/certs.pm
 ## No hash selection, only cn
-- name: Keychain | switch certificate to deny trust
+- name: Keychain | switch certificate to deny trust  # noqa 301
   shell: >
     security find-certificate -a -p -c '{{ item }}' /System/Library/Keychains/SystemRootCertificates.keychain > /tmp/certs.pm;
     security add-trusted-cert -d -r deny -k /Library/Keychains/System.keychain /tmp/certs.pm
   with_items: "{{ harden_darwin_certificates_cn_denytrust }}"
 
-- name: Keychain | switch certificate to unspecified trust
+- name: Keychain | switch certificate to unspecified trust  # noqa 301
   shell: >
     security find-certificate -a -p -c '{{ item }}' /System/Library/Keychains/SystemRootCertificates.keychain > /tmp/certs.pm;
     security add-trusted-cert -d -r unspecified -k /Library/Keychains/System.keychain /tmp/certs.pm
   with_items: "{{ harden_darwin_certificates_cn_unspecifiedtrust }}"
 
-- name: Keychain | switch certificate to trust
+- name: Keychain | switch certificate to trust  # noqa 301
   shell: >
     security find-certificate -a -p -c '{{ item }}' /System/Library/Keychains/SystemRootCertificates.keychain > /tmp/certs.pm;
     security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain /tmp/certs.pm
   with_items: "{{ harden_darwin_certificates_cn_trust }}"
 
-- name: Keychain | trust extra certificates from orchestrator
+- name: Keychain | trust extra certificates from orchestrator  # noqa 301
   command: >
     security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain {{ backupdir }}/{{ item | basename }}
   with_items: "{{ harden_darwin_certificates_files }}"
-- name: Keychain | trust extra certificates from Internet
+- name: Keychain | trust extra certificates from Internet  # noqa 301
   command: >
     security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain {{ backupdir }}/{{ item.u | basename }}
   with_items: "{{ harden_darwin_certificates_dl }}"

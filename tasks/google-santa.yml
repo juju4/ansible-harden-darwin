@@ -16,20 +16,20 @@
 - block:
 
     # conf?
-    #/private/etc/asl/com.google.santa.asl.conf ## just logging
-    #/Library/LaunchAgents/com.google.santagui.plist
-    #/Library/LaunchDaemons/com.google.santad.plist
-    #/private/var/log/santa.log
-    #/private/var/db/santa/rules.db (sqlite3)
+    # /private/etc/asl/com.google.santa.asl.conf ## just logging
+    # /Library/LaunchAgents/com.google.santagui.plist
+    # /Library/LaunchDaemons/com.google.santad.plist
+    # /private/var/log/santa.log
+    # /private/var/db/santa/rules.db (sqlite3)
 
-    - include: "google-santa-whitelist.yml type=cert path={{ item }} action=whitelist match=White"
-      with_items: "{{ harden_darwin_santa_whitelist_cert }}"
+    - include: "google-santa-whitelist.yml type=cert path={{ item }} action=whitelist match=White"
+      with_items: "{{ harden_darwin_santa_whitelist_cert }}"
 
-    - include: "google-santa-whitelist.yml type=hash path={{ item }} action=whitelist match=White"
-      with_items: "{{ harden_darwin_santa_whitelist_hash }}"
+    - include: "google-santa-whitelist.yml type=hash path={{ item }} action=whitelist match=White"
+      with_items: "{{ harden_darwin_santa_whitelist_hash }}"
 
-    - include: "google-santa-whitelist.yml type=hash path={{ item }} action=blacklist match=Black"
-      with_items: "{{ harden_darwin_santa_blacklist_hash }}"
+    - include: "google-santa-whitelist.yml type=hash path={{ item }} action=blacklist match=Black"
+      with_items: "{{ harden_darwin_santa_blacklist_hash }}"
 
     - name: santa | blacklist users home folders path
       osx_defaults:

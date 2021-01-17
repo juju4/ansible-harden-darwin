@@ -16,9 +16,10 @@
         dest: /etc/ssh/sshd_config
         regexp: "{{ item.regexp }}"
         line: "{{ item.line }}"
+        mode: '0644'
         backup: yes
         validate: "sshd -f %s -T"
-## avoid to add at end of file after a restricting match...
+        ## avoid to add at end of file after a restricting match...
         insertafter: "^#PermitEmptyPasswords"
       with_items:
         - { regexp: '^PasswordAuthentication', line: 'PasswordAuthentication no' }
@@ -33,9 +34,10 @@
         dest: /etc/ssh/sshd_config
         regexp: "{{ item.regexp }}"
         line: "{{ item.line }}"
+        mode: '0644'
         backup: yes
         validate: "sshd -f %s -T"
-## avoid to add at end of file after a restricting match...
+        ## avoid to add at end of file after a restricting match...
         insertafter: "^#UsePrivilegeSeparation"
       with_items:
         - { regexp: '^UsePrivilegeSeparation', line: 'UsePrivilegeSeparation sandbox' }
@@ -46,9 +48,10 @@
         dest: /etc/ssh/ssh_config
         regexp: "{{ item.regexp }}"
         line: "{{ item.line }}"
+        mode: '0644'
         backup: yes
         validate: "ssh -F %s -G localhost"
-## avoid to add at end of file after a restricting match...
+        ## avoid to add at end of file after a restricting match...
         insertafter: "^Host *"
       with_items:
         - { regexp: '^    UseKeyChain', line: '    UseKeychain no' }
@@ -61,22 +64,22 @@
   when: not sshdconf.stat.exists
   ignore_errors: true
 
-#- name: sshd configuration file update
-#  template: src=sshd_config
-#    dest=/etc/ssh/sshd_config
-#    backup=yes
-#    owner=0 group=0 mode=0644
-#    validate='/usr/sbin/sshd -T -f %s'
-#  notify:
-#    - restart sshd
+# - name: sshd configuration file update
+#   template: src=sshd_config
+#     dest=/etc/ssh/sshd_config
+#     backup=yes
+#     owner=0 group=0 mode=0644
+#     validate='/usr/sbin/sshd -T -f %s'
+#   notify:
+#     - restart sshd
 
-#- name: iptables configuration file update
-#  template: src=rules.v4
-#    dest=/etc/iptables/rules.v4
-#    backup=yes
-#    owner=0 group=0 mode=0644
-#  notify:
-#    - restart iptables
+# - name: iptables configuration file update
+#   template: src=rules.v4
+#     dest=/etc/iptables/rules.v4
+#     backup=yes
+#     owner=0 group=0 mode=0644
+#   notify:
+#     - restart iptables
 
 ## Bash history to syslog (since 4.1) but need re-compile for most distributions
 ## https://isc.sans.edu/forums/diary/Improving+Bash+Forensics+Capabilities/20887/

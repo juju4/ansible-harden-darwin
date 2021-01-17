@@ -1,12 +1,12 @@
 ---
 
-- name: set file immutable (schg)
-  command: "chflags schg {{ item }}"
-  with_items: "{{ harden_darwin_set_immutable }}"
+- name: set file immutable (schg)  # noqa 301
+  command: "chflags schg {{ item }}"
+  with_items: "{{ harden_darwin_set_immutable }}"
 
-- name: set file not immutable (schg)
-  command: "chflags noschg {{ item }}"
-  with_items: "{{ harden_darwin_set_notimmutable }}"
+- name: set file not immutable (schg)  # noqa 301
+  command: "chflags noschg {{ item }}"
+  with_items: "{{ harden_darwin_set_notimmutable }}"
 
 ## if set to 1: system immutable flags can only be disabled in single user mode
 ## Macos 10.4-: 1

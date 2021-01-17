@@ -9,7 +9,7 @@
     repo: https://github.com/SummitRoute/osxlockdown
     dest: "{{ install_archives }}/osxlockdown"
     version: "{{ osxlockdown_version | default('eff7eb67db81991fb5a6b59d88b97bb721c9a907') }}"
-#  when: "{{ ansible_distribution_version | regex_replace('^(\d+)\.(\d+)\.(\d+)$', '\\1.\\2') }}" == '10.11'
+  # when: "{{ ansible_distribution_version | regex_replace('^(\d+)\.(\d+)\.(\d+)$', '\\1.\\2') }}" == '10.11'
   when: ansible_distribution_version.find('10.11') != -1 and not osxl.stat.exists
 
 ## go install with macport or homebrew
@@ -29,11 +29,11 @@
             type: "{{ harden_darwin_santa_db_type }}"
           when: (harden_darwin_santa_mode == 'LOCKDOWN' or harden_darwin_santa_mode == 2)
 
-    ## FIXME! not installing correct packages: only get gobject-introspection, goffice
+        ## FIXME! not installing correct packages: only get gobject-introspection, goffice
         - name: macports go package install
           macports: name=go state=present
-#  async: 3600
-#  poll: 300
+          # async: 3600
+          # poll: 300
 
       always:
         - name: Google Santa | ensure config set to Lockdown mode
@@ -57,9 +57,9 @@
       homebrew:
         name: go
         state: present
-## Error: Running Homebrew as root is extremely dangerous and no longer supported.
-##      As Homebrew does not drop privileges on installation you would be giving all
-##      build scripts full access to your system.
+      ## Error: Running Homebrew as root is extremely dangerous and no longer supported.
+      ##      As Homebrew does not drop privileges on installation you would be giving all
+      ##      build scripts full access to your system.
       become: yes
       become_user: "{{ ansible_user | default('travis') }}"
       register: pkg_result

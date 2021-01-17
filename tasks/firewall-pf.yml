@@ -13,7 +13,7 @@
 
 - name: configure pf
   template:
-    src: "{{ harden_darwin_fw_template }}"
+    src: "{{ harden_darwin_fw_template }}"
     dest: /private/etc/pf.conf
     mode: '0644'
     owner: root

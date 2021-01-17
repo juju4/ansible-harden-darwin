@@ -6,71 +6,73 @@
     name: _test
     state: present
 
-#- name: retrieve unix-privesc-check
-#  get_url:
-#    url: http://pentestmonkey.net/tools/unix-privesc-check/unix-privesc-check-1.4.tar.gz
-#    dest: /tmp/unix-privesc-check-1.4.tar.gz
-#    checksum: 'sha256:e1f85e7f69fabadd23756a3d76a0e3d864b21e28763b60ce2e6181290d1c1969'
-#    mode: '0644'
+# - name: retrieve unix-privesc-check
+#   get_url:
+#     url: http://pentestmonkey.net/tools/unix-privesc-check/unix-privesc-check-1.4.tar.gz
+#     dest: /tmp/unix-privesc-check-1.4.tar.gz
+#     checksum: 'sha256:e1f85e7f69fabadd23756a3d76a0e3d864b21e28763b60ce2e6181290d1c1969'
+#     mode: '0644'
 #
 ## Make sure the required command to extract the file is installed.
 ##  Command \"/usr/bin/tar\" detected as tar type bsd. GNU tar required.
-#- name: unarchive unix-privesc-check
-##  unarchive:
-##    src: /tmp/unix-privesc-check-1.4.tar.gz
-##    dest: /tmp/
-##    owner: _test
-#  shell: gunzip -c /tmp/unix-privesc-check-1.4.tar.gz | tar xf -
-#  args:
-#    chdir: /tmp
-#    creates: /tmp/unix-privesc-check-1.4/unix-privesc-check
-##  become: yes
-##  become_user: _test
+# - name: unarchive unix-privesc-check
+#   # unarchive:
+#   #   src: /tmp/unix-privesc-check-1.4.tar.gz
+#   #   dest: /tmp/
+#   #   owner: _test
+#   shell: gunzip -c /tmp/unix-privesc-check-1.4.tar.gz | tar xf -
+#   args:
+#     chdir: /tmp
+#     creates: /tmp/unix-privesc-check-1.4/unix-privesc-check
+#   # become: yes
+#   # become_user: _test
 #
-#- name: execute unix-privesc-check
-#  shell: "/tmp/unix-privesc-check-1.4/unix-privesc-check detailed | tee /tmp/unix-privesc-check.out"
-#  ignore_errors: true
-#  register: privcheck
-#  args:
-#    creates: /tmp/unix-privesc-check.out
-##  become: yes
-##  become_user: _test
+# - name: execute unix-privesc-check
+#   shell: "/tmp/unix-privesc-check-1.4/unix-privesc-check detailed | tee /tmp/unix-privesc-check.out"
+#   ignore_errors: true
+#   register: privcheck
+#   args:
+#     creates: /tmp/unix-privesc-check.out
+#   # become: yes
+#   # become_user: _test
 #
-##- debug: var=privcheck.stdout_lines
-#- name: grep error+warning of unix-privesc
-#  shell: >
-#    egrep --color=always '(ERROR|WARNING)' /tmp/unix-privesc-check.out |
-#    grep -v "Can't find full path of running program:" |
-#    sort | uniq
-#  changed_when: false
-#  ignore_errors: true
+# - debug: var=privcheck.stdout_lines
+# - name: grep error+warning of unix-privesc
+#   shell: >
+#     egrep --color=always '(ERROR|WARNING)' /tmp/unix-privesc-check.out |
+#     grep -v "Can't find full path of running program:" |
+#     sort | uniq
+#   changed_when: false
+#   ignore_errors: true
 
 - name: retrieve linuxprivchecker
-## FIXME! Request failed: <urlopen error [SSL: SSLV3_ALERT_HANDSHAKE_FAILURE] sslv3 alert handshake failure
-##      (_ssl.c:590)>
-#  get_url:
-#    url: https://www.securitysift.com/download/linuxprivchecker.py
-#    dest: /tmp/linuxprivchecker.py
-#    checksum: 'sha256:d5002d499e3b3653a9505b2781f51d6d38507816b7eb9e9367d2c59fadfcac8c'
-#    mode: '0644'
-#    validate_certs: false
-  command: "curl -so /tmp/linuxprivchecker.py https://www.securitysift.com/download/linuxprivchecker.py"
-#  become: yes
-#  become_user: _test
+  ## FIXME! Request failed: <urlopen error [SSL: SSLV3_ALERT_HANDSHAKE_FAILURE] sslv3 alert handshake failure
+  ##      (_ssl.c:590)>
+  # get_url:
+  #   url: https://www.securitysift.com/download/linuxprivchecker.py
+  #   dest: /tmp/linuxprivchecker.py
+  #   checksum: 'sha256:d5002d499e3b3653a9505b2781f51d6d38507816b7eb9e9367d2c59fadfcac8c'
+  #   mode: '0644'
+  #   validate_certs: false
+  command: "curl -so /tmp/linuxprivchecker.py https://www.securitysift.com/download/linuxprivchecker.py"  # noqa 303
+  args:
+    creates: /tmp/linuxprivchecker.py
+  # become: yes
+  # become_user: _test
   ignore_errors: true
 
 ## FIXME! silent??? No output has been received in the last 10m0s
-#- name: execute unix-privesc-check
-#  shell: "python /tmp/linuxprivchecker.py | tee /tmp/linuxprivchecker.out"
-#  ignore_errors: true
-#  register: linuxprivchecker
-#  args:
-#    creates: /tmp/linuxprivchecker.out
-##  become: yes
-##  become_user: _test
-#  ignore_errors: true
+# - name: execute unix-privesc-check
+#   shell: "python /tmp/linuxprivchecker.py | tee /tmp/linuxprivchecker.out"
+#   ignore_errors: true
+#   register: linuxprivchecker
+#   args:
+#     creates: /tmp/linuxprivchecker.out
+#   # become: yes
+#   # become_user: _test
+#   ignore_errors: true
 
-#- debug: var=linuxprivchecker.stdout_lines
+# - debug: var=linuxprivchecker.stdout_lines
 
 # http://www.kitploit.com/2017/11/kernelpop-kernel-privilege-escalation.html
 # https://github.com/spencerdodd/kernelpop
@@ -80,8 +82,8 @@
     dest: /Users/_test/kernelpop
     version: "{{ kernelpop_version | default('b3467d3c64f9657a822c1f3c0d70769efabebf60') }}"
     update: no
-#  become: yes
-#  become_user: _test
+    # become: yes
+    # become_user: _test
 
 - name: ensure python3 is present
   macports:
@@ -91,8 +93,9 @@
   until: pkg_result is success
 
 - name: execute kernelpop
-  shell: "/opt/local/bin/python3.6 kernelpop.py -b | tee /tmp/kernelpop.out"
+  shell: "/opt/local/bin/python3.6 kernelpop.py -b | tee /tmp/kernelpop.out"  # noqa 306
   args:
     chdir: /Users/_test/kernelpop
-#  become: yes
-#  become_user: _test
+    creates: /tmp/kernelpop.out
+    # become: yes
+    # become_user: _test
