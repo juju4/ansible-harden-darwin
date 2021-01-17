@@ -1,5 +1,9 @@
 [![Build Status - Master](https://travis-ci.org/juju4/ansible-harden-darwin.svg?branch=master)](https://travis-ci.org/juju4/ansible-harden-darwin)
 [![Build Status - Devel](https://travis-ci.org/juju4/ansible-harden-darwin.svg?branch=devel)](https://travis-ci.org/juju4/ansible-harden-darwin/branches)
+
+[![Actions Status - Master](https://github.com/juju4/ansible-harden-darwin/workflows/AnsibleCI/badge.svg)](https://github.com/juju4/ansible-harden-darwin/actions?query=branch%3Amaster)
+[![Actions Status - Devel](https://github.com/juju4/ansible-harden-darwin/workflows/AnsibleCI/badge.svg?branch=devel)](https://github.com/juju4/ansible-harden-darwin/actions?query=branch%3Adevel)
+
 # Darwin harden ansible role
 
 Ansible role to harden darwin/macosx system.

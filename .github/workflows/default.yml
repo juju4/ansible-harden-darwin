@@ -1,0 +1,64 @@
+---
+name: AnsibleCI
+
+on:
+  push:
+  pull_request:
+  schedule:  # run weekly, every Wednesday 04:00
+    - cron: '0 4 * * 3'
+
+jobs:
+  build:
+
+    runs-on: macos-10.15
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+    env:
+      ANSIBLE_CALLBACK_WHITELIST: profile_tasks
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          path: juju4.harden-darwin
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+      - name: Install dependencies
+        run: |
+          python3 --version
+          python3 -c "import ssl; print(ssl.OPENSSL_VERSION)"
+          python3 -c 'import ssl; ssl.PROTOCOL_TLSv1_2'
+          python3 -m pip install --upgrade pip
+          pip3 install ansible-lint flake8 yamllint
+          ansible --version
+          cd $GITHUB_WORKSPACE/juju4.harden-darwin
+          [ -f get-dependencies.sh ] && sh -x get-dependencies.sh
+          { echo '[defaults]'; echo 'callback_whitelist = profile_tasks, timer'; echo 'roles_path = ../'; echo 'ansible_python_interpreter: /usr/bin/python3'; } >> ansible.cfg
+      - name: yamllint
+        run: |
+          pwd
+          find .
+          cd $GITHUB_WORKSPACE/juju4.harden-darwin && yamllint .
+      - name: ansible-lint
+        run: |
+          cd $GITHUB_WORKSPACE/juju4.harden-darwin && ansible-lint
+      - name: run test
+        run: |
+          cd $GITHUB_WORKSPACE/juju4.harden-darwin && ansible-playbook -i localhost, --connection=local --become -vvv test/integration/default/default.yml
+        env:
+          PY_COLORS: '1'
+          ANSIBLE_FORCE_COLOR: '1'
+      - name: idempotency run
+        run: |
+          cd $GITHUB_WORKSPACE/juju4.harden-darwin && ansible-playbook -i localhost, --connection=local --become -vvv test/integration/default/default.yml | tee /tmp/idempotency.log | grep -q 'changed=0.*failed=0'  && (echo 'Idempotence test: pass' && exit 0)  || (echo 'Idempotence test: fail' && cat /tmp/idempotency.log && exit 0)
+      - name: After script
+        run: |
+          ls -A $HOME/
+          ls -lhA /Applications/
+          [ -f /private/var/root/osxlockdown.audit ] && sudo cat /private/var/root/osxlockdown.audit || true
+          ls -lA "/Library/Application Support/Google/Chrome/External Extensions"
+          cp "/Library/Managed Preferences/com.google.Chrome.plist" /tmp/chrome.plist && plutil -convert xml1 /tmp/chrome.plist && cat /tmp/chrome.plist
+          cat /Applications/Firefox.app/Contents/Resources/distribution/policies.json
+        continue-on-error: true
