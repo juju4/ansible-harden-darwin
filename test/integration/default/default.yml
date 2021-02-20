@@ -63,7 +63,8 @@
     # - harden_darwin_oversight: false
     # - harden_darwin_blockblock: false
   pre_tasks:
-    - set_fact:
+    - name: Macos 10.14 | set fact
+      set_fact:
         macos_apps_install_list:
           - "{{ macos_apps_install_list }}"
           - { u: 'https://distfiles.macports.org/MacPorts/MacPorts-2.5.4-10.14-Mojave.pkg',
@@ -75,7 +76,8 @@
               to: '/opt/local/bin/ports'
           }
       when: ansible_distribution == 'MacOSX' and ansible_distribution_version.split('.')[1] == '14'
-    - set_fact:
+    - name: Macos 10.13 | set fact
+      set_fact:
         macos_apps_install_list:
           - "{{ macos_apps_install_list }}"
           - { u: 'https://distfiles.macports.org/MacPorts/MacPorts-2.5.4-10.13-HighSierra.pkg',
@@ -87,7 +89,8 @@
               to: '/opt/local/bin/ports'
           }
       when: ansible_distribution == 'MacOSX' and ansible_distribution_version.split('.')[1] == '13'
-    - set_fact:
+    - name: Macos 10.12 | set fact
+      set_fact:
         macos_apps_install_list:
           - "{{ macos_apps_install_list }}"
           - { u: 'https://github.com/macports/macports-base/releases/download/v2.4.4/MacPorts-2.4.4-10.12-Sierra.pkg',
@@ -100,7 +103,8 @@
               to: '/opt/local/bin/ports'
           }
       when: ansible_distribution == 'MacOSX' and ansible_distribution_version.split('.')[1] == '12'
-    - set_fact:
+    - name: Macos 10.11 | set fact
+      set_fact:
         macos_apps_install_list:
           - "{{ macos_apps_install_list }}"
           - { u: 'https://github.com/macports/macports-base/releases/download/v2.4.2/MacPorts-2.4.2-10.11-ElCapitan.pkg',

@@ -79,7 +79,8 @@
     # - harden_darwin_blockblock: false
     - fxext_list: []
   pre_tasks:
-    - set_fact:
+    - name: Macos 10.14 | set fact
+      set_fact:
         macos_apps_install_list:
           - "{{ macos_apps_install_list }}"
           - { u: 'https://distfiles.macports.org/MacPorts/MacPorts-2.5.4-10.14-Mojave.pkg',
@@ -91,7 +92,7 @@
               to: '/opt/local/bin/ports'
           }
       when: ansible_distribution == 'MacOSX' and ansible_distribution_version.split('.')[1] == '14'
-    - name: Macos 10.13 | Application list
+    - name: Macos 10.13 | set fact
       set_fact:
         macos_apps_install_list:
           - "{{ macos_apps_install_list }}"
@@ -104,7 +105,7 @@
               to: '/opt/local/bin/ports'
           }
       when: ansible_distribution == 'MacOSX' and ansible_distribution_version.split('.')[1] == '13'
-    - name: Macos 10.12 | Application list
+    - name: Macos 10.12 | set fact
       set_fact:
         macos_apps_install_list:
           - "{{ macos_apps_install_list }}"
@@ -118,7 +119,7 @@
               to: '/opt/local/bin/ports'
           }
       when: ansible_distribution == 'MacOSX' and ansible_distribution_version.split('.')[1] == '12'
-    - name: Macos 10.11 | Application list
+    - name: Macos 10.11 | set fact
       set_fact:
         macos_apps_install_list:
           - "{{ macos_apps_install_list }}"
