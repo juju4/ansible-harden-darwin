@@ -6,6 +6,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Github Action
+- Support for 10.15
+
+### Changed
+- lint
+
+### Removed
+- Travis-ci
+
+## [1.1.0] - 2019-07-18
+
+### Changed
+- update softwares and hashes in testing suites
+
+## [1.0.0] - 2020-02-23
+
 ### Changed
 - Travis: use ansible.git@devel - global to include ansible#PR57605 (temporary, 2.8.2 NOK)
 - Github: rename tags to match semantic versioning: 0.7.0, 0.8.0
