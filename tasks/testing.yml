@@ -9,7 +9,8 @@
       register: inspeclog
       args:
         creates: /var/log/inspec.log
-    - debug: var=inspeclog.stdout_lines
+    - name: Debug | inspec output
+      debug: var=inspeclog.stdout_lines
 
   when: harden_darwin_testing_inspec
 

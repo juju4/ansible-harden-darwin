@@ -29,4 +29,5 @@
   register: spectre
   ignore_errors: true
 
-- debug: var=spectre
+- name: Debug | spectre
+  debug: var=spectre

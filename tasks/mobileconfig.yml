@@ -10,7 +10,8 @@
   ignore_errors: true
   register: profileslist
 
-- debug: var=profileslist
+- name: Debug | profiles output
+  debug: var=profileslist
 - block:
     - name: copy file to target
       copy:
