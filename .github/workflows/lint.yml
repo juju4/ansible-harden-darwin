@@ -1,5 +1,5 @@
 ---
-name: AnsibleCI
+name: lint
 
 on:
   push:
@@ -49,21 +49,9 @@ jobs:
           pwd
           env
           find . -ls
-      - name: run test
+      - name: yamllint
         run: |
-          cd $GITHUB_WORKSPACE/juju4.harden-darwin && ansible-playbook -i localhost, --connection=local --become -vvv test/integration/default/default.yml
-        env:
-          PY_COLORS: '1'
-          ANSIBLE_FORCE_COLOR: '1'
-      - name: idempotency run
+          cd $GITHUB_WORKSPACE/juju4.harden-darwin && yamllint .
+      - name: ansible-lint
         run: |
-          cd $GITHUB_WORKSPACE/juju4.harden-darwin && ansible-playbook -i localhost, --connection=local --become -vvv test/integration/default/default.yml | tee /tmp/idempotency.log | grep -q 'changed=0.*failed=0'  && (echo 'Idempotence test: pass' && exit 0)  || (echo 'Idempotence test: fail' && cat /tmp/idempotency.log && exit 0)
-      - name: After script
-        run: |
-          ls -A $HOME/
-          ls -lhA /Applications/
-          [ -f /private/var/root/osxlockdown.audit ] && sudo cat /private/var/root/osxlockdown.audit || true
-          ls -lA "/Library/Application Support/Google/Chrome/External Extensions"
-          cp "/Library/Managed Preferences/com.google.Chrome.plist" /tmp/chrome.plist && plutil -convert xml1 /tmp/chrome.plist && cat /tmp/chrome.plist
-          cat /Applications/Firefox.app/Contents/Resources/distribution/policies.json
-        continue-on-error: true
+          cd $GITHUB_WORKSPACE/juju4.harden-darwin && ansible-lint
