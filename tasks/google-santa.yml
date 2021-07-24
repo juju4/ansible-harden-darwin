@@ -48,14 +48,12 @@
       when: harden_darwin_santa_whitelist_path
 
     ## default is monitor mode only
-    - name: ensure config set to desired mode = {{ harden_darwin_santa_mode }}
-      osx_defaults:
-        domain: /var/db/santa/config.plist
-        key: ClientMode
-        value: "{{ harden_darwin_santa_mode }}"
-        type: "{{ harden_darwin_santa_db_type }}"
-      when: harden_darwin_santa_mode == '0' or harden_darwin_santa_mode == 2 or harden_darwin_santa_mode == 1
+    - name: Set Google Santa configuration profile
+      template:
+        src: "{{ harden_darwin_santa_template | default('com.google.santa.mobileconfig.j2') }}"
+        dest: /var/db/santa/com.google.santa.mobileconfig
+        mode: '0600'
       notify:
-        - restart santa
+        - reload santa mobileconfig
 
   when: hasSanta.stat.exists and santakext.rc == 0

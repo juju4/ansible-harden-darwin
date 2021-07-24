@@ -30,6 +30,9 @@
     launchctl start -w /Library/LaunchDaemons/com.google.santad.plist
   ignore_errors: true
 
+- name: reload santa mobileconfig
+  command: /usr/bin/profiles -IF /var/db/santa/com.google.santa.mobileconfig
+
 - name: restart auditd
   command: >
     launchctl stop -w /System/Library/LaunchDaemons/com.apple.auditd.plist;
