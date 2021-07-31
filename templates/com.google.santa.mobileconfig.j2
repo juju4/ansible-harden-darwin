@@ -22,8 +22,6 @@
 								<false/>
 								<key>EventDetailText</key>
 								<string>Open sync server</string>
-								<key>EventDetailURL</key>
-								<string>https://sync-server-hostname/blockables/%file_sha%</string>
 								<key>FileChangesRegex</key>
 								<string>^/(?!(?:private/tmp|Library/(?:Caches|Managed Installs/Logs|(?:Managed )?Preferences))/)</string>
 								<key>MachineIDKey</key>
@@ -38,10 +36,14 @@
 								<string>Entering Lockdown mode</string>
 								<key>ModeNotificationMonitor</key>
 								<string>Entering Monitor mode&lt;br/&gt;Please be careful!</string>
+{% if harden_darwin_santa_syncserver is defined and harden_darwin_santa_syncserver|string %}
+								<key>EventDetailURL</key>
+								<string>https://{{ harden_darwin_santa_syncserver }}/blockables/%file_sha%</string>
 								<key>MoreInfoURL</key>
-								<string>https://sync-server-hostname/moreinfo</string>
+								<string>https://{{ harden_darwin_santa_syncserver }}/moreinfo</string>
 								<key>SyncBaseURL</key>
-								<string>https://sync-server-hostname/api/santa/</string>
+								<string>https://{{ harden_darwin_santa_syncserver }}/api/santa/</string>
+{% endif %}
 								<key>UnknownBlockMessage</key>
 								<string>This application has been blocked from executing.</string>
 							</dict>
