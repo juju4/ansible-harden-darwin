@@ -59,7 +59,7 @@
     creates: /tmp/linuxprivchecker.py
   # become: yes
   # become_user: _test
-  ignore_errors: true
+  failed_when: false
 
 ## FIXME! silent??? No output has been received in the last 10m0s
 # - name: execute unix-privesc-check

@@ -28,7 +28,7 @@
   args:
     creates: "{{ backupdir }}/trust_settings-{{ ansible_date_time.date }}.plist"
   ## travis: "stderr": "SecTrustSettingsCreateExternalRepresentation: No Trust Settings were found."
-  ignore_errors: true
+  failed_when: false
 
 - name: Download extra certificates
   get_url:

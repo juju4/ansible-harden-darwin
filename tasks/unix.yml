@@ -62,7 +62,7 @@
 - name: where is sshd_config if not standard?
   command: "ls -l /etc/ssh/sshd_config /private/etc/ssh/"
   when: not sshdconf.stat.exists
-  ignore_errors: true
+  failed_when: false
 
 # - name: sshd configuration file update
 #   template: src=sshd_config
