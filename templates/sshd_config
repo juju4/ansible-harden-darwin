@@ -128,7 +128,7 @@ Match User vagrant deploy
     PermitTunnel no
     GatewayPorts no
 
-## chrooted sftp with rsync, 
+## chrooted sftp with rsync,
 ## http://www.positon.org/post/SFTP-chroot-rsync
 Match user upload
     X11Forwarding no
@@ -138,5 +138,3 @@ Match user upload
 #    ForceCommand internal-sftp
 ## ensure chroot dir is owned by root for security reason
 #    ChrootDirectory %h
-
-

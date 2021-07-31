@@ -31,4 +31,3 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     # shared folder not working on elcapitan
     config.vm.synced_folder ".", "/vagrant", disabled: true
 end
-

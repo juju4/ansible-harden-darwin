@@ -135,4 +135,3 @@ Another limitation, pkg file (XAR Archive) are also 'Whitelisted (Scope)' even i
 ## License
 
 BSD 2-clause
-
