@@ -23,11 +23,18 @@
   register: devtools
 - name: FATAL
   fail: msg="FATAL! Missing Xcode and developper tools."
-  when: harden_darwin_hard_fail_developertools
+  when: harden_darwin_hard_fail_developertools and not devtools.stat.exists
 
 - name: ensure archives directory exists
-  file: dest="{{ install_archives }}" mode=0755 state=directory
+  file:
+    dest: "{{ install_archives }}"
+    state: directory
+    mode: '0755'
   become: yes
+  when:
+    - install_archives != '/tmp'
+    - install_archives != '/private/tmp'
+    - install_archives != '/Users/Shared'
 
 - include: darwin-updates.yml
 
@@ -48,12 +55,13 @@
     ## https://developer.apple.com/library/mac/documentation/Darwin/Reference/ManPages/man1/pmset.1.html
     ## FIXME! ?10.10: makes mac hibernate directly. ok on 10.11+10.12
     - { k: 'hibernatemode', v: '25' }
-## https://github.com/drduh/macOS-Security-and-Privacy-Guide/issues/124
-## FIXME! The error was: 'dict object' has no attribute 'k' ???
-#    - { k: 'powernap', v: '0' }
-#    - { k: 'standby', v: '0' }
-#    - { k: 'standbydelay', v: '0' }
-#    - { k: 'autopoweroff', v: '0' }
+    ## https://github.com/drduh/macOS-Security-and-Privacy-Guide/issues/124
+    ## FIXME! The error was: 'dict object' has no attribute 'k' ???
+    # - { k: 'powernap', v: '0' }
+    # - { k: 'standby', v: '0' }
+    # - { k: 'standbydelay', v: '0' }
+    # - { k: 'autopoweroff', v: '0' }
+  when: harden_darwin_enforce_hibernate
 
 # - name: Reset Accessibility settings
 #   command: tccutil reset Accessibility
