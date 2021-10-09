@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+ <key>PayloadContent</key>
+ <array>
+  <dict>
+   <key>PayloadDescription</key>
+   <string>osqueryd</string>
+   <key>PayloadDisplayName</key>
+   <string>osqueryd</string>
+   <key>PayloadIdentifier</key>
+   <string>{{ profile_PayloadContentIdentifier | default('osquery5') }}</string>
+   <key>PayloadOrganization</key>
+   <string>{{ profile_PayloadContentOrganization | default('') }}</string>
+   <key>PayloadType</key>
+   <string>com.apple.TCC.configuration-profile-policy</string>
+   <key>PayloadUUID</key>
+   <string>{{ profile_PayloadContentUUID | default('89121197-3B5F-4502-BB8C-4331261D3B8C') }}</string>
+   <key>PayloadVersion</key>
+   <integer>1</integer>
+   <key>Services</key>
+   <dict>
+    <key>SystemPolicyAllFiles</key>
+    <array>
+     <dict>
+      <key>Allowed</key>
+      <true/>
+      <key>CodeRequirement</key>
+      <string>
+identifier "io.osquery.agent" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "3522FA9PXF"
+</string>
+      <key>Comment</key>
+      <string></string>
+      <key>Identifier</key>
+      <string>{{ profile_Identifier | default('io.osquery.agent') }}</string>
+      <key>IdentifierType</key>
+      <string>bundleID</string>
+     </dict>
+    </array>
+   </dict>
+  </dict>
+ </array>
+ <key>PayloadDescription</key>
+ <string>osqueryd</string>
+ <key>PayloadDisplayName</key>
+ <string>osqueryd</string>
+ <key>PayloadIdentifier</key>
+ <string>{{ profile_PayloadIdentifier | default('BDBD19F2-A35A-4AEC-9E96-3CA7E2994666') }}</string>
+ <key>PayloadOrganization</key>
+ <string>Trail of Bits</string>
+ <key>PayloadScope</key>
+ <string>System</string>
+ <key>PayloadType</key>
+ <string>Configuration</string>
+ <key>PayloadUUID</key>
+ <string>{{ profile_PayloadUUID | default('28A8A2B7-A91E-4C26-BAEC-00F6F542742E') }}</string>
+ <key>PayloadVersion</key>
+ <integer>1</integer>
+</dict>
+</plist>

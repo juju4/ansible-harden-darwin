@@ -74,4 +74,11 @@
         launchctllist is defined and
         launchctllist.stdout is defined and
         launchctllist.stdout.find("com.facebook.osqueryd") == -1
+
+    - name: Set osquery configuration profile
+      template:
+        src: "{{ harden_darwin_osquery_template | default('osquery5.mobileconfig.j2') }}"
+        dest: /Users/Shared/osquery5.mobileconfig
+        mode: '0600'
+
   when: hasOsquery.stat.exists

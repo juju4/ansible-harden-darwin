@@ -66,4 +66,7 @@ jobs:
           ls -lA "/Library/Application Support/Google/Chrome/External Extensions"
           cp "/Library/Managed Preferences/com.google.Chrome.plist" /tmp/chrome.plist && plutil -convert xml1 /tmp/chrome.plist && cat /tmp/chrome.plist
           cat /Applications/Firefox.app/Contents/Resources/distribution/policies.json
+          codesign  -dr - /opt/osquery/lib/osquery.app/Contents/MacOS/osqueryd
+          cat /Users/Shared/osquery5.mobileconfig
+          cat /Users/Shared/com.google.santa.mobileconfig
         continue-on-error: true
