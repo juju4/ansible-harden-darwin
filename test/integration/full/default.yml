@@ -33,12 +33,12 @@
             versioncmd: '/usr/local/bin/santactl version | sed "1 s/.*| //;q"',
             to: '/usr/local/bin/santactl'
         }
-        - { u: 'https://pkg.osquery.io/darwin/osquery-4.9.0.pkg',
+        - { u: 'https://pkg.osquery.io/darwin/osquery-5.0.1.pkg',
             v: true,
-            s: '3f9ab772596f4da69687a2d7db9a382535b5eabf2346abd452b24666b8f25102',
+            s: 'ec58996e64637d861ccead8dc6bc8865662728f6e5bc2694a3c92f0f4a371095',
             n: 'osquery',
             t: 'pkgonly',
-            version: '4.9.0',
+            version: '5.0.1',
             versioncmd: '/usr/local/bin/osqueryi --version | sed "s/osqueryi version //"',
             to: '/usr/local/bin/osqueryi'
         }
