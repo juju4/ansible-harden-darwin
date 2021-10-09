@@ -34,11 +34,11 @@
 - name: install oversight
   command: "{{ install_archives }}/{{ app_name }}.app/Contents/MacOS/{{ app_name }} -install"
   args:
-    creates: "/OverSight_Helper.app/Contents/XPCServices"
+    creates: "/Applications/OverSight.app/Contents/MacOS/OverSight"
   become: yes
 
 - block:
     - include: "google-santa-whitelist.yml type=hash path={{ item }} action=whitelist match=White"
       with_items:
-        - "/Applications/OverSight.app/Contents/Library/LoginItems/OverSightXPC.xpc"
+        - "/Applications/OverSight.app/Contents/MacOS/OverSight"
   when: harden_darwin_santa is defined and harden_darwin_santa and harden_darwin_santa_mode == 2

@@ -40,5 +40,5 @@
 - name: install Lulu
   command: "\"{{ install_archives }}/LuLu Installer.app/Contents/MacOS/LuLu Installer\" -install"
   args:
-    creates: "/Library/Objective-See/LuLu/LuLu.bundle"
+    creates: "/Applications/LuLu.app/Contents/MacOS/LuLu"
   become: yes

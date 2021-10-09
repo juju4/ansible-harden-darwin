@@ -35,7 +35,7 @@
 - name: install ransomwhere
   command: "{{ install_archives }}/{{ app_name }}_Installer.app/Contents/MacOS/{{ app_name }}_Installer -install"
   args:
-    creates: "/Library/RansomWhere/RansomWhere"
+    creates: "/Library/LaunchDaemons/com.objective-see.ransomwhere.plist"
   become: yes
 
 - block:
