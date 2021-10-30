@@ -65,6 +65,12 @@ jobs:
           ls -lhA /usr/local/bin/
         if: ${{ always() }}
         continue-on-error: true
+      - name: After script - launchtl
+        run: |
+          launchctl list
+          ls -lA /Library/LaunchDaemons/ /Library/LaunchAgents/
+        if: ${{ always() }}
+        continue-on-error: true
       - name: After script - tools
         run: |
           [ -f /private/var/root/osxlockdown.audit ] && sudo cat /private/var/root/osxlockdown.audit || true
