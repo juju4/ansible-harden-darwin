@@ -54,4 +54,4 @@
   template:
     src: "{{ harden_darwin_santa_template | default('com.google.santa.mobileconfig.j2') }}"
     dest: /Users/Shared/com.google.santa.mobileconfig
-    mode: '0600'
+    mode: '0644'
