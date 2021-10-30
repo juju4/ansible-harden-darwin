@@ -88,6 +88,7 @@ jobs:
         run: |
           ls -lhAR /opt/osquery
           codesign  -dr - /opt/osquery/lib/osquery.app/Contents/MacOS/osqueryd
+          cat /Library/LaunchDaemons/io.osquery.agent.plist
           cat /Users/Shared/osquery5.mobileconfig
         if: ${{ always() }}
         continue-on-error: true
