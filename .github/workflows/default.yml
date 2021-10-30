@@ -63,6 +63,7 @@ jobs:
           ls -A $HOME/
           ls -lhA /Applications/
           ls -lhA /usr/local/bin/
+        if: ${{ always() }}
         continue-on-error: true
       - name: After script - tools
         run: |
@@ -70,14 +71,17 @@ jobs:
           ls -lA "/Library/Application Support/Google/Chrome/External Extensions" || true
           cp "/Library/Managed Preferences/com.google.Chrome.plist" /tmp/chrome.plist && plutil -convert xml1 /tmp/chrome.plist && cat /tmp/chrome.plist
           cat /Applications/Firefox.app/Contents/Resources/distribution/policies.json || true
+        if: ${{ always() }}
         continue-on-error: true
       - name: After script - santa
         run: |
           cat /Users/Shared/com.google.santa.mobileconfig
+        if: ${{ always() }}
         continue-on-error: true
       - name: After script - osquery
         run: |
           ls -lhAR /opt/osquery
           codesign  -dr - /opt/osquery/lib/osquery.app/Contents/MacOS/osqueryd
           cat /Users/Shared/osquery5.mobileconfig
+        if: ${{ always() }}
         continue-on-error: true
