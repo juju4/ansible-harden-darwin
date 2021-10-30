@@ -46,13 +46,12 @@
         value: "{{ harden_darwin_santa_whitelist_path }}"
         state: present
       when: harden_darwin_santa_whitelist_path
-
-    ## default is monitor mode only
-    ## cli tool does not support anymore install, must be done by admin user in Preferences (or MDM)
-    - name: Set Google Santa configuration profile
-      template:
-        src: "{{ harden_darwin_santa_template | default('com.google.santa.mobileconfig.j2') }}"
-        dest: /Users/Shared/com.google.santa.mobileconfig
-        mode: '0600'
-
   when: hasSanta.stat.exists and santakext.rc == 0
+
+## default is monitor mode only
+## cli tool does not support anymore install, must be done by admin user in Preferences (or MDM)
+- name: Set Google Santa configuration profile
+  template:
+    src: "{{ harden_darwin_santa_template | default('com.google.santa.mobileconfig.j2') }}"
+    dest: /Users/Shared/com.google.santa.mobileconfig
+    mode: '0600'
