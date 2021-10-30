@@ -71,6 +71,6 @@
       template:
         src: "{{ harden_darwin_osquery_template | default('osquery5.mobileconfig.j2') }}"
         dest: /Users/Shared/osquery5.mobileconfig
-        mode: '0600'
+        mode: '0644'
 
   when: hasOsquery.stat.exists
