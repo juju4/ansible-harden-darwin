@@ -56,24 +56,16 @@
         validate: 'newsyslog -N -f %s'
         # notify:
         #   - restart newsyslog
-    - name: configure Launchd for osquery
-      copy:
-        src: /var/osquery/com.facebook.osqueryd.plist
-        dest: /Library/LaunchDaemons/
-        mode: '0644'
-        remote_src: true
     - name: check if service is loaded
       command: "launchctl list"
       changed_when: false
       register: launchctllist
     - name: ensure service is enabled and started
-      # service: name=osqueryd state=started enabled=yes
-      # command: "launchctl load /Library/LaunchDaemons/com.facebook.osqueryd.plist"
       command: "/usr/local/bin/osqueryctl start"
       when: >
         launchctllist is defined and
         launchctllist.stdout is defined and
-        launchctllist.stdout.find("com.facebook.osqueryd") == -1
+        launchctllist.stdout.find("osqueryd") == -1
 
     - name: Set osquery configuration profile
       template:
