@@ -3,29 +3,38 @@
 // https://blog.kolide.com/monitoring-macos-hosts-with-osquery-ba5dcc83122d
 {
   "queries": {
+    "arp_anomalies": {
+      "query" : "SELECT address, mac, COUNT(mac) AS mac_count FROM arp_cache GROUP BY mac HAVING count(mac) > 1;",
+      "description" : "Retrieves interface details.",
+      "interval" : "900"
+    },
     "authorized_keys": {
       "query" : "select authorized_keys.* from users join authorized_keys using (uid);",
       "description" : "Info on authorized keys",
       "interval" : "900"
     },
-    "user_ssh_keys": {
-      "query" : "select * from user_ssh_keys;",
-      "description" : "info on user ssh keys",
+    "crontab": {
+      "query" : "select * from crontab;",
+      "version" : "1.4.5",
+      "description" : "Retrieves all the jobs scheduled in crontab in the target system.",
+      "value" : "Identify malware that uses this persistence mechanism to launch at a given interval",
       "interval" : "900"
     },
     "dns_resolvers": {
       "query" : "select * from dns_resolvers;",
       "description" : "check DNS resolvers",
       "interval" : "3600"
-      },
+    },
     "known_hosts": {
       "query" : "select known_hosts.* from users join known_hosts using (uid);",
       "description" : "line-delimited known_hosts table",
       "interval" : "900"
     },
-    "sudoers": {
-      "query" : "select * from sudoers;",
-      "description" : "Retrieves all the information for sudoers.",
+    "etc_hosts": {
+      "query" : "select * from etc_hosts;",
+      "version" : "1.4.5",
+      "description" : "Retrieves all the entries in the target system /etc/hosts file.",
+      "value" : "Identify network communications that are being redirected. Example: identify if security logging has been disabled",
       "interval" : "3600"
     },
     "groups": {
@@ -49,37 +58,29 @@
       "interval" : "900"
     },
     "processes": {
-      "query": "SELECT pid, name, path, cmdline from processes;",
+      "query": "SELECT p1.pid, p1.name, p1.path, p1.cmdline, p1.parent, p2.cmdline as pcmdline from processes as p1, processes as p2 where p1.parent == p2.pid;",
       "description": "Retrieve list of processes",
       "interval" : "900"
     },
     "process_binding_to_ports": {
-      "query" : "select DISTINCT process.name, listening.port, process.pid FROM processes as process JOIN listening_ports AS listening ON process.pid=listening.pid;",
+      "query" : "select DISTINCT process.name, listening.port, listening.protocol, process.pid FROM processes as process JOIN listening_ports AS listening ON process.pid=listening.pid;",
       "description" : "Retrieves the list of processes bound to listening ports.",
       "interval" : "900"
+    },
+    // FIXME! performance impacting! = higher interval
+    "outbound_connections": {
+      "query": "select user.username, proc.name, hash.md5, socket.pid, proc.path, proc.cmdline, socket.local_port, socket.remote_port, socket.remote_address from process_open_sockets as socket, processes as proc, users as user, hash as hash where socket.local_port not in (select port from listening_ports) and socket.local_port != 0 and socket.pid = proc.pid and user.uid = proc.uid and hash.path = proc.path;",
+      "interval": "3600",
+      "description": ""
     },
     "python_packages": {
       "query" : "select * FROM python_packages;",
       "interval" : "900",
       "description" : "Python packages installed in a system"
     },
-    "arp_anomalies": {
-      "query" : "SELECT address, mac, COUNT(mac) AS mac_count FROM arp_cache GROUP BY mac HAVING count(mac) > 1;",
-      "description" : "Retrieves interface details.",
-      "interval" : "900"
-    },
-    "crontab": {
-      "query" : "select * from crontab;",
-      "version" : "1.4.5",
-      "description" : "Retrieves all the jobs scheduled in crontab in the target system.",
-      "value" : "Identify malware that uses this persistence mechanism to launch at a given interval",
-      "interval" : "900"
-    },
-    "etc_hosts": {
-      "query" : "select * from etc_hosts;",
-      "version" : "1.4.5",
-      "description" : "Retrieves all the entries in the target system /etc/hosts file.",
-      "value" : "Identify network communications that are being redirected. Example: identify if security logging has been disabled",
+    "sudoers": {
+      "query" : "select * from sudoers;",
+      "description" : "Retrieves all the information for sudoers.",
       "interval" : "3600"
     },
     "suid_bin": {
@@ -88,6 +89,16 @@
       "description" : "Retrieves all the files in the target system that are setuid enabled.",
       "value" : "Detect backdoor binaries (attacker may drop a copy of /bin/sh). Find potential elevation points / vulnerabilities in the standard build.",
       "interval" : "3600"
+    },
+    "users": {
+      "query" : "select * from users;",
+      "interval" : "3600",
+      "description" : "Retrieves users info."
+    },
+    "user_ssh_keys": {
+      "query" : "select user_ssh_keys.* from users join user_ssh_keys using (uid);",
+      "description" : "info on user ssh keys",
+      "interval" : "900"
     },
     "system_controls": {
       "query": "select * from system_controls;",
