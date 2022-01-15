@@ -161,7 +161,7 @@
           }
       when: ansible_distribution == 'MacOSX' and ansible_distribution_version.split('.')[1] == '11'
   roles:
-    - juju4.macos-apps-install
-    - juju4.harden-darwin
+    - juju4.macos_apps_install
+    - juju4.harden_darwin
     - juju4.chrome_config
     - juju4.firefox_config
