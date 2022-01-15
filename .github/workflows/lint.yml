@@ -10,17 +10,17 @@ on:
 jobs:
   build:
 
-    runs-on: macos-10.15
+    runs-on: macos-latest
     strategy:
       fail-fast: false
       max-parallel: 4
     env:
-      ANSIBLE_CALLBACK_WHITELIST: profile_tasks
+      ANSIBLE_CALLBACKS_ENABLED: profile_tasks
 
     steps:
       - uses: actions/checkout@v2
         with:
-          path: juju4.harden-darwin
+          path: juju4.harden_darwin
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
@@ -41,7 +41,7 @@ jobs:
           echo "/opt/hostedtoolcache/Python/3.9.1/x64/bin" >> $GITHUB_PATH
           which ansible
           ansible --version
-          cd $GITHUB_WORKSPACE/juju4.harden-darwin
+          cd $GITHUB_WORKSPACE/juju4.harden_darwin
           [ -f get-dependencies.sh ] && sh -x get-dependencies.sh
           { echo '[defaults]'; echo 'callback_whitelist = profile_tasks, timer'; echo 'roles_path = ../'; echo 'ansible_python_interpreter: /usr/bin/python3'; } >> ansible.cfg
       - name: Environment
@@ -51,7 +51,7 @@ jobs:
           find . -ls
       - name: yamllint
         run: |
-          cd $GITHUB_WORKSPACE/juju4.harden-darwin && yamllint .
+          cd $GITHUB_WORKSPACE/juju4.harden_darwin && yamllint .
       - name: ansible-lint
         run: |
-          cd $GITHUB_WORKSPACE/juju4.harden-darwin && ansible-lint
+          cd $GITHUB_WORKSPACE/juju4.harden_darwin && ansible-lint
