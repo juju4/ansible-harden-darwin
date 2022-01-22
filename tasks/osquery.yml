@@ -73,4 +73,6 @@
         dest: /Users/Shared/osquery5.mobileconfig
         mode: '0644'
 
+    - import_tasks: osquery-reporting.yml
+
   when: hasOsquery.stat.exists

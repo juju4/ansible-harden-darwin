@@ -1,0 +1,56 @@
+#!/bin/sh
+
+export export PATH=/usr/bin:/bin
+umask 077
+
+# inline stdout redirection for sh
+# https://stackoverflow.com/questions/3173131/redirect-copy-of-stdout-to-log-file-from-within-bash-script-itself
+check_tee_output()
+{
+    # copy (append) stdout and stderr to log file if TEE is unset or true
+    if [ -z "${TEE}" ] || [ "${TEE}" = true ]; then
+	TEE=false $0 2>&1 | tee {{ harden_darwin_santa_reporting_dest }}/santa-report-"$(date +%Y%m%d)" >/dev/null
+        exit $?
+    fi
+}
+
+check_tee_output
+
+date=$(date +%Y%m%d)
+# default /var/db/santa/santa.log: 644
+f=/var/db/santa/santa.log
+echo
+echo
+echo "      SANTA BINARIES DAILY REPORT ${date} for ${f}"
+echo
+echo
+
+echo "*** action"
+awk -F'[|:]' '/ action=/ { print $4 }' "${f}" | sort | uniq -c | sort -nr| head -30
+echo "*** decision"
+awk -F'|' '/\|decision=/ { print $2 }' "${f}" | sort | uniq -c | sort -nr| head -30
+echo
+echo
+
+echo "*** EXEC CERT (reason, decision, path)"
+awk -F'|' '/reason=CERT/ { print $3,$2,$15 }' "${f}" | sort | uniq -c | sort -nr| head -30
+echo "*** EXEC BINARY (reason, decision, path)"
+awk -F'|' '/reason=BINARY/ { print $3,$2,$15 }' "${f}" | sort | uniq -c | sort -nr| head -30
+echo
+echo
+
+echo "*** EXEC ALLOW (reason, decision, path)"
+awk -F'|' '/\|decision=ALLOW\|/ { print $3,$2,$15 }' "${f}" | sort | uniq -c | sort -nr| head -30
+echo "*** EXEC DENY (reason, decision, path)"
+awk -F'|' '/\|decision=DENY\|/ { print $3,$2,$15 }' "${f}" | sort | uniq -c | sort -nr| head -30
+echo "*** action WRITE (path, processpath)"
+awk -F'|' '/ action=WRITE\|/ { print $2,$7 }' "${f}" | sort | uniq -c | sort -nr| head -30
+echo "*** action DISKAPPEAR (path, processpath)"
+awk -F'|' '/ action=DISKAPPEAR\|/ { print $2,$7 }' "${f}" | sort | uniq -c | sort -nr| head -30
+echo "*** action LINK (path, processpath)"
+awk -F'|' '/ action=LINK\|/ { print $2,$7 }' "${f}" | sort | uniq -c | sort -nr| head -30
+echo "*** action RENAME (path, processpath)"
+awk -F'|' '/ action=RENAME\|/ { print $2,$7 }' "${f}" | sort | uniq -c | sort -nr| head -30
+echo "*** other decision (reason, decision, path)"
+awk -F'[|:]' '!/\|decision=ALLOW\|/ && !/\|decision=DENY\|/ && !/ action=WRITE\|/ && !/ action=DISKAPPEAR\|/ && !/ action=LINK\|/ && !/ action=RENAME\|/ { print $4,$5,$10 }' "${f}" | sort | uniq -c | sort -nr| head -30
+

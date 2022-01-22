@@ -1,0 +1,82 @@
+#!/bin/sh
+#
+# Requirements on Macos
+# q with homebrew, macports or https://github.com/stedolan/jq/releases/download/jq-1.6/jq-osx-amd64
+# % sudo chmod +a 'cabinetmedical allow read' /var/log/osquery/osqueryd.*.log
+
+export export PATH=/usr/bin:/bin:/usr/local/bin
+umask 077
+
+# inline stdout redirection for sh
+# https://stackoverflow.com/questions/3173131/redirect-copy-of-stdout-to-log-file-from-within-bash-script-itself
+check_tee_output()
+{
+    # copy (append) stdout and stderr to log file if TEE is unset or true
+    if [ -z "${TEE}" ] || [ "${TEE}" = true ]; then
+	TEE=false $0 2>&1 | tee {{ osquery_reporting_dest }}/osquery-report-"$(date +%Y%m%d)" >/dev/null
+        exit $?
+    fi
+}
+
+check_tee_output
+
+date=$(date +%Y%m%d)
+f=/var/log/osquery/osqueryd.results.log
+f2=/var/log/osquery/osqueryd.snapshots.log
+echo
+echo
+echo "      OSQUERY DAILY REPORT ${date} for ${f}"
+echo
+echo
+
+
+echo "** Queries name"
+jq -r '.name' "${f}" | sort | uniq -c | sort -nr
+echo
+echo
+
+echo "** Process"
+#jq -r 'select(.name == "pack_osquery-darwin-pack_processes") | .columns.name + ";" + .columns.path + ";" + .columns.cmdline + ";" + .columns.pcmdline' "${f}"  | sort | uniq -c | sort -nr
+jq -r 'select(.name == "pack_osquery-darwin-pack_processes") | .columns.name + ";" + .columns.path' "${f}"  | sort | uniq -c | sort -nr
+echo "** Process binding to ports"
+jq -r 'select(.name == "pack_osquery-darwin-pack_process_binding_to_ports" and .action == "added") | .columns.name + " " + .columns.port' "${f}" | sort | uniq -c | sort -nr | head -20
+echo "** Shell history"
+jq -r 'select(.name == "pack_incident-response_shell_history" and .action == "added") | .columns.username + ": " + .columns.command' "${f}" | sort | uniq -c | sort -nr | head
+jq -r 'select(.name == "pack_incident-response_shell_history" and .action == "added") | .columns.username + ": " + .columns.command' "${f}" | sort | uniq -c | sort -nr | tail
+echo "** Sudoers"
+jq -r 'select(.name == "pack_osquery-darwin-pack_sudoers" and .action == "added") | .columns.rule_details' "${f}" | sort | uniq -c | sort -nr | head
+echo "** Process Memory"
+jq -r 'select(.name == "pack_incident-response_process_memory") | .columns.path + " " + .columns.permissions' "${f}" | sort | uniq -c | sort -nr | head -20
+echo "** Process Memory wx"
+jq -r 'select(.name == "pack_incident-response_process_memory" and (.columns.permissions | test("wx"))) | .columns.path + ": " + .columns.permissions' "${f}" | sort | uniq -c | sort -nr | head -20
+echo "** Listening Ports"
+jq -r 'select(.name == "pack_incident-response_listening_ports") | .columns.path + " " + .columns.port + " " +.columns.protocol' "${f}" | sort | uniq -c | sort -nr
+echo "** Last"
+jq -r 'select(.name == "pack_incident-response_last") | .columns.username + " " + .columns.host + " " + .columns.tty + " " + .columns.type' "${f}" | sort | uniq -c | sort -nr
+echo "** Kernel modules"
+jq -r 'select(.name == "pack_vuln-management_kernel_modules") | .action' "${f}" | sort | uniq -c | sort -nr
+echo "** Mounts"
+jq -r 'select(.name == "pack_incident-response_mounts") | .action' "${f}" | sort | uniq -c | sort -nr
+echo "** Launchd agents"
+jq -r 'select(.name == "pack_osquery-darwin-pack_launchd_agents") | .columns.path' "${f}" | sort | uniq -c | sort -nr
+echo "** etc hosts"
+jq -r 'select(.name == "pack_osquery-darwin-pack_etc_hosts" and .action == "added") | .columns.hostnames + " " + .columns.address' "${f}" | sort | uniq -c | sort -nr
+echo "** dns resolvers"
+jq -r 'select(.name == "pack_osquery-darwin-pack_dns_resolvers" and .action == "added") | .columns.type + " " + .columns.address' "${f}" | sort | uniq -c | sort -nr
+echo "** shared folders"
+jq -r 'select(.name == "pack_osquery-darwin-pack_shared_folders" and .action == "added") | .columns.path + " " + .columns.name' "${f}" | sort | uniq -c | sort -nr
+echo "** managed policies / profiles"
+jq -r 'select(.name == "pack_osquery-darwin-pack_managed_policies" and .action == "added") | .columns.domain + " " + .columns.name + " " + .columns.value' "${f}" | sort | uniq -c | sort -nr
+echo
+echo
+
+echo "** Snapshots Queries name"
+jq -r '.name' "$f2" | sort | uniq -c | sort -nr
+echo "** Snapshots system controls"
+jq -r 'select(.name == "pack_osquery-snapshots-pack_system_controls") | .columns.name' "$f2" | sort | uniq -c | sort -nr
+echo "** /etc/hosts"
+jq -r 'select(.name == "pack_osquery-snapshots-pack_etc_hosts") | .columns.address + " " + .columns.hostnames' "$f2" | sort | uniq -c | sort -nr
+echo
+echo
+
+find {{ osquery_reporting_dest }} -name 'osquery-report-*' -mtime +{{ osquery_logrotate_days|int }} -exec rm {} \; 2>/dev/null
