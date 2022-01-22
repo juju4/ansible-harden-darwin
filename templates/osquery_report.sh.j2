@@ -13,7 +13,7 @@ check_tee_output()
 {
     # copy (append) stdout and stderr to log file if TEE is unset or true
     if [ -z "${TEE}" ] || [ "${TEE}" = true ]; then
-	TEE=false $0 2>&1 | tee {{ osquery_reporting_dest }}/osquery-report-"$(date +%Y%m%d)" >/dev/null
+	TEE=false $0 2>&1 | tee {{ harden_darwin_osquery_reporting_dest }}/osquery-report-"$(date +%Y%m%d)" >/dev/null
         exit $?
     fi
 }
@@ -79,4 +79,4 @@ jq -r 'select(.name == "pack_osquery-snapshots-pack_etc_hosts") | .columns.addre
 echo
 echo
 
-find {{ osquery_reporting_dest }} -name 'osquery-report-*' -mtime +{{ osquery_logrotate_days|int }} -exec rm {} \; 2>/dev/null
+find {{ harden_darwin_osquery_reporting_dest }} -name 'osquery-report-*' -mtime +{{ harden_darwin_osquery_logrotate_days|int }} -exec rm {} \; 2>/dev/null

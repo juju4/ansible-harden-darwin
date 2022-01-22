@@ -109,6 +109,7 @@ harden_darwin_osxconfigcheck: false
 ## install google santa. mode 0 = Monitor, 1 = Blacklist, 2 = Whitelist
 harden_darwin_santa: true
 harden_darwin_santa_reporting_template: santa-binaries-report.sh
+harden_darwin_santa_reporting_dest: /var/tmp
 ## ?ElCapitan/0.9.17
 # harden_darwin_santa_db_type: int
 ## Sierra/0.9.17
@@ -211,6 +212,8 @@ harden_darwin_osquery_template: 'osquery.conf.j2'
 harden_darwin_osquery_config_plugin: 'filesystem'
 harden_darwin_osquery_logger_plugin: 'filesystem'
 harden_darwin_osquery_reporting_template: osquery_report.sh
+harden_darwin_osquery_reporting_dest: /var/tmp
+harden_darwin_osquery_logrotate_days: 30
 ## fim on macos requires kernel module and extra actions
 ## Process file access is Experimental: https://osquery.readthedocs.io/en/stable/deployment/file-integrity-monitoring/
 harden_darwin_osquery_fim: false
