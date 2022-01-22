@@ -4,7 +4,7 @@
 
 - name: check santa is installed
   stat: path=/var/db/santa
-  register: hasSanta
+  register: has_santa
 
 # OSX 10.13+: can't do it without GUI interaction...
 - name: check santa kernel driver is loaded
@@ -46,7 +46,7 @@
         value: "{{ harden_darwin_santa_whitelist_path }}"
         state: present
       when: harden_darwin_santa_whitelist_path
-  when: hasSanta.stat.exists and santakext.rc == 0
+  when: has_santa.stat.exists and santakext.rc == 0
 
 ## default is monitor mode only
 ## cli tool does not support anymore install, must be done by admin user in Preferences (or MDM)

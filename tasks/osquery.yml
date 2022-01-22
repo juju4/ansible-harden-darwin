@@ -7,7 +7,7 @@
 
 - name: check if osquery is present
   stat: path=/var/osquery
-  register: hasOsquery
+  register: has_osquery
 - block:
     - name: push extra osquery packs file
       template:
@@ -75,4 +75,4 @@
 
     - import_tasks: osquery-reporting.yml
 
-  when: hasOsquery.stat.exists
+  when: has_osquery.stat.exists

@@ -45,7 +45,7 @@
           when: (harden_darwin_santa_mode == 'LOCKDOWN' or harden_darwin_santa_mode == 2)
 
     - name: Set fact GOROOT for osxlockdown build
-      set_fact:
+      set_fact:  # noqa var-naming
         GOROOT: /opt/local/lib/go
   when: mp.stat.exists and not mpgo.stat.exists
 
@@ -65,7 +65,7 @@
       register: pkg_result
       until: pkg_result is success
     - name: Set fact GOROOT for osxlockdown build
-      set_fact:
+      set_fact:  # noqa var-naming
         GOROOT: /usr/local/opt/go/libexec
   when: brew.stat.exists and not mp.stat.exists and ansible_user is defined and ansible_user != 'root'
 
