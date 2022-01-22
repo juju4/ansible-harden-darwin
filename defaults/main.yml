@@ -205,7 +205,6 @@ harden_darwin_santa_blacklist_hash: []
 ## for testing purpose
 # harden_darwin_santa_blacklist_hash:
 #   - /usr/bin/yes
-harden_darwin_santa_reporting_dest: /var/tmp
 
 harden_darwin_osquery: true
 harden_darwin_osquery_template: 'osquery.conf.j2'
