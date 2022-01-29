@@ -69,7 +69,7 @@
     },
     // FIXME! performance impacting! = higher interval
     "outbound_connections": {
-      "query": "select user.username, proc.name, hash.md5, socket.pid, proc.path, proc.cmdline, socket.local_port, socket.remote_port, socket.remote_address from process_open_sockets as socket, processes as proc, users as user, hash as hash where socket.local_port not in (select port from listening_ports) and socket.local_port != 0 and socket.pid = proc.pid and user.uid = proc.uid and hash.path = proc.path;",
+      "query": "select user.username, p1.name, hash.md5, socket.pid, p1.path, p1.cmdline, p2.cmdline as pcmdline, socket.local_port, socket.remote_port, socket.remote_address from process_open_sockets as socket, processes as p1, processes as p2, users as user, hash as hash where socket.local_port not in (select port from listening_ports) and socket.local_port != 0 and socket.pid = p1.pid and user.uid = p1.uid and hash.path = p1.path and p1.parent == p2.pid;",
       "interval": "3600",
       "description": ""
     },
