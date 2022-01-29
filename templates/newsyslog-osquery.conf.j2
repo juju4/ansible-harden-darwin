@@ -1,3 +1,4 @@
 {{ ansible_managed | comment }}
 # logfilename                   [owner:group]  mode  count  size   when  flags [/pid_file] [sig_num]
 /var/log/osquery/osqueryd.results.log   root:wheel 640 {{ harden_darwin_logrotate_days }}    *     $D11 Z
+/var/log/osquery/osqueryd.snapshots.log   root:wheel 640 {{ harden_darwin_logrotate_days }}    *     $D11 Z
