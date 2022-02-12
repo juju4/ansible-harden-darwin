@@ -26,7 +26,12 @@
   become: yes
 
 - block:
-    - include: "google-santa-whitelist.yml type=hash path={{ item }} action=whitelist match=White"
+    - include_tasks: google-santa-whitelist.yml
+      vars:
+        type: hash
+        path: "{{ item }}"
+        action: whitelist
+        match: White
       with_items:
         - "{{ install_archives }}/{{ app_name }}_Installer.app/Contents/MacOS/{{ app_name }}_Installer"
   when: harden_darwin_santa is defined and harden_darwin_santa and harden_darwin_santa_mode == 2
@@ -39,7 +44,12 @@
   become: yes
 
 - block:
-    - include: "google-santa-whitelist.yml type=hash path={{ item }} action=whitelist match=White"
+    - include_tasks: google-santa-whitelist.yml
+      vars:
+        type: hash
+        path: "{{ item }}"
+        action: whitelist
+        match: White
       with_items:
         - "/Library/RansomWhere/RansomWhere"
   when: harden_darwin_santa is defined and harden_darwin_santa and harden_darwin_santa_mode == 2

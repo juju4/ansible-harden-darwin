@@ -9,12 +9,12 @@
   changed_when: false
   ignore_errors: true
   register: santakext
-- include: >
-    google-santa-whitelist.yml
-    type=hash
-    path=/System/Library/Frameworks/Python.framework/Versions/2.7/Resources/Python.app/Contents/MacOS/Python
-    action=whitelist
-    match=White
+- import_tasks: google-santa-whitelist.yml
+  vars:
+    type: hash
+    path: /System/Library/Frameworks/Python.framework/Versions/2.7/Resources/Python.app/Contents/MacOS/Python
+    action: whitelist
+    match: White
   when: santakext.rc == 0
 
 - name: Check if developer tools are installed
@@ -36,7 +36,7 @@
     - install_archives != '/private/tmp'
     - install_archives != '/Users/Shared'
 
-- include: darwin-updates.yml
+- import_tasks: darwin-updates.yml
 
 - name: check wake for network access status
   command: "/usr/sbin/systemsetup -getwakeonnetworkaccess"
@@ -163,7 +163,7 @@
     state: present
 
 ## per user settings
-# - include: darwin-user.yml
+# - import_tasks: darwin-user.yml
 #   # FIXME! https://github.com/ansible/ansible/issues/19729
 #   become: yes
 #   become_user: "{{ item }}"
@@ -245,49 +245,49 @@
 
 ## https://github.com/iSECPartners/yontma-mac
 
-- include: firewall-pf.yml
+- import_tasks: firewall-pf.yml
 
-- include: firewall.yml
+- import_tasks: firewall.yml
 
-- include: usb.yml
+- import_tasks: usb.yml
   when: harden_darwin_disable_usb is defined and harden_darwin_disable_usb
 
-- include: wpad-disable.yml
+- import_tasks: wpad-disable.yml
   when: harden_darwin_disable_wpad is defined and harden_darwin_disable_wpad
 
-- include: osxlockdown.yml
+- import_tasks: osxlockdown.yml
   when: harden_darwin_osxlockdown is defined and harden_darwin_osxlockdown
 
-- include: osx-config-check.yml
+- import_tasks: osx-config-check.yml
   when: harden_darwin_osxconfigcheck is defined and harden_darwin_osxconfigcheck
 
-- include: google-santa.yml
+- import_tasks: google-santa.yml
   when: harden_darwin_santa is defined and harden_darwin_santa
   tags:
     - santa
 
-- include: osquery.yml
+- import_tasks: osquery.yml
   when: harden_darwin_osquery is defined and harden_darwin_osquery
 
-- include: objectivesee-ransomwhere.yml
+- import_tasks: objectivesee-ransomwhere.yml
   when: harden_darwin_ransomwhere and harden_darwin_bitbucket_download
-- include: objectivesee-oversight.yml
+- import_tasks: objectivesee-oversight.yml
   when: harden_darwin_oversight and harden_darwin_bitbucket_download
-- include: objectivesee-blockblock.yml
+- import_tasks: objectivesee-blockblock.yml
   when: harden_darwin_blockblock and harden_darwin_bitbucket_download
-- include: objectivesee-knockknock.yml
+- import_tasks: objectivesee-knockknock.yml
   when: harden_darwin_knockknock and harden_darwin_bitbucket_download
-- include: objectivesee-dnd.yml
+- import_tasks: objectivesee-dnd.yml
   when: harden_darwin_dnd and harden_darwin_bitbucket_download
-- include: objectivesee-lulu.yml
+- import_tasks: objectivesee-lulu.yml
   when: >
     harden_darwin_lulu and ansible_distribution_version is version_compare( '10.12', '>=') and
     devtools.stat.exists
 
-- include: immutable.yml
-- include: darwin-openbsm.yml
-- include: darwin-certificates.yml
+- import_tasks: immutable.yml
+- import_tasks: darwin-openbsm.yml
+- import_tasks: darwin-certificates.yml
   when: harden_darwin_certificates
-- include: mobileconfig.yml
-- include: darwin-hostname.yml
+- import_tasks: mobileconfig.yml
+- import_tasks: darwin-hostname.yml
   when: harden_darwin_hostname is defined and harden_darwin_hostname

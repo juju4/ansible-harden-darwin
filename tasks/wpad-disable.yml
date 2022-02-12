@@ -6,5 +6,7 @@
   register: netlist
   changed_when: false
 
-- include: wpad-disable-if.yml if={{ item }}
+- include_tasks: wpad-disable-if.yml
+  vars:
+    if: "{{ item }}"
   with_items: "{{ netlist.stdout_lines }}"

@@ -14,8 +14,8 @@
 
   when: harden_darwin_testing_inspec
 
-- include: testing-privesc.yml
+- import_tasks: testing-privesc.yml
   when: harden_darwin_testing_privesc
 
-- include: testing-speculative.yml
+- import_tasks: testing-speculative.yml
   when: harden_darwin_testing_speculative
