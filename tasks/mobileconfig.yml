@@ -21,7 +21,7 @@
         backup: yes
       with_items: "{{ harden_darwin_mobileconfigs }}"
     - name: add mobileconfig profiles
-      command: "profiles -I -F {{ install_archives }}/{{ item | basename }}"
+      command: "profiles -I -F {{ install_archives }}/{{ item | basename }}"  # noqa no-changed-when
       with_items: "{{ harden_darwin_mobileconfigs }}"
       # when: "'{{ item | basename }}' not in profileslist.stdout"
   when: harden_darwin_mobileconfigs != []

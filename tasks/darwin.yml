@@ -212,7 +212,7 @@
 - block:
     ## FIXME! not idempotent
     - name: disable launchd services
-      command: "launchctl unload -w {{ item }}"
+      command: "launchctl unload -w {{ item }}"  # noqa no-changed-when
       with_items: "{{ harden_darwin_launchd_services_unload }}"
   when: >
     harden_darwin_launchd_services_unload is defined and harden_darwin_launchd_services_unload and
