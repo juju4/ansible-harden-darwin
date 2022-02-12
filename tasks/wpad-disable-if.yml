@@ -1,12 +1,12 @@
 ---
 
-- name: get state of interface "{{ if }}"
-  command: "networksetup -getproxyautodiscovery \"{{ if }}\""
+- name: get state of interface "{{ interface }}"
+  command: "networksetup -getproxyautodiscovery \"{{ interface }}\""
   register: ifstate
   changed_when: false
   ignore_errors: true
 
 - name: turn off wpad
-  command: "networksetup -setproxyautodiscovery \"{{ if }}\" off"
+  command: "networksetup -setproxyautodiscovery \"{{ interface }}\" off"
   become: yes
   when: ifstate.stdout.find("Off") == -1

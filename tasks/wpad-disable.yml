@@ -8,5 +8,5 @@
 
 - include_tasks: wpad-disable-if.yml
   vars:
-    if: "{{ item }}"
+    interface: "{{ item }}"
   with_items: "{{ netlist.stdout_lines }}"
