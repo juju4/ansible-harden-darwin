@@ -1,3 +1,8 @@
 ---
 skip_list:
-  - '106'  # Role name {} does not match ``^[a-z][a-z0-9_]+$`` pattern'
+  # implicit in 6.0.0
+  - fqcn-builtins
+opt-in:  # Rules that are not used unless manually added to `enable_list`
+  - empty-string-compare
+  - no-log-password
+  - no-same-owner
