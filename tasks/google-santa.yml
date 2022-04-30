@@ -3,12 +3,12 @@
 ## howto fully disable/uninstall?
 
 - name: check santa is installed
-  stat: path=/var/db/santa
+  ansible.builtin.stat: path=/var/db/santa
   register: has_santa
 
 # OSX 10.13+: can't do it without GUI interaction...
 - name: check santa kernel driver is loaded
-  shell: "kextstat | grep -q com.google.santa-driver"
+  ansible.builtin.shell: "kextstat | grep -q com.google.santa-driver"
   changed_when: false
   ignore_errors: true
   register: santakext
@@ -66,7 +66,7 @@
 ## default is monitor mode only
 ## cli tool does not support anymore install, must be done by admin user in Preferences (or MDM)
 - name: Set Google Santa configuration profile
-  template:
+  ansible.builtin.template:
     src: "{{ harden_darwin_santa_template | default('com.google.santa.mobileconfig.j2') }}"
     dest: /Users/Shared/com.google.santa.mobileconfig
     mode: '0644'

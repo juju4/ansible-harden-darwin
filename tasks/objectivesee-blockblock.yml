@@ -2,13 +2,13 @@
 
 ## https://www.objective-see.com/products/blockblock.html
 - name: Set variables for BlockBlock
-  set_fact:
+  ansible.builtin.set_fact:
     app_name: BlockBlock
     app_url: https://bitbucket.org/objective-see/deploy/downloads/BlockBlock_0.9.9.4.zip
     app_checksum: 'sha1:4E7342597893A61CCE317B61C48C1F7210BD8CB3'
 
 - name: download {{ app_name }}
-  get_url:
+  ansible.builtin.get_url:
     url: "{{ app_url }}"
     dest: "{{ install_archives }}/{{ app_url | basename }}"
     mode: '0644'
@@ -17,7 +17,7 @@
   become: yes
 
 - name: decompress {{ app_name }}
-  unarchive:
+  ansible.builtin.unarchive:
     src: "{{ install_archives }}/{{ app_url | basename }}"
     dest: "{{ install_archives }}"
     mode: '0755'
@@ -37,7 +37,7 @@
 
 ## FIXME! always return 'install ok' and rc = 0
 - name: install {{ app_name }}
-  command: "\"{{ install_archives }}/{{ app_name }} Installer.app/Contents/MacOS/{{ app_name }}\" -install"
+  ansible.builtin.command: "\"{{ install_archives }}/{{ app_name }} Installer.app/Contents/MacOS/{{ app_name }}\" -install"
   args:
     creates: "/Library/Objective-See/BlockBlock"
   become: yes

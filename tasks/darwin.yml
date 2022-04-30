@@ -5,7 +5,7 @@
 ## just to ensure playbook doesn't get block by google santa during provisioning
 # OSX 10.13+: can't do it without GUI interaction...
 - name: check santa kernel driver is loaded
-  shell: "kextstat | grep -q com.google.santa-driver"
+  ansible.builtin.shell: "kextstat | grep -q com.google.santa-driver"
   changed_when: false
   ignore_errors: true
   register: santakext
@@ -18,15 +18,15 @@
   when: santakext.rc == 0
 
 - name: Check if developer tools are installed
-  stat:
+  ansible.builtin.stat:
     path: /Applications/Xcode.app
   register: devtools
 - name: FATAL
-  fail: msg="FATAL! Missing Xcode and developper tools."
+  ansible.builtin.fail: msg="FATAL! Missing Xcode and developper tools."
   when: harden_darwin_hard_fail_developertools and not devtools.stat.exists
 
 - name: ensure archives directory exists
-  file:
+  ansible.builtin.file:
     dest: "{{ install_archives }}"
     state: directory
     mode: '0755'
@@ -39,17 +39,17 @@
 - import_tasks: darwin-updates.yml
 
 - name: check wake for network access status
-  command: "/usr/sbin/systemsetup -getwakeonnetworkaccess"
+  ansible.builtin.command: "/usr/sbin/systemsetup -getwakeonnetworkaccess"
   changed_when: false
   register: wakestate
 - name: disable wake for network access
-  command: "/usr/sbin/systemsetup -setwakeonnetworkaccess off"
+  ansible.builtin.command: "/usr/sbin/systemsetup -setwakeonnetworkaccess off"
   when: "'Off' not in wakestate.stdout and 'Not supported on this machine.' not in wakestate.stdout"
 
 ## http://www.macos.utah.edu/documentation/administration/pmset.html
 ## FIXME! not idempotent
 - name: enforce hibernation and evict Filevault keys from memory instead of traditional sleep to memory  # noqa 301
-  command: "pmset -a {{ item.k }} {{ item.v }}"
+  ansible.builtin.command: "pmset -a {{ item.k }} {{ item.v }}"
   with_items:
     - { k: 'destroyfvkeyonstandby', v: '1' }
     ## https://developer.apple.com/library/mac/documentation/Darwin/Reference/ManPages/man1/pmset.1.html
@@ -64,7 +64,7 @@
   when: harden_darwin_enforce_hibernate
 
 # - name: Reset Accessibility settings
-#   command: tccutil reset Accessibility
+#   ansible.builtin.command: tccutil reset Accessibility
 
 # - osx_defaults: domain=NSGlobalDomain key=WebKitDeveloperExtras type=bool value=true state=present
 - name: screen saver with password
@@ -171,17 +171,17 @@
 
 ## http://jacobsalmela.com/bash-script-enable-access-assistive-devices-programmatically-os-x-mavericks-10-9-x-simulate-keystrokes/
 - name: Check if TCC.db file exists
-  stat: path='/Library/Application Support/com.apple.TCC/TCC.db'
+  ansible.builtin.stat: path='/Library/Application Support/com.apple.TCC/TCC.db'
   register: tccdb
 ## incompatible with 10.12+, https://github.com/Homebrew/brew/pull/1029
 - block:
     - name: check current tcc.db
-      command: "sqlite3 \"/Library/Application Support/com.apple.TCC/TCC.db\" \"SELECT * FROM access\""
+      ansible.builtin.command: "sqlite3 \"/Library/Application Support/com.apple.TCC/TCC.db\" \"SELECT * FROM access\""
       register: tccselect
       changed_when: false
     - name: Allow osascript to command keyboard/mouse
       ## works on osx but not travis osx, latest osx (10.11 have 7 columns vs 6 before)
-      command: >
+      ansible.builtin.command: >
         sqlite3 "/Library/Application Support/com.apple.TCC/TCC.db"
           "INSERT or REPLACE INTO access('service','client','client_type','allowed','prompt_count','csreq')
           VALUES('kTCCServiceAccessibility','com.apple.RemoteDesktopAgent',1,1,1,NULL)"
@@ -192,7 +192,7 @@
       when: not tccdb.stat.exists
   when: ansible_distribution_version is version_compare( '10.12', '<')
 - name: WARNING
-  debug: msg='Warning! macOS Sierra+ accessibility can\'t be enable from command line.'
+  ansible.builtin.debug: msg='Warning! macOS Sierra+ accessibility can\'t be enable from command line.'
   when: ansible_distribution_version is version_compare( '10.12', '>=')
 
 - name: disable IPv6 noise
@@ -212,7 +212,7 @@
 - block:
     ## FIXME! not idempotent
     - name: disable launchd services
-      command: "launchctl unload -w {{ item }}"  # noqa no-changed-when
+      ansible.builtin.command: "launchctl unload -w {{ item }}"  # noqa no-changed-when
       with_items: "{{ harden_darwin_launchd_services_unload }}"
   when: >
     harden_darwin_launchd_services_unload is defined and harden_darwin_launchd_services_unload and
@@ -220,7 +220,7 @@
 
 ## 2016/12 website down?
 - name: download fix-macosx.py to disable search engines 'leak'
-  get_url:
+  ansible.builtin.get_url:
     url: https://fix-macosx.com/fix-macosx.py
     dest: "{{ install_archives }}/fix-macosx.py"
     mode: '0755'
@@ -234,10 +234,10 @@
 #   when: harden_darwin_fixmacosleak
 
 - name: Check if fsmon is present
-  stat: path={{ install_archives }}/fsmon
+  ansible.builtin.stat: path={{ install_archives }}/fsmon
   register: fsmon
 - name: git clone fsmon
-  git:
+  ansible.builtin.git:
     repo: https://github.com/nowsecure/fsmon.git
     dest: "{{ install_archives }}/fsmon"
     version: "{{ fsmon_version | default('51f1ea7019c3b5f0ab2e646c68a3174fc9ff8931') }}"

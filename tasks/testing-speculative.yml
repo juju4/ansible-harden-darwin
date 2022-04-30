@@ -5,19 +5,19 @@
 # https://github.com/Eugnis/spectre-attack/blob/master/Source.c
 
 - name: download speculative execution sample code
-  get_url:
+  ansible.builtin.get_url:
     url: https://gist.githubusercontent.com/jedisct1/3bbb6e50b768968c30629bf734ea49c6/raw/6ede3c9a3356a4a55a27febaf38157897c4fed09/spectre.c
     dest: /tmp/spectre.c
     owner: nobody
 
 - name: compile sample code
-  command: gcc -std=c99 -O0 spectre.c -o spectre
+  ansible.builtin.command: gcc -std=c99 -O0 spectre.c -o spectre
   args:
     chdir: /tmp
     creates: /tmp/spectre
 
 - name: run sample code
-  command: ./spectre  # noqa 301
+  ansible.builtin.command: ./spectre  # noqa 301
   args:
     chdir: /tmp
   # Failed to set permissions on the temporary files Ansible needs to create when becoming an unprivileged user

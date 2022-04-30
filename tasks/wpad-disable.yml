@@ -1,7 +1,7 @@
 ---
 
 - name: get list of network devices
-  shell: "networksetup -listallnetworkservices | grep -v 'denotes that a network service is disabled'"  # noqa 306
+  ansible.builtin.shell: "networksetup -listallnetworkservices | grep -v 'denotes that a network service is disabled'"  # noqa 306
   become: yes
   register: netlist
   changed_when: false

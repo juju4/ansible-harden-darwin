@@ -2,13 +2,13 @@
 
 ## https://objective-see.com/products/ransomwhere.html
 - name: Set variables for Ransomwhere
-  set_fact:
+  ansible.builtin.set_fact:
     app_name: RansomWhere
     app_url: https://bitbucket.org/objective-see/deploy/downloads/RansomWhere_1.2.5.zip
     app_checksum: 'sha256:091a61bb99f5fe73944cda2b6ad26efb6d7ffaf8ddd391d237b82afb10b46a67'
 
 - name: download {{ app_name }}
-  get_url:
+  ansible.builtin.get_url:
     url: "{{ app_url }}"
     dest: "{{ install_archives }}/{{ app_url | basename }}"
     mode: '0644'
@@ -18,7 +18,7 @@
 
 ## FIXME! Unable to find '/private/var/_install/RansomWhere_1.1.0.zip' in expected paths.
 - name: decompress {{ app_name }}
-  unarchive:
+  ansible.builtin.unarchive:
     src: "{{ install_archives }}/{{ app_url | basename }}"
     dest: "{{ install_archives }}"
     mode: '0755'
@@ -38,7 +38,7 @@
 
 ## FIXME! always return 'install ok' and rc = 0
 - name: install ransomwhere
-  command: "{{ install_archives }}/{{ app_name }}_Installer.app/Contents/MacOS/{{ app_name }}_Installer -install"
+  ansible.builtin.command: "{{ install_archives }}/{{ app_name }}_Installer.app/Contents/MacOS/{{ app_name }}_Installer -install"
   args:
     creates: "/Library/LaunchDaemons/com.objective-see.ransomwhere.plist"
   become: yes

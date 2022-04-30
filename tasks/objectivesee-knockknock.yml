@@ -1,13 +1,13 @@
 ---
 
 - name: Set variables for KnockKnock
-  set_fact:
+  ansible.builtin.set_fact:
     app_name: KnockKnock
     app_url: https://bitbucket.org/objective-see/deploy/downloads/KnockKnock_1.9.3.zip
     app_checksum: 'sha1:a31528b825759fb7fc0e9402572ddda0fe972009'
 
 - name: download {{ app_name }}
-  get_url:
+  ansible.builtin.get_url:
     url: "{{ app_url }}"
     dest: "{{ install_archives }}/{{ app_url | basename }}"
     mode: '0644'
@@ -16,7 +16,7 @@
   become: yes
 
 - name: decompress {{ app_name }}
-  unarchive:
+  ansible.builtin.unarchive:
     src: "{{ install_archives }}/{{ app_url | basename }}"
     dest: "{{ install_archives }}"
     mode: '0755'

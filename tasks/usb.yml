@@ -5,12 +5,12 @@
 ## http://patrickmosca.com/root-a-mac-in-10-seconds-or-less/
 
 - name: Check loaded kernel drivers
-  command: kextstat
+  ansible.builtin.command: kextstat
   changed_when: false
   register: kextstat
 
 - name: USB+Firewire | Disable mass storage with kextunload
-  command: "kextunload /System/Library/Extensions/{{ item }}.kext"
+  ansible.builtin.command: "kextunload /System/Library/Extensions/{{ item }}.kext"
   with_items:
     - IOUSBMassStorageClass
     - IOUSBMassStorageDriver
@@ -24,7 +24,7 @@
 ## need to reboot
 - block:
     - name: USB+Firewire | Remove kernel extension from USB Mass storage
-      file:
+      ansible.builtin.file:
         dest: "/System/Library/Extensions/{{ item }}.kext"
         state: absent
       with_items:
@@ -32,7 +32,7 @@
         - IOFireWireSerialBusProtocolTransport
       register: rmkext
     - name: USB+Firewire | force refresh of Extensions cache at next reboot
-      file:
+      ansible.builtin.file:
         dest: /System/Library/Extensions
         mode: '0644'
         state: touch

@@ -1,18 +1,18 @@
 ---
 
 - name: set file immutable (schg)  # noqa 301
-  command: "chflags schg {{ item }}"
+  ansible.builtin.command: "chflags schg {{ item }}"
   with_items: "{{ harden_darwin_set_immutable }}"
 
 - name: set file not immutable (schg)  # noqa 301
-  command: "chflags noschg {{ item }}"
+  ansible.builtin.command: "chflags noschg {{ item }}"
   with_items: "{{ harden_darwin_set_notimmutable }}"
 
 ## if set to 1: system immutable flags can only be disabled in single user mode
 ## Macos 10.4-: 1
 ## Macos 10.5+: 0
 - name: Review kern.securelevel
-  sysctl:
+  ansible.builtin.sysctl:
     name: "kern.securelevel"
     value: "{{ harden_darwin_sysctl_kernsecurelevel | default(0) }}"
     state: present

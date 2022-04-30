@@ -5,23 +5,23 @@
 ## 10.7+: networksetup command mostly deprecated
 
 - name: list current profile
-  command: profiles -P
+  ansible.builtin.command: profiles -P
   changed_when: false
   ignore_errors: true
   register: profileslist
 
 - name: Debug | profiles output
-  debug: var=profileslist
+  ansible.builtin.debug: var=profileslist
 - block:
     - name: copy file to target
-      copy:
+      ansible.builtin.copy:
         src: "{{ item }}"
         dest: "{{ install_archives }}/{{ item | basename }}"
         mode: '0400'
         backup: yes
       with_items: "{{ harden_darwin_mobileconfigs }}"
     - name: add mobileconfig profiles
-      command: "profiles -I -F {{ install_archives }}/{{ item | basename }}"  # noqa no-changed-when
+      ansible.builtin.command: "profiles -I -F {{ install_archives }}/{{ item | basename }}"  # noqa no-changed-when
       with_items: "{{ harden_darwin_mobileconfigs }}"
       # when: "'{{ item | basename }}' not in profileslist.stdout"
   when: harden_darwin_mobileconfigs != []

@@ -7,7 +7,7 @@
 ## auditreduce -m AUE_EXECVE /var/audit/current | praudit -s | grep -A8 "/bin/sh"
 
 - name: configure openbsdm auditd
-  template:
+  ansible.builtin.template:
     src: "{{ harden_darwin_auditconf }}"
     dest: /etc/security/audit_control
     mode: '0400'

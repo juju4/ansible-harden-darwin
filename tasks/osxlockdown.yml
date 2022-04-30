@@ -2,10 +2,10 @@
 
 ## https://github.com/SummitRoute/osxlockdown only osx 10.11/El Capitan
 - name: Check if osxlockdown is present
-  stat: path={{ install_archives }}/osxlockdown
+  ansible.builtin.stat: path={{ install_archives }}/osxlockdown
   register: osxl
 - name: git clone osxlockdown
-  git:
+  ansible.builtin.git:
     repo: https://github.com/SummitRoute/osxlockdown
     dest: "{{ install_archives }}/osxlockdown"
     version: "{{ osxlockdown_version | default('eff7eb67db81991fb5a6b59d88b97bb721c9a907') }}"
@@ -14,10 +14,10 @@
 
 ## go install with macport or homebrew
 - name: Check if macports is present
-  stat: path=/opt/local/bin/port
+  ansible.builtin.stat: path=/opt/local/bin/port
   register: mp
 - name: Check if macports golang package is present
-  stat: path=/opt/local/bin/go
+  ansible.builtin.stat: path=/opt/local/bin/go
   register: mpgo
 - block:
     - block:
@@ -45,12 +45,12 @@
           when: (harden_darwin_santa_mode == 'LOCKDOWN' or harden_darwin_santa_mode == 2)
 
     - name: Set fact GOROOT for osxlockdown build
-      set_fact:  # noqa var-naming
+      ansible.builtin.set_fact:  # noqa var-naming
         GOROOT: /opt/local/lib/go
   when: mp.stat.exists and not mpgo.stat.exists
 
 - name: Check if homebrew is present
-  stat: path=/usr/local/bin/brew
+  ansible.builtin.stat: path=/usr/local/bin/brew
   register: brew
 - block:
     - name: homebrew go package install
@@ -65,15 +65,15 @@
       register: pkg_result
       until: pkg_result is success
     - name: Set fact GOROOT for osxlockdown build
-      set_fact:  # noqa var-naming
+      ansible.builtin.set_fact:  # noqa var-naming
         GOROOT: /usr/local/opt/go/libexec
   when: brew.stat.exists and not mp.stat.exists and ansible_user is defined and ansible_user != 'root'
 
 - name: Check if existing osxlockdown.audit file
-  stat: path=/private/var/root/osxlockdown.audit
+  ansible.builtin.stat: path=/private/var/root/osxlockdown.audit
   register: osxlfile
 - name: build osxlockdown
-  command: "{{ item.c }}"
+  ansible.builtin.command: "{{ item.c }}"
   args:
     chdir: "{{ item.d }}"
   with_items:
@@ -87,7 +87,7 @@
   when: ansible_distribution_version.find('10.11') != -1 and not osxlfile.stat.exists
   failed_when: false
 - name: execute osxlockdown - audit mode only
-  shell: "./osxlockdown | tee /private/var/root/osxlockdown.audit chdir={{ install_archives }}/osxlockdown"
+  ansible.builtin.shell: "./osxlockdown | tee /private/var/root/osxlockdown.audit chdir={{ install_archives }}/osxlockdown"
   environment:
     PATH: "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/local/bin"
     GOROOT: "{{ GOROOT }}"
@@ -100,5 +100,5 @@
     harden_darwin_osxlockdown == 'audit'
   ignore_errors: true
 - name: Debug | osxlockdown output
-  debug: var=osxlout.stdout_lines
+  ansible.builtin.debug: var=osxlout.stdout_lines
   when: ansible_distribution_version.find('10.11') != -1 and not osxlfile.stat.exists

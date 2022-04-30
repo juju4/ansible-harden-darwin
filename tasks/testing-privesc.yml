@@ -2,7 +2,7 @@
 # https://isc.sans.edu/forums/diary/Finding+Privilege+Escalation+Flaws+in+Linux/19207
 
 - name: Ensure user _test is present
-  user:
+  ansible.builtin.user:
     name: _test
     state: present
 
@@ -54,7 +54,7 @@
   #   checksum: 'sha256:d5002d499e3b3653a9505b2781f51d6d38507816b7eb9e9367d2c59fadfcac8c'
   #   mode: '0644'
   #   validate_certs: false
-  command: "curl -so /tmp/linuxprivchecker.py https://www.securitysift.com/download/linuxprivchecker.py"  # noqa 303
+  ansible.builtin.command: "curl -so /tmp/linuxprivchecker.py https://www.securitysift.com/download/linuxprivchecker.py"  # noqa 303
   args:
     creates: /tmp/linuxprivchecker.py
   # become: yes
@@ -77,7 +77,7 @@
 # http://www.kitploit.com/2017/11/kernelpop-kernel-privilege-escalation.html
 # https://github.com/spencerdodd/kernelpop
 - name: retrieve kernelpop
-  git:
+  ansible.builtin.git:
     repo: 'https://github.com/spencerdodd/kernelpop'
     dest: /Users/_test/kernelpop
     version: "{{ kernelpop_version | default('b3467d3c64f9657a822c1f3c0d70769efabebf60') }}"
@@ -93,7 +93,7 @@
   until: pkg_result is success
 
 - name: execute kernelpop
-  shell: "/opt/local/bin/python3.6 kernelpop.py -b | tee /tmp/kernelpop.out"  # noqa 306
+  ansible.builtin.shell: "/opt/local/bin/python3.6 kernelpop.py -b | tee /tmp/kernelpop.out"  # noqa 306
   args:
     chdir: /Users/_test/kernelpop
     creates: /tmp/kernelpop.out

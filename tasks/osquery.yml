@@ -6,11 +6,11 @@
 # osqueryctl config-check
 
 - name: check if osquery is present
-  stat: path=/var/osquery
+  ansible.builtin.stat: path=/var/osquery
   register: has_osquery
 - block:
     - name: push extra osquery packs file
-      template:
+      ansible.builtin.template:
         src: "{{ item }}.conf.j2"
         dest: "/var/osquery/packs/{{ item | basename }}.conf"
         mode: '0644'
@@ -18,7 +18,7 @@
       notify:
         - restart osquery
     - name: review default packs configuration
-      replace:
+      ansible.builtin.replace:
         dest: "{{ item.d }}"
         regexp: "{{ item.re }}"
         replace: "{{ item.rep }}"
@@ -36,7 +36,7 @@
             rep: '"select shell_history.* from users join shell_history using (uid);"'
         }
     - name: configure osquery
-      template:
+      ansible.builtin.template:
         src: "{{ harden_darwin_osquery_template }}"
         dest: /var/osquery/osquery.conf
         mode: '0644'
@@ -48,7 +48,7 @@
         PATH: '/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin'
     ## https://github.com/facebook/osquery/issues/302
     - name: configure newsyslog for osquery
-      template:
+      ansible.builtin.template:
         src: newsyslog-osquery.conf.j2
         dest: /private/etc/newsyslog.d/osquery.conf
         mode: '0644'
@@ -57,18 +57,18 @@
         # notify:
         #   - restart newsyslog
     - name: check if service is loaded
-      command: "launchctl list"
+      ansible.builtin.command: "launchctl list"
       changed_when: false
       register: launchctllist
     - name: ensure service is enabled and started
-      command: "/usr/local/bin/osqueryctl start"
+      ansible.builtin.command: "/usr/local/bin/osqueryctl start"
       when: >
         launchctllist is defined and
         launchctllist.stdout is defined and
         launchctllist.stdout.find("osqueryd") == -1
 
     - name: Set osquery configuration profile
-      template:
+      ansible.builtin.template:
         src: "{{ harden_darwin_osquery_template | default('osquery5.mobileconfig.j2') }}"
         dest: /Users/Shared/osquery5.mobileconfig
         mode: '0644'

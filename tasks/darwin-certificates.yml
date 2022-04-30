@@ -7,13 +7,13 @@
 ## https://apple.stackexchange.com/questions/24640/how-do-i-remove-many-system-roots-from-apple-system-keychain
 
 - name: Ensure backup directory exists
-  file:
+  ansible.builtin.file:
     dest: "{{ backupdir }}"
     mode: '0755'
     state: directory
 
 - name: Backup certificate keychains
-  command: >
+  ansible.builtin.command: >
     install -m 0400 {{ item }}
       {{ backupdir }}/{{ item | regex_replace('/', '-') }}-{{ ansible_date_time.date }}
   args:
@@ -23,7 +23,7 @@
     - /System/Library/Keychains/SystemRootCertificates.keychain
     - /Library/Keychains/System.keychain
 - name: Export trust settings
-  command: >
+  ansible.builtin.command: >
     security trust-settings-export -d {{ backupdir }}/trust_settings-{{ ansible_date_time.date }}.plist
   args:
     creates: "{{ backupdir }}/trust_settings-{{ ansible_date_time.date }}.plist"
@@ -31,7 +31,7 @@
   failed_when: false
 
 - name: Download extra certificates
-  get_url:
+  ansible.builtin.get_url:
     url: "{{ item.u }}"
     dest: "{{ backupdir }}/{{ item.u | basename }}"
     mode: '0644'
@@ -42,23 +42,23 @@
   with_items: "{{ harden_darwin_certificates_dl }}"
 
 - name: Copy extra certificates from orchestrator
-  copy:
+  ansible.builtin.copy:
     src: "{{ item }}"
     dest: "{{ backupdir }}/{{ item | basename }}"
     mode: '0644'
   with_items: "{{ harden_darwin_certificates_files }}"
 
 - name: dump system certificates
-  command: "security dump-keychain /System/Library/Keychains/SystemRootCertificates.keychain"
+  ansible.builtin.command: "security dump-keychain /System/Library/Keychains/SystemRootCertificates.keychain"
   register: systemrootcert
   changed_when: false
 ## Not allowed... 'security: SecKeychainItemDelete: UNIX[Operation not permitted]'
 - name: remove certificate to keychain - admin store (hash)  # noqa 301
-  command: >
+  ansible.builtin.command: >
     security delete-certificate -Z '{{ item }}' /System/Library/Keychains/SystemRootCertificates.keychain
   with_items: "{{ harden_darwin_certificates_hash_delete }}"
 - name: remove certificate to keychain - admin store (common name)  # noqa 301
-  command: >
+  ansible.builtin.command: >
     security delete-certificate -c '{{ item }}' /System/Library/Keychains/SystemRootCertificates.keychain
   with_items: "{{ harden_darwin_certificates_cn_delete }}"
 
@@ -67,28 +67,28 @@
 # $ security export -k /System/Library/Keychains/SystemRootCertificates.keychain -t certs -o /tmp/certs.pm
 ## No hash selection, only cn
 - name: Keychain | switch certificate to deny trust  # noqa 301
-  shell: >
+  ansible.builtin.shell: >
     security find-certificate -a -p -c '{{ item }}' /System/Library/Keychains/SystemRootCertificates.keychain > /tmp/certs.pm;
     security add-trusted-cert -d -r deny -k /Library/Keychains/System.keychain /tmp/certs.pm
   with_items: "{{ harden_darwin_certificates_cn_denytrust }}"
 
 - name: Keychain | switch certificate to unspecified trust  # noqa 301
-  shell: >
+  ansible.builtin.shell: >
     security find-certificate -a -p -c '{{ item }}' /System/Library/Keychains/SystemRootCertificates.keychain > /tmp/certs.pm;
     security add-trusted-cert -d -r unspecified -k /Library/Keychains/System.keychain /tmp/certs.pm
   with_items: "{{ harden_darwin_certificates_cn_unspecifiedtrust }}"
 
 - name: Keychain | switch certificate to trust  # noqa 301
-  shell: >
+  ansible.builtin.shell: >
     security find-certificate -a -p -c '{{ item }}' /System/Library/Keychains/SystemRootCertificates.keychain > /tmp/certs.pm;
     security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain /tmp/certs.pm
   with_items: "{{ harden_darwin_certificates_cn_trust }}"
 
 - name: Keychain | trust extra certificates from orchestrator  # noqa 301
-  command: >
+  ansible.builtin.command: >
     security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain {{ backupdir }}/{{ item | basename }}
   with_items: "{{ harden_darwin_certificates_files }}"
 - name: Keychain | trust extra certificates from Internet  # noqa 301
-  command: >
+  ansible.builtin.command: >
     security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain {{ backupdir }}/{{ item.u | basename }}
   with_items: "{{ harden_darwin_certificates_dl }}"

@@ -2,7 +2,7 @@
 
 - block:
     - name: testing | run macos-baseline
-      shell: >
+      ansible.builtin.shell: >
         /usr/local/bin/inspec exec https://github.com/juju4/macos-baseline/archive/master.tar.gz |
             tee /var/log/inspec.log
       ignore_errors: true
@@ -10,7 +10,7 @@
       args:
         creates: /var/log/inspec.log
     - name: Debug | inspec output
-      debug: var=inspeclog.stdout_lines
+      ansible.builtin.debug: var=inspeclog.stdout_lines
 
   when: harden_darwin_testing_inspec
 

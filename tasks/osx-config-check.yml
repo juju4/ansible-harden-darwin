@@ -2,10 +2,10 @@
 
 ## https://github.com/kristovatlas/osx-config-check
 - name: Check if osx-config-check is present
-  stat: path={{ install_archives }}/osx-config-check
+  ansible.builtin.stat: path={{ install_archives }}/osx-config-check
   register: osxcc
 - name: git clone osx-config-check
-  git:
+  ansible.builtin.git:
     repo: https://github.com/kristovatlas/osx-config-check
     dest: "{{ install_archives }}/osx-config-check"
     version: "{{ osxconfigcheck_version | default('7ab816d52d818a770b712ad0652e7bd7457ffd15') }}"
@@ -13,7 +13,7 @@
 
 ## Note: report is written to ~/Documents/ ...
 - name: execute osx-config-check - audit mode only  # noqa 306
-  shell: >
+  ansible.builtin.shell: >
     python app.py --report-only --disable-prompt | tee /private/var/root/osx-config-check.audit
   args:
     chdir: "{{ install_archives }}/osx-config-check"
@@ -22,4 +22,4 @@
   register: osxccout
 #  ignore_errors: true
 ## Note: long report
-# - debug: var=osxccout.stdout_lines
+# - ansible.builtin.debug: var=osxccout.stdout_lines

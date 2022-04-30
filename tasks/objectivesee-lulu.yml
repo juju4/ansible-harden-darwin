@@ -4,17 +4,17 @@
 ## kernel extension so probably issue with upcoming high sierra
 
 - name: Set variables for Lulu
-  set_fact:
+  ansible.builtin.set_fact:
     app_name: Lulu
     app_url: https://github.com/objective-see/LuLu/releases/download/1.1.1/LuLu_1.1.1.zip
     app_checksum: 'sha256:88ad8042b711a2f17f93ea9423f45927c4358af73f78feedf02c7885e795e817'
 
 - name: check if lulu archive is present
-  stat:
+  ansible.builtin.stat:
     path: "{{ install_archives }}/{{ app_url | basename }}"
   register: luluarchive
 - name: download {{ app_name }}
-  get_url:
+  ansible.builtin.get_url:
     url: "{{ app_url }}"
     dest: "{{ install_archives }}/{{ app_url | basename }}"
     mode: '0644'
@@ -24,7 +24,7 @@
   when: not luluarchive.stat.exists
 
 - name: decompress {{ app_name }}
-  unarchive:
+  ansible.builtin.unarchive:
     src: "{{ install_archives }}/{{ app_url | basename }}"
     dest: "{{ install_archives }}"
     mode: '0755'
@@ -43,7 +43,7 @@
   when: harden_darwin_santa is defined and harden_darwin_santa and harden_darwin_santa_mode == 2
 
 - name: install Lulu
-  command: "\"{{ install_archives }}/LuLu Installer.app/Contents/MacOS/LuLu Installer\" -install"
+  ansible.builtin.command: "\"{{ install_archives }}/LuLu Installer.app/Contents/MacOS/LuLu Installer\" -install"
   args:
     creates: "/Applications/LuLu.app/Contents/MacOS/LuLu"
   become: yes
