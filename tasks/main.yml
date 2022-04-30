@@ -5,7 +5,7 @@
     MacOSX-{{ ansible_distribution_version.split('.')[0] }}.{{ ansible_distribution_version.split('.')[1] }}.yml
   when: ansible_distribution == "MacOSX" and ansible_distribution_major_version|int == 10
 - name: Include version-specific variables
-  include_vars: "MacOSX-{{ ansible_distribution_major_version }}.yml"
+  ansible.builtin.include_vars: "MacOSX-{{ ansible_distribution_major_version }}.yml"
   when: ansible_distribution == "MacOSX" and ansible_distribution_major_version|int > 10
 
 - import_tasks: travis.yml

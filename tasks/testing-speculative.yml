@@ -30,4 +30,4 @@
   ignore_errors: true
 
 - name: Debug | spectre
-  debug: var=spectre
+  ansible.builtin.debug: var=spectre
