@@ -9,6 +9,7 @@
     url: https://gist.githubusercontent.com/jedisct1/3bbb6e50b768968c30629bf734ea49c6/raw/6ede3c9a3356a4a55a27febaf38157897c4fed09/spectre.c
     dest: /tmp/spectre.c
     owner: nobody
+    mode: '0600'
 
 - name: compile sample code
   ansible.builtin.command: gcc -std=c99 -O0 spectre.c -o spectre
@@ -30,4 +31,4 @@
   ignore_errors: true
 
 - name: Debug | spectre
-  debug: var=spectre
+  ansible.builtin.debug: var=spectre

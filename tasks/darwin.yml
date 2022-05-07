@@ -188,7 +188,7 @@
       become: yes
       when: tccdb.stat.exists and not ('com.apple.RemoteDesktopAgent' in tccselect.stdout)
     - name: WARNING
-      debug: msg="WARNING! didn't found /Library/Application\ Support/com.apple.TCC/TCC.db"
+      ansible.builtin.debug: msg="WARNING! didn't found /Library/Application\ Support/com.apple.TCC/TCC.db"
       when: not tccdb.stat.exists
   when: ansible_distribution_version is version_compare( '10.12', '<')
 - name: WARNING
