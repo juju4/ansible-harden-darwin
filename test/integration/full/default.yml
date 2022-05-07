@@ -4,41 +4,41 @@
   vars:
     macos_apps_install_list:
       ## osxfuse is required for veracrypt
-      - { u: 'https://github.com/osxfuse/osxfuse/releases/download/macfuse-4.2.1/macfuse-4.2.1.dmg',
+      - { u: 'https://github.com/osxfuse/osxfuse/releases/download/macfuse-4.3.0/macfuse-4.3.0.dmg',
           v: True,
-          s: 'bd3abba91a8c16005eb3937ad492e49275e60db429bbecd30d54769c191e0699 ',
+          s: '8447e2ef3252cbab2608aeacec096b85561e7fdc8809157063a90ded812d48e8',
           n: 'FUSE',
           t: 'pkg',
           m: '/Volumes/FUSE for macOS',
-          version: '4.2.1',
+          version: '4.3.0',
           to: '/Library/Filesystems/osxfuse.fs',
           exec_name: 'FUSE for macOS.pkg',
           versioncmd: '/usr/libexec/PlistBuddy -c "print :CFBundleVersion" "/Library/Filesystems/osxfuse.fs/Contents/Info.plist"'
       }
-      - { u: 'https://launchpad.net/veracrypt/trunk/1.24-update8/+download/VeraCrypt_1.24-Update8.dmg',
+      - { u: 'https://launchpad.net/veracrypt/trunk/1.25.9/+download/VeraCrypt_1.25.9.dmg',
           v: true,
-          s: '9edeae9fbf7f1b2eb91ce55ff82481bfd4c099e85c3c88cb6d6dd91b460a3a6b',
+          s: '8acfdcfca5b64218431b990d1018b0c54feb508207640e819397cdbe701ae1eb',
           n: 'VeraCrypt',
           t: 'pkg',
           m: '/Volumes/VeraCrypt for OSX',
-          version: '1.24',
+          version: '1.25.9',
           exec_name: 'VeraCrypt_Installer.pkg'
       }
-      - { u: 'https://github.com/google/santa/releases/download/2021.7/santa-2021.7.dmg',
+      - { u: 'https://github.com/google/santa/releases/download/2022.3/santa-2022.3.dmg',
           v: false,
-          s: '7682a855aa2517011fe08eb5c1f420c1dbe2ab6ea3a732bbf915267fda203754',
-          n: 'santa-2021.7',
+          s: '89498c1867b00ad53f04c01c7cd8565d5d64428874803b38919e5f12e71022fe',
+          n: 'santa-2022.3',
           t: 'pkg',
-          version: '2021.7',
+          version: '2022.3',
           versioncmd: '/usr/local/bin/santactl version | sed "1 s/.*| //;q"',
           to: '/usr/local/bin/santactl'
       }
-      - { u: 'https://pkg.osquery.io/darwin/osquery-5.0.1.pkg',
+      - { u: 'https://pkg.osquery.io/darwin/osquery-5.2.3.pkg',
           v: true,
-          s: 'ec58996e64637d861ccead8dc6bc8865662728f6e5bc2694a3c92f0f4a371095',
+          s: '1927c1bb0138fa9c9dc1c48682cfe7270f91adad20409313c7aef284e4d773ca',
           n: 'osquery',
           t: 'pkgonly',
-          version: '5.0.1',
+          version: '5.2.3',
           versioncmd: '/usr/local/bin/osqueryi --version | sed "s/osqueryi version //"',
           to: '/usr/local/bin/osqueryi'
       }
@@ -48,14 +48,14 @@
       #     s: 'xxx'
       # }
       # https://downloads.chef.io/products/inspec
-      - { u: 'https://packages.chef.io/files/stable/inspec/4.46.13/mac_os_x/11/inspec-4.46.13-1.x86_64.dmg',
+      - { u: 'https://packages.chef.io/files/stable/inspec/5.14.0/mac_os_x/12/inspec-5.14.0-1.x86_64.dmg',
           v: true,
-          s: 'cf117764cd1e67ef4d161d6ad8bd0e713d25d2e6afaaea0d734e6707eccd2e58',
+          s: '9deb2141ead0b94ab80e048110bff955230def6156dc5cdc52b9d26fe7d08764',
           n: 'inspec',
           t: 'pkg',
           m: '/Volumes/InSpec',
-          version: '4.46.13',
-          exec_name: 'inspec-4.46.13-1.pkg',
+          version: '5.14.0',
+          exec_name: 'inspec-5.14.0-1.pkg',
           versioncmd: 'inspec --version 2>&1 | tail -1'
       }
       - { u: 'https://download.mozilla.org/?product=firefox-latest-ssl&os=osx&lang=en-US',
@@ -72,6 +72,14 @@
           n: 'Google Chrome',
           t: 'app',
           version: '92.0'
+      }
+      # Only if Macos 10.12 or above
+      - { u: 'https://github.com/objective-see/LuLu/releases/download/v2.4.1/LuLu_2.4.1.dmg',
+          v: true,
+          s: 'fe2607d874456295154238fb387e2f038b2b9f475d440ded0e495fd90aacc934',
+          n: 'Lulu',
+          t: 'app',
+          version: '2.4.1'
       }
       # - { u: '', f: '', v: true, s: 'aaaa', n: '', t: 'app', m: '/Volumes/app', version: '', versioncmd: '', to: '/Applications/example.app' }
     harden_darwin_testing: true

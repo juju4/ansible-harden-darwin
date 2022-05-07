@@ -4,8 +4,8 @@
 - name: Set variables for BlockBlock
   ansible.builtin.set_fact:
     app_name: BlockBlock
-    app_url: https://bitbucket.org/objective-see/deploy/downloads/BlockBlock_0.9.9.4.zip
-    app_checksum: 'sha1:4E7342597893A61CCE317B61C48C1F7210BD8CB3'
+    app_url: https://github.com/objective-see/BlockBlock/releases/download/v2.1.4/BlockBlock_2.1.4.zip
+    app_checksum: 'sha256:8c12d13c9327701245ccdfee6217296baf4086ae359e025c98c4980a7ce466ee'
 
 - name: download {{ app_name }}
   ansible.builtin.get_url:

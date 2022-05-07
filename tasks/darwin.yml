@@ -279,10 +279,6 @@
   when: harden_darwin_knockknock and harden_darwin_bitbucket_download
 - import_tasks: objectivesee-dnd.yml
   when: harden_darwin_dnd and harden_darwin_bitbucket_download
-- import_tasks: objectivesee-lulu.yml
-  when: >
-    harden_darwin_lulu and ansible_distribution_version is version_compare( '10.12', '>=') and
-    devtools.stat.exists
 
 - import_tasks: immutable.yml
 - import_tasks: darwin-openbsm.yml

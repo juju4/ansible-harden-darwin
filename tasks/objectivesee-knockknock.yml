@@ -3,8 +3,8 @@
 - name: Set variables for KnockKnock
   ansible.builtin.set_fact:
     app_name: KnockKnock
-    app_url: https://bitbucket.org/objective-see/deploy/downloads/KnockKnock_1.9.3.zip
-    app_checksum: 'sha1:a31528b825759fb7fc0e9402572ddda0fe972009'
+    app_url: https://github.com/objective-see/KnockKnock/releases/download/v2.3.0/KnockKnock_2.3.0.zip
+    app_checksum: 'sha256:140f5f3c6d02541bed685810cb4c6916231fe2385ad749dd4856e7c9f2dcd05c'
 
 - name: download {{ app_name }}
   ansible.builtin.get_url:
