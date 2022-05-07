@@ -37,7 +37,7 @@
 
 ## FIXME! always return 'install ok' and rc = 0
 - name: install oversight
-  ansible.builtin.command: "{{ install_archives }}/{{ app_name }}.app/Contents/MacOS/{{ app_name }} -install"
+  ansible.builtin.command: "\"{{ install_archives }}/{{ app_name }}.app/Contents/MacOS/{{ app_name }}\" -install"
   args:
     creates: "/Applications/OverSight.app/Contents/MacOS/OverSight"
   become: yes
