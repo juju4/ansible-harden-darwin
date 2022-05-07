@@ -60,9 +60,11 @@ jobs:
           cd $GITHUB_WORKSPACE/juju4.harden_darwin && ansible-playbook -i localhost, --connection=local --become -vvv test/integration/default/default.yml | tee /tmp/idempotency.log | grep -q 'changed=0.*failed=0'  && (echo 'Idempotence test: pass' && exit 0)  || (echo 'Idempotence test: fail' && cat /tmp/idempotency.log && exit 0)
       - name: After script
         run: |
+          set -x
           ls -A $HOME/
           ls -lhA /Applications/
           ls -lhA /usr/local/bin/
+          ls -lhAR /private/var/_install/
         if: ${{ always() }}
         continue-on-error: true
       - name: After script - launchtl
@@ -73,6 +75,7 @@ jobs:
         continue-on-error: true
       - name: After script - tools
         run: |
+          set -x
           [ -f /private/var/root/osxlockdown.audit ] && sudo cat /private/var/root/osxlockdown.audit || true
           ls -lA "/Library/Application Support/Google/Chrome/External Extensions" || true
           cp "/Library/Managed Preferences/com.google.Chrome.plist" /tmp/chrome.plist && plutil -convert xml1 /tmp/chrome.plist && cat /tmp/chrome.plist
@@ -86,6 +89,7 @@ jobs:
         continue-on-error: true
       - name: After script - osquery
         run: |
+          set -x
           ls -lhAR /opt/osquery
           codesign  -dr - /opt/osquery/lib/osquery.app/Contents/MacOS/osqueryd
           cat /Library/LaunchDaemons/io.osquery.agent.plist
