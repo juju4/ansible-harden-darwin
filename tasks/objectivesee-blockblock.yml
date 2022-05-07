@@ -3,7 +3,7 @@
 ## https://www.objective-see.com/products/blockblock.html
 - name: Set variables for BlockBlock
   ansible.builtin.set_fact:
-    app_name: BlockBlock
+    app_name: BlockBlock Installer
     app_url: https://github.com/objective-see/BlockBlock/releases/download/v2.1.4/BlockBlock_2.1.4.zip
     app_checksum: 'sha256:8c12d13c9327701245ccdfee6217296baf4086ae359e025c98c4980a7ce466ee'
 
