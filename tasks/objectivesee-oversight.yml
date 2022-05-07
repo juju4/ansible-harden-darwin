@@ -3,7 +3,7 @@
 
 - name: Set variables for Oversight
   ansible.builtin.set_fact:
-    app_name: OverSight_Installer
+    app_name: 'OverSight Installer'
     app_url: https://github.com/objective-see/OverSight/releases/download/v2.0.1/OverSight_2.0.1.zip
     app_checksum: 'sha256:e19d4da26aeba29343d3bdc33643c03b925ed29a13bc71eae46c5999b654b843'
 
