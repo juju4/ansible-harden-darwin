@@ -42,7 +42,8 @@
     creates: "/Applications/OverSight.app/Contents/MacOS/OverSight"
   become: yes
 
-- block:
+- name: Ensure app is allowed by Google Santa
+  block:
     - include_tasks: google-santa-whitelist.yml
       vars:
         type: hash

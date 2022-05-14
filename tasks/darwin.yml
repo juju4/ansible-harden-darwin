@@ -174,7 +174,8 @@
   ansible.builtin.stat: path='/Library/Application Support/com.apple.TCC/TCC.db'
   register: tccdb
 ## incompatible with 10.12+, https://github.com/Homebrew/brew/pull/1029
-- block:
+- name: TCC
+  block:
     - name: check current tcc.db
       ansible.builtin.command: "sqlite3 \"/Library/Application Support/com.apple.TCC/TCC.db\" \"SELECT * FROM access\""
       register: tccselect
@@ -209,7 +210,8 @@
     - { k: 'net.inet6.icmp6.nd6_accept_6to4', v: 0 }
 
 ## https://github.com/ansible/ansible-modules-extras/pull/995/files
-- block:
+- name: Disable services
+  block:
     ## FIXME! not idempotent
     - name: disable launchd services
       ansible.builtin.command: "launchctl unload -w {{ item }}"  # noqa no-changed-when

@@ -25,7 +25,8 @@
     creates: "{{ install_archives }}/{{ app_name }}_Installer.app/Contents/MacOS/{{ app_name }} Installer"
   become: yes
 
-- block:
+- name: Ensure app is allowed by Google Santa
+  block:
     - include_tasks: google-santa-whitelist.yml
       vars:
         type: hash

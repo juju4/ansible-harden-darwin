@@ -8,7 +8,8 @@
 - name: check if osquery is present
   ansible.builtin.stat: path=/var/osquery
   register: has_osquery
-- block:
+- name: osquery present
+  block:
     - name: push extra osquery packs file
       ansible.builtin.template:
         src: "{{ item }}.conf.j2"

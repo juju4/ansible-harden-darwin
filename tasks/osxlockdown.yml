@@ -19,8 +19,10 @@
 - name: Check if macports golang package is present
   ansible.builtin.stat: path=/opt/local/bin/go
   register: mpgo
-- block:
-    - block:
+- name: Temporary allow macports build
+  block:
+    - name: Google Santa
+      block:
         - name: Google Santa | ensure config set to monitor mode
           osx_defaults:
             domain: /var/db/santa/config.plist
@@ -52,7 +54,8 @@
 - name: Check if homebrew is present
   ansible.builtin.stat: path=/usr/local/bin/brew
   register: brew
-- block:
+- name: Homebrew
+  block:
     - name: homebrew go package install
       homebrew:
         name: go

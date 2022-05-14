@@ -12,7 +12,8 @@
 
 - name: Debug | profiles output
   ansible.builtin.debug: var=profileslist
-- block:
+- name: Macos mobileconfigs
+  block:
     - name: copy file to target
       ansible.builtin.copy:
         src: "{{ item }}"

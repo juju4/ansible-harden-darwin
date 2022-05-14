@@ -10,7 +10,8 @@
     checksum_algorithm: sha256
   register: filestat
 
-- block:
+- name: santa rule
+  block:
     - name: santa | fileinfo check
       ansible.builtin.command: "/usr/local/bin/santactl fileinfo '{{ path }}'"
       changed_when: false

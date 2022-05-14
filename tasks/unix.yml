@@ -10,7 +10,8 @@
 - name: Check if /etc/ssh/sshd_config exists
   ansible.builtin.stat: path=/etc/ssh/sshd_config
   register: sshdconf
-- block:
+- name: SSHD
+  block:
     - name: Restrict sshd config (1)
       ansible.builtin.lineinfile:
         dest: /etc/ssh/sshd_config

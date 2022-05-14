@@ -1,6 +1,7 @@
 ---
 
-- block:
+- name: Inspec
+  block:
     - name: testing | run macos-baseline
       ansible.builtin.shell: >
         /usr/local/bin/inspec exec https://github.com/juju4/macos-baseline/archive/master.tar.gz |

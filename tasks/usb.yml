@@ -22,7 +22,8 @@
 ## http://images.apple.com/server/macosx/docs/Leopard_Security_Config_20080530.pdf
 ## until 10.9 (https://stackoverflow.com/questions/28348963/mac-os-x-10-10-disable-usb-ports)
 ## need to reboot
-- block:
+- name: Kernel extensions
+  block:
     - name: USB+Firewire | Remove kernel extension from USB Mass storage
       ansible.builtin.file:
         dest: "/System/Library/Extensions/{{ item }}.kext"
