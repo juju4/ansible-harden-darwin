@@ -53,4 +53,3 @@ echo "*** action RENAME (path, processpath)"
 awk -F'|' '/ action=RENAME\|/ { print $2,$7 }' "${f}" | sort | uniq -c | sort -nr| head -30
 echo "*** other decision (reason, decision, path)"
 awk -F'[|:]' '!/\|decision=ALLOW\|/ && !/\|decision=DENY\|/ && !/ action=WRITE\|/ && !/ action=DISKAPPEAR\|/ && !/ action=LINK\|/ && !/ action=RENAME\|/ { print $4,$5,$10 }' "${f}" | sort | uniq -c | sort -nr| head -30
-
