@@ -1,7 +1,7 @@
 ---
 
 - name: Configure Updates automatic check
-  osx_defaults:
+  community.general.osx_defaults:
     domain: /Library/Preferences/com.apple.SoftwareUpdate
     key: AutomaticCheckEnabled
     type: bool
@@ -9,7 +9,7 @@
     state: present
 
 - name: Configure Auto-Update
-  osx_defaults:
+  community.general.osx_defaults:
     domain: /Library/Preferences/com.apple.commerce
     key: AutoUpdate
     type: bool
@@ -17,7 +17,7 @@
     state: present
 
 - name: Configure Auto-Update RestartRequired
-  osx_defaults:
+  community.general.osx_defaults:
     domain: /Library/Preferences/com.apple.commerce
     key: AutoUpdateRestartRequired
     type: bool

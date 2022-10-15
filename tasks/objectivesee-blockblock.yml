@@ -7,7 +7,7 @@
     app_url: https://github.com/objective-see/BlockBlock/releases/download/v2.1.4/BlockBlock_2.1.4.zip
     app_checksum: 'sha256:8c12d13c9327701245ccdfee6217296baf4086ae359e025c98c4980a7ce466ee'
 
-- name: download {{ app_name }}
+- name: Download {{ app_name }}
   ansible.builtin.get_url:
     url: "{{ app_url }}"
     dest: "{{ install_archives }}/{{ app_url | basename }}"
@@ -16,7 +16,7 @@
     validate_certs: "{{ harden_darwin_bitbucket_sslcert_validate | default(true) }}"
   become: yes
 
-- name: decompress {{ app_name }}
+- name: Decompress {{ app_name }}
   ansible.builtin.unarchive:
     src: "{{ install_archives }}/{{ app_url | basename }}"
     dest: "{{ install_archives }}"
@@ -25,8 +25,10 @@
   become: yes
 
 - name: Ensure app is allowed by Google Santa
+  when: harden_darwin_santa is defined and harden_darwin_santa and harden_darwin_santa_mode == 2
   block:
-    - include_tasks: google-santa-whitelist.yml
+    - name: Include google-santa-whitelist
+      ansible.builtin.include_tasks: google-santa-whitelist.yml
       vars:
         type: hash
         path: "{{ item }}"
@@ -34,10 +36,9 @@
         match: White
       with_items:
         - "{{ install_archives }}/{{ app_name }} Installer.app/Contents/MacOS/{{ app_name }}"
-  when: harden_darwin_santa is defined and harden_darwin_santa and harden_darwin_santa_mode == 2
 
 ## FIXME! always return 'install ok' and rc = 0
-- name: install {{ app_name }}
+- name: Install {{ app_name }}
   ansible.builtin.command: "\"{{ install_archives }}/{{ app_name }}.app/Contents/MacOS/{{ app_name }}\" -install"
   args:
     creates: "/Library/Objective-See/BlockBlock"

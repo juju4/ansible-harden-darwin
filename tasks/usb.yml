@@ -23,6 +23,7 @@
 ## until 10.9 (https://stackoverflow.com/questions/28348963/mac-os-x-10-10-disable-usb-ports)
 ## need to reboot
 - name: Kernel extensions
+  when: harden_darwin_usb_remove_massstoragekext
   block:
     - name: USB+Firewire | Remove kernel extension from USB Mass storage
       ansible.builtin.file:
@@ -38,4 +39,3 @@
         mode: '0644'
         state: touch
       when: rmkext.changed
-  when: harden_darwin_usb_remove_massstoragekext

@@ -1,12 +1,12 @@
 ---
 
-- name: get state of interface "{{ interface }}"
+- name: Get state of interface - {{ interface }}
   ansible.builtin.command: "networksetup -getproxyautodiscovery \"{{ interface }}\""
   register: ifstate
   changed_when: false
   ignore_errors: true
 
-- name: turn off wpad
+- name: Turn off wpad
   ansible.builtin.command: "networksetup -setproxyautodiscovery \"{{ interface }}\" off"
   become: yes
   when: ifstate.stdout.find("Off") == -1

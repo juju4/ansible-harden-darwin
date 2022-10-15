@@ -1,16 +1,19 @@
 ---
 
 - name: Check if /etc/ssh/ssh_host_ed25519_key is present
-  ansible.builtin.stat: path=/etc/ssh/ssh_host_ed25519_key
+  ansible.builtin.stat:
+    path: /etc/ssh/ssh_host_ed25519_key
   register: sshkey
 - name: Generate any missing SSH host key
   ansible.builtin.command: ssh-keygen -A
   when: not sshkey.stat.exists
 
 - name: Check if /etc/ssh/sshd_config exists
-  ansible.builtin.stat: path=/etc/ssh/sshd_config
+  ansible.builtin.stat:
+    path: /etc/ssh/sshd_config
   register: sshdconf
 - name: SSHD
+  when: sshdconf.stat.exists
   block:
     - name: Restrict sshd config (1)
       ansible.builtin.lineinfile:
@@ -29,7 +32,7 @@
         - { regexp: '^TCPKeepAlive', line: 'TCPKeepAlive no' }
         - { regexp: '^UseDNS', line: 'UseDNS yes' }
       notify:
-        - restart sshd
+        - Restart sshd
     - name: Restrict sshd config - UsePrivilegeSeparation sandbox
       ansible.builtin.lineinfile:
         dest: /etc/ssh/sshd_config
@@ -57,10 +60,9 @@
       with_items:
         - { regexp: '^    UseKeyChain', line: '    UseKeychain no' }
       notify:
-        - restart sshd
+        - Restart sshd
       when: ansible_distribution_version is version_compare( '10.12.2', '>=')
-  when: sshdconf.stat.exists
-- name: where is sshd_config if not standard?
+- name: Where is sshd_config if not standard?
   ansible.builtin.command: "ls -l /etc/ssh/sshd_config /private/etc/ssh/"
   when: not sshdconf.stat.exists
   failed_when: false

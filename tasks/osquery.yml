@@ -5,20 +5,22 @@
 # /var/osquery/osquery.example.conf
 # osqueryctl config-check
 
-- name: check if osquery is present
-  ansible.builtin.stat: path=/var/osquery
+- name: Check if osquery is present
+  ansible.builtin.stat:
+    path: /var/osquery
   register: has_osquery
-- name: osquery present
+- name: Osquery present
+  when: has_osquery.stat.exists
   block:
-    - name: push extra osquery packs file
+    - name: Push extra osquery packs file
       ansible.builtin.template:
         src: "{{ item }}.conf.j2"
         dest: "/var/osquery/packs/{{ item | basename }}.conf"
         mode: '0644'
       with_items: "{{ harden_darwin_osquery_upload_packs }}"
       notify:
-        - restart osquery
-    - name: review default packs configuration
+        - Restart osquery
+    - name: Review default packs configuration
       ansible.builtin.replace:
         dest: "{{ item.d }}"
         regexp: "{{ item.re }}"
@@ -36,7 +38,7 @@
             re: '"select \* from shell_history;"',
             rep: '"select shell_history.* from users join shell_history using (uid);"'
         }
-    - name: configure osquery
+    - name: Configure osquery
       ansible.builtin.template:
         src: "{{ harden_darwin_osquery_template }}"
         dest: /var/osquery/osquery.conf
@@ -44,11 +46,11 @@
         backup: yes
         validate: 'osqueryi --config_path %s --config_check --verbose'
       notify:
-        - restart osquery
+        - Restart osquery
       environment:
         PATH: '/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin'
     ## https://github.com/facebook/osquery/issues/302
-    - name: configure newsyslog for osquery
+    - name: Configure newsyslog for osquery
       ansible.builtin.template:
         src: newsyslog-osquery.conf.j2
         dest: /private/etc/newsyslog.d/osquery.conf
@@ -57,11 +59,11 @@
         validate: 'newsyslog -N -f %s'
         # notify:
         #   - restart newsyslog
-    - name: check if service is loaded
+    - name: Check if service is loaded
       ansible.builtin.command: "launchctl list"
       changed_when: false
       register: launchctllist
-    - name: ensure service is enabled and started
+    - name: Ensure service is enabled and started
       ansible.builtin.command: "/usr/local/bin/osqueryctl start"
       when: >
         launchctllist is defined and
@@ -74,6 +76,5 @@
         dest: /Users/Shared/osquery5.mobileconfig
         mode: '0644'
 
-    - import_tasks: osquery-reporting.yml
-
-  when: has_osquery.stat.exists
+    - name: Import osquery-reporting
+      ansible.builtin.import_tasks: osquery-reporting.yml

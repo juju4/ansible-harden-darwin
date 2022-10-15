@@ -1,22 +1,22 @@
 ---
 
 ## not sure it is needed, as sshd is managed by launchd/inetd-like
-- name: restart sshd
+- name: Restart sshd
   # ansible.builtin.service: name={{ ssh_svc }} state=restarted
   ansible.builtin.command: >
     launchctl stop -w /System/Library/LaunchDaemons/ssh.plist;
     launchctl start -w /System/Library/LaunchDaemons/ssh.plist
   failed_when: false
 
-- name: reload fstab
+- name: Reload fstab
   ansible.builtin.shell: "umount -a; mount -a"
   failed_when: false
 
-- name: kill osx bluetooth
+- name: Kill osx bluetooth
   ansible.builtin.command: "killall -HUP blued"
   failed_when: false
 
-- name: restart osquery
+- name: Restart osquery
   # ansible.builtin.service: name=osqueryd state=restarted
   ansible.builtin.command: >
     launchctl stop -w /Library/LaunchDaemons/com.facebook.osqueryd.plist;
@@ -24,17 +24,17 @@
   failed_when: false
 
 ## seems to always return 3 and not restarting anything
-- name: restart santa
+- name: Restart santa
   ansible.builtin.command: >
     launchctl stop -w /Library/LaunchDaemons/com.google.santad.plist;
     launchctl start -w /Library/LaunchDaemons/com.google.santad.plist
   failed_when: false
 
-- name: restart auditd
+- name: Restart auditd
   ansible.builtin.command: >
     launchctl stop -w /System/Library/LaunchDaemons/com.apple.auditd.plist;
     launchctl start -w /System/Library/LaunchDaemons/com.apple.auditd.plist
   failed_when: false
 
-- name: reload pf
+- name: Reload pf
   ansible.builtin.command: "pfctl -f /etc/pf.conf"

@@ -6,7 +6,7 @@
     app_url: https://github.com/objective-see/KnockKnock/releases/download/v2.3.0/KnockKnock_2.3.0.zip
     app_checksum: 'sha256:140f5f3c6d02541bed685810cb4c6916231fe2385ad749dd4856e7c9f2dcd05c'
 
-- name: download {{ app_name }}
+- name: Download {{ app_name }}
   ansible.builtin.get_url:
     url: "{{ app_url }}"
     dest: "{{ install_archives }}/{{ app_url | basename }}"
@@ -15,7 +15,7 @@
     validate_certs: "{{ harden_darwin_bitbucket_sslcert_validate | default(true) }}"
   become: yes
 
-- name: decompress {{ app_name }}
+- name: Decompress {{ app_name }}
   ansible.builtin.unarchive:
     src: "{{ install_archives }}/{{ app_url | basename }}"
     dest: "{{ install_archives }}"
@@ -24,8 +24,10 @@
   become: yes
 
 - name: Ensure app is allowed by Google Santa
+  when: harden_darwin_santa is defined and harden_darwin_santa and harden_darwin_santa_mode == 2
   block:
-    - include_tasks: google-santa-whitelist.yml
+    - name: Include google-santa-whitelist
+      ansible.builtin.include_tasks: google-santa-whitelist.yml
       vars:
         type: hash
         path: "{{ item }}"
@@ -33,4 +35,3 @@
         match: White
       with_items:
         - "{{ install_archives }}/{{ app_name }}.app/Contents/MacOS/{{ app_name }}"
-  when: harden_darwin_santa is defined and harden_darwin_santa and harden_darwin_santa_mode == 2

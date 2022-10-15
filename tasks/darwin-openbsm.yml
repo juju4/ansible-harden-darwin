@@ -6,7 +6,7 @@
 ## binary logs in /var/audit: praudit, auditreduce
 ## auditreduce -m AUE_EXECVE /var/audit/current | praudit -s | grep -A8 "/bin/sh"
 
-- name: configure openbsdm auditd
+- name: Configure openbsdm auditd
   ansible.builtin.template:
     src: "{{ harden_darwin_auditconf }}"
     dest: /etc/security/audit_control
@@ -14,4 +14,4 @@
     backup: yes
     ## no validate option in auditd
   notify:
-    - restart auditd
+    - Restart auditd

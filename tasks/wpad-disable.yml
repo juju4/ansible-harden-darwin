@@ -1,12 +1,13 @@
 ---
 
-- name: get list of network devices
+- name: Get list of network devices
   ansible.builtin.shell: "networksetup -listallnetworkservices | grep -v 'denotes that a network service is disabled'"  # noqa 306
   become: yes
   register: netlist
   changed_when: false
 
-- include_tasks: wpad-disable-if.yml
+- name: Include wpad-disable-if
+  ansible.builtin.include_tasks: wpad-disable-if.yml
   vars:
     interface: "{{ item }}"
   with_items: "{{ netlist.stdout_lines }}"

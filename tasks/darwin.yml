@@ -4,12 +4,13 @@
 
 ## just to ensure playbook doesn't get block by google santa during provisioning
 # OSX 10.13+: can't do it without GUI interaction...
-- name: check santa kernel driver is loaded
+- name: Check santa kernel driver is loaded
   ansible.builtin.shell: "kextstat | grep -q com.google.santa-driver"
   changed_when: false
   ignore_errors: true
   register: santakext
-- import_tasks: google-santa-whitelist.yml
+- name: Import google-santa-whitelist
+  ansible.builtin.import_tasks: google-santa-whitelist.yml
   vars:
     type: hash
     path: /System/Library/Frameworks/Python.framework/Versions/2.7/Resources/Python.app/Contents/MacOS/Python
@@ -22,10 +23,11 @@
     path: /Applications/Xcode.app
   register: devtools
 - name: FATAL
-  ansible.builtin.fail: msg="FATAL! Missing Xcode and developper tools."
+  ansible.builtin.fail:
+    msg: "FATAL! Missing Xcode and developper tools."
   when: harden_darwin_hard_fail_developertools and not devtools.stat.exists
 
-- name: ensure archives directory exists
+- name: Ensure archives directory exists
   ansible.builtin.file:
     dest: "{{ install_archives }}"
     state: directory
@@ -36,19 +38,20 @@
     - install_archives != '/private/tmp'
     - install_archives != '/Users/Shared'
 
-- import_tasks: darwin-updates.yml
+- name: Import darwin-updates
+  ansible.builtin.import_tasks: darwin-updates.yml
 
-- name: check wake for network access status
+- name: Check wake for network access status
   ansible.builtin.command: "/usr/sbin/systemsetup -getwakeonnetworkaccess"
   changed_when: false
   register: wakestate
-- name: disable wake for network access
+- name: Disable wake for network access
   ansible.builtin.command: "/usr/sbin/systemsetup -setwakeonnetworkaccess off"
   when: "'Off' not in wakestate.stdout and 'Not supported on this machine.' not in wakestate.stdout"
 
 ## http://www.macos.utah.edu/documentation/administration/pmset.html
 ## FIXME! not idempotent
-- name: enforce hibernation and evict Filevault keys from memory instead of traditional sleep to memory  # noqa 301
+- name: Enforce hibernation and evict Filevault keys from memory instead of traditional sleep to memory  # noqa 301
   ansible.builtin.command: "pmset -a {{ item.k }} {{ item.v }}"
   with_items:
     - { k: 'destroyfvkeyonstandby', v: '1' }
@@ -67,18 +70,38 @@
 #   ansible.builtin.command: tccutil reset Accessibility
 
 # - osx_defaults: domain=NSGlobalDomain key=WebKitDeveloperExtras type=bool value=true state=present
-- name: screen saver with password
-  osx_defaults: domain=com.apple.screensaver key=askForPassword type=int value=1 state=present
+- name: Screen saver with password
+  community.general.osx_defaults:
+    domain: com.apple.screensaver
+    key: askForPassword
+    type: int
+    value: 1
+    state: present
 
 - name: Disable Creation of Metadata Files on Network Volumes
-  osx_defaults: domain=com.apple.desktopservices key=DSDontWriteNetworkStores type=bool value=true state=present
+  community.general.osx_defaults:
+    domain: com.apple.desktopservices
+    key: DSDontWriteNetworkStores
+    type: bool
+    value: true
+    state: present
 - name: Disable Creation of Metadata Files on USB Volumes
-  osx_defaults: domain=com.apple.desktopservices key=DSDontWriteUSBStores type=bool value=true state=present
+  community.general.osx_defaults:
+    domain: com.apple.desktopservices
+    key: DSDontWriteUSBStores
+    type: bool
+    value: true
+    state: present
 - name: Check for Software Updates Daily
-  osx_defaults: domain=com.apple.SoftwareUpdate key=ScheduleFrequency type=int value=1 state=present
+  community.general.osx_defaults:
+    domain: com.apple.SoftwareUpdate
+    key: ScheduleFrequency
+    type: int
+    value: 1
+    state: present
 ## FIXME! it seems type can be int or bool
 - name: Enable infrared receiver
-  osx_defaults:
+  community.general.osx_defaults:
     domain: /Library/Preferences/com.apple.driver.AppleIRController
     key: DeviceEnabled
     type: "{{ darwin_booltype }}"
@@ -86,7 +109,7 @@
     state: present
   when: harden_darwin_infrared
 - name: Disable infrared receiver
-  osx_defaults:
+  community.general.osx_defaults:
     domain: /Library/Preferences/com.apple.driver.AppleIRController
     key: DeviceEnabled
     type: "{{ darwin_booltype }}"
@@ -95,7 +118,7 @@
   when: not harden_darwin_infrared
 ## FIXME! it seems type can be int or bool, and different even between 2 Sierra/10.12 (depends if system upgraded?)
 - name: Enable bluetooth
-  osx_defaults:
+  community.general.osx_defaults:
     domain: /Library/Preferences/com.apple.Bluetooth
     key: ControllerPowerState
     type: "{{ darwin_booltype }}"
@@ -103,7 +126,7 @@
     state: present
   when: not harden_darwin_disable_bluetooth
 - name: Disable bluetooth
-  osx_defaults:
+  community.general.osx_defaults:
     domain: /Library/Preferences/com.apple.Bluetooth
     key: ControllerPowerState
     type: "{{ darwin_booltype }}"
@@ -112,10 +135,10 @@
   when: harden_darwin_disable_bluetooth
   register: osx_bluetooth
   notify:
-    - kill osx bluetooth
+    - Kill osx bluetooth
 
 - name: Configure Captive Portal
-  osx_defaults:
+  community.general.osx_defaults:
     domain: /Library/Preferences/SystemConfiguration/com.apple.captive.control
     key: Active
     type: bool
@@ -123,7 +146,7 @@
     state: present
 
 - name: Configure FastUserSwitching
-  osx_defaults:
+  community.general.osx_defaults:
     domain: /Library/Preferences/.GlobalPreferences
     key: MultipleSessionEnabled
     type: bool
@@ -131,7 +154,7 @@
     state: present
 
 - name: Configure Disable FDE AutoLogin (Filevault DoubleLogin) = {{ harden_darwin_disablefdeautologin }}
-  osx_defaults:
+  community.general.osx_defaults:
     domain: /Library/Preferences/com.apple.loginwindow
     key: DisableFDEAutoLogin
     type: bool
@@ -139,7 +162,7 @@
     state: present
 
 - name: Disable bonjour multicast advertisements
-  osx_defaults:
+  community.general.osx_defaults:
     domain: /Library/Preferences/com.apple.mDNSResponder
     key: NoMulticastAdvertisements
     type: bool
@@ -147,7 +170,7 @@
     state: present
 
 - name: Review CrashReporter configuration
-  osx_defaults:
+  community.general.osx_defaults:
     domain: com.apple.CrashReporter
     key: DialogType
     type: string
@@ -155,7 +178,7 @@
     state: present
 
 - name: Review CrashReporter configuration - use Notifications
-  osx_defaults:
+  community.general.osx_defaults:
     domain: com.apple.CrashReporter
     key: UseUNC
     type: int
@@ -163,7 +186,7 @@
     state: present
 
 ## per user settings
-# - import_tasks: darwin-user.yml
+# - ansible.builtin.import_tasks: darwin-user.yml
 #   # FIXME! https://github.com/ansible/ansible/issues/19729
 #   become: yes
 #   become_user: "{{ item }}"
@@ -171,12 +194,14 @@
 
 ## http://jacobsalmela.com/bash-script-enable-access-assistive-devices-programmatically-os-x-mavericks-10-9-x-simulate-keystrokes/
 - name: Check if TCC.db file exists
-  ansible.builtin.stat: path='/Library/Application Support/com.apple.TCC/TCC.db'
+  ansible.builtin.stat:
+    path: '/Library/Application Support/com.apple.TCC/TCC.db'
   register: tccdb
 ## incompatible with 10.12+, https://github.com/Homebrew/brew/pull/1029
 - name: TCC
+  when: ansible_distribution_version is version_compare( '10.12', '<')
   block:
-    - name: check current tcc.db
+    - name: Check current tcc.db
       ansible.builtin.command: "sqlite3 \"/Library/Application Support/com.apple.TCC/TCC.db\" \"SELECT * FROM access\""
       register: tccselect
       changed_when: false
@@ -189,15 +214,16 @@
       become: yes
       when: tccdb.stat.exists and not ('com.apple.RemoteDesktopAgent' in tccselect.stdout)
     - name: WARNING
-      ansible.builtin.debug: msg="WARNING! didn't found /Library/Application\ Support/com.apple.TCC/TCC.db"
+      ansible.builtin.debug:
+        msg: "WARNING! didn't found /Library/Application\ Support/com.apple.TCC/TCC.db"
       when: not tccdb.stat.exists
-  when: ansible_distribution_version is version_compare( '10.12', '<')
 - name: WARNING
-  ansible.builtin.debug: msg='Warning! macOS Sierra+ accessibility can\'t be enable from command line.'
+  ansible.builtin.debug:
+    msg: "Warning! macOS Sierra+ accessibility can't be enable from command line."
   when: ansible_distribution_version is version_compare( '10.12', '>=')
 
-- name: disable IPv6 noise
-  sysctl:
+- name: Disable IPv6 noise
+  ansible.posix.sysctl:
     name: "{{ item.k }}"
     value: "{{ item.v }}"
     state: present
@@ -211,17 +237,17 @@
 
 ## https://github.com/ansible/ansible-modules-extras/pull/995/files
 - name: Disable services
-  block:
-    ## FIXME! not idempotent
-    - name: disable launchd services
-      ansible.builtin.command: "launchctl unload -w {{ item }}"  # noqa no-changed-when
-      with_items: "{{ harden_darwin_launchd_services_unload }}"
   when: >
     harden_darwin_launchd_services_unload is defined and harden_darwin_launchd_services_unload and
     harden_darwin_launchd_services_unload != []
+  block:
+    ## FIXME! not idempotent
+    - name: Disable launchd services
+      ansible.builtin.command: "launchctl unload -w {{ item }}"  # noqa no-changed-when
+      with_items: "{{ harden_darwin_launchd_services_unload }}"
 
 ## 2016/12 website down?
-- name: download fix-macosx.py to disable search engines 'leak'
+- name: Download fix-macosx.py to disable search engines 'leak'
   ansible.builtin.get_url:
     url: https://fix-macosx.com/fix-macosx.py
     dest: "{{ install_archives }}/fix-macosx.py"
@@ -236,9 +262,10 @@
 #   when: harden_darwin_fixmacosleak
 
 - name: Check if fsmon is present
-  ansible.builtin.stat: path={{ install_archives }}/fsmon
+  ansible.builtin.stat:
+    path: "{{ install_archives }}/fsmon"
   register: fsmon
-- name: git clone fsmon
+- name: Git clone fsmon
   ansible.builtin.git:
     repo: https://github.com/nowsecure/fsmon.git
     dest: "{{ install_archives }}/fsmon"
@@ -247,45 +274,63 @@
 
 ## https://github.com/iSECPartners/yontma-mac
 
-- import_tasks: firewall-pf.yml
+- name: Import firewall-pf
+  ansible.builtin.import_tasks: firewall-pf.yml
 
-- import_tasks: firewall.yml
+- name: Import firewall
+  ansible.builtin.import_tasks: firewall.yml
 
-- import_tasks: usb.yml
+- name: Import usb
+  ansible.builtin.import_tasks: usb.yml
   when: harden_darwin_disable_usb is defined and harden_darwin_disable_usb
 
-- import_tasks: wpad-disable.yml
+- name: Import wpad-disable
+  ansible.builtin.import_tasks: wpad-disable.yml
   when: harden_darwin_disable_wpad is defined and harden_darwin_disable_wpad
 
-- import_tasks: osxlockdown.yml
+- name: Import osxlockdown
+  ansible.builtin.import_tasks: osxlockdown.yml
   when: harden_darwin_osxlockdown is defined and harden_darwin_osxlockdown
 
-- import_tasks: osx-config-check.yml
+- name: Import osx-config-check
+  ansible.builtin.import_tasks: osx-config-check.yml
   when: harden_darwin_osxconfigcheck is defined and harden_darwin_osxconfigcheck
 
-- import_tasks: google-santa.yml
+- name: Import google-santa
+  ansible.builtin.import_tasks: google-santa.yml
   when: harden_darwin_santa is defined and harden_darwin_santa
   tags:
     - santa
 
-- import_tasks: osquery.yml
+- name: Import osquery
+  ansible.builtin.import_tasks: osquery.yml
   when: harden_darwin_osquery is defined and harden_darwin_osquery
 
-- import_tasks: objectivesee-ransomwhere.yml
+- name: Import objective-ransomwhere
+  ansible.builtin.import_tasks: objectivesee-ransomwhere.yml
   when: harden_darwin_ransomwhere and harden_darwin_bitbucket_download
-- import_tasks: objectivesee-oversight.yml
+- name: Import objective-oversight
+  ansible.builtin.import_tasks: objectivesee-oversight.yml
   when: harden_darwin_oversight and harden_darwin_bitbucket_download
-- import_tasks: objectivesee-blockblock.yml
+- name: Import objective-blockblock
+  ansible.builtin.import_tasks: objectivesee-blockblock.yml
   when: harden_darwin_blockblock and harden_darwin_bitbucket_download
-- import_tasks: objectivesee-knockknock.yml
+- name: Import objective-knockknock
+  ansible.builtin.import_tasks: objectivesee-knockknock.yml
   when: harden_darwin_knockknock and harden_darwin_bitbucket_download
-- import_tasks: objectivesee-dnd.yml
+- name: Import objective-dnd
+  ansible.builtin.import_tasks: objectivesee-dnd.yml
   when: harden_darwin_dnd and harden_darwin_bitbucket_download
 
-- import_tasks: immutable.yml
-- import_tasks: darwin-openbsm.yml
-- import_tasks: darwin-certificates.yml
+- name: Import immutable
+  ansible.builtin.import_tasks: immutable.yml
+- name: Import darwin-openbsm
+  ansible.builtin.import_tasks: darwin-openbsm.yml
+- name: Import darwin-certificates
+  ansible.builtin.import_tasks: darwin-certificates.yml
   when: harden_darwin_certificates
-- import_tasks: mobileconfig.yml
-- import_tasks: darwin-hostname.yml
+- name: Import mobileconfig
+  ansible.builtin.import_tasks: mobileconfig.yml
+- name: Import darwin-hostname
+  ansible.builtin.import_tasks: darwin-hostname.yml
   when: harden_darwin_hostname is defined and harden_darwin_hostname

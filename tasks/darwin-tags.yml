@@ -7,8 +7,8 @@
 ## defaults write /path/to/plist/file "URL Types" -array-add '{"URL Identifier" = "com.myapp.2"; "URL Schemes" = { "two"; }; }'l
 ## defaults write /path/to/plist/file "URL Types" -array-add '{"URL Identifier" = "com.myapp.2"; "URL Schemes" = { "two"; }; }'l
 
-- name: add TLP:YELLOW category
-  osx_defaults:
+- name: Add TLP:YELLOW category
+  community.general.osx_defaults:
     domain: '/Users/*/Library/Application Support/com.apple.sharedfilelist/com.apple.LSSharedFileList.ProjectsItems.sfl'
     # key: AppleLanguages
     key: '$objects'

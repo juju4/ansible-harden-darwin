@@ -7,7 +7,7 @@
     app_url: https://github.com/objective-see/OverSight/releases/download/v2.0.1/OverSight_2.0.1.zip
     app_checksum: 'sha256:e19d4da26aeba29343d3bdc33643c03b925ed29a13bc71eae46c5999b654b843'
 
-- name: download {{ app_name }}
+- name: Download {{ app_name }}
   ansible.builtin.get_url:
     url: "{{ app_url }}"
     dest: "{{ install_archives }}/{{ app_url | basename }}"
@@ -16,7 +16,7 @@
     validate_certs: "{{ harden_darwin_bitbucket_sslcert_validate | default(true) }}"
   become: yes
 
-- name: decompress {{ app_name }}
+- name: Decompress {{ app_name }}
   ansible.builtin.unarchive:
     src: "{{ install_archives }}/{{ app_url | basename }}"
     dest: "{{ install_archives }}"
@@ -25,8 +25,10 @@
   become: yes
 
 - name: Ensure app is allowed by Google Santa
+  when: harden_darwin_santa is defined and harden_darwin_santa and harden_darwin_santa_mode == 2
   block:
-    - include_tasks: google-santa-whitelist.yml
+    - name: Include google-santa-whitelist
+      ansible.builtin.include_tasks: google-santa-whitelist.yml
       vars:
         type: hash
         path: "{{ item }}"
@@ -34,18 +36,19 @@
         match: White
       with_items:
         - "{{ install_archives }}/{{ app_name }}.app/Contents/MacOS/{{ app_name }}"
-  when: harden_darwin_santa is defined and harden_darwin_santa and harden_darwin_santa_mode == 2
 
 ## FIXME! always return 'install ok' and rc = 0
-- name: install oversight
+- name: Install oversight
   ansible.builtin.command: "\"{{ install_archives }}/{{ app_name }}.app/Contents/MacOS/{{ app_name }}\" -install"
   args:
     creates: "/Applications/OverSight.app/Contents/MacOS/OverSight"
   become: yes
 
 - name: Ensure app is allowed by Google Santa
+  when: harden_darwin_santa is defined and harden_darwin_santa and harden_darwin_santa_mode == 2
   block:
-    - include_tasks: google-santa-whitelist.yml
+    - name: Include google-santa-whitelist
+      ansible.builtin.include_tasks: google-santa-whitelist.yml
       vars:
         type: hash
         path: "{{ item }}"
@@ -53,4 +56,3 @@
         match: White
       with_items:
         - "/Applications/OverSight.app/Contents/MacOS/OverSight"
-  when: harden_darwin_santa is defined and harden_darwin_santa and harden_darwin_santa_mode == 2

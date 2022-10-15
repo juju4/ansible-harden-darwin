@@ -8,7 +8,7 @@
     app_url: https://bitbucket.org/objective-see/deploy/downloads/DoNotDisturb_1.3.0.zip
     app_checksum: 'sha1:15037CC79AFE797EFFA3506914243E5DE8F71C68'
 
-- name: download {{ app_name }}
+- name: Download {{ app_name }}
   ansible.builtin.get_url:
     url: "{{ app_url }}"
     dest: "{{ install_archives }}/{{ app_url | basename }}"
@@ -17,7 +17,7 @@
     validate_certs: "{{ harden_darwin_bitbucket_sslcert_validate | default(true) }}"
   become: yes
 
-- name: decompress {{ app_name }}
+- name: Decompress {{ app_name }}
   ansible.builtin.unarchive:
     src: "{{ install_archives }}/{{ app_url | basename }}"
     dest: "{{ install_archives }}"
@@ -26,8 +26,10 @@
   become: yes
 
 - name: Ensure app is allowed by Google Santa
+  when: harden_darwin_santa is defined and harden_darwin_santa and harden_darwin_santa_mode == 2
   block:
-    - include_tasks: google-santa-whitelist.yml
+    - name: Include google-santa-whitelist
+      ansible.builtin.include_tasks: google-santa-whitelist.yml
       vars:
         type: hash
         path: "{{ item }}"
@@ -35,9 +37,8 @@
         match: White
       with_items:
         - "{{ install_archives }}/{{ app_name }}.app/Contents/MacOS/{{ app_name }} Installer"
-  when: harden_darwin_santa is defined and harden_darwin_santa and harden_darwin_santa_mode == 2
 
-- name: install {{ app_name }}
+- name: Install {{ app_name }}
   ansible.builtin.command: "\"{{ install_archives }}/{{ app_name }} Installer.app/Contents/MacOS/{{ app_name }} Installer\" -install"
   args:
     creates: "/Library/Objective-See/DND"
