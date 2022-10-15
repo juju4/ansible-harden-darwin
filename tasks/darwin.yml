@@ -24,7 +24,7 @@
   register: devtools
 - name: FATAL
   ansible.builtin.fail:
-    msg: "FATAL! Missing Xcode and developper tools."
+    msg: "FATAL! Missing Xcode and developer tools."
   when: harden_darwin_hard_fail_developertools and not devtools.stat.exists
 
 - name: Ensure archives directory exists
