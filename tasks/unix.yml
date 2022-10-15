@@ -46,7 +46,7 @@
       with_items:
         - { regexp: '^UsePrivilegeSeparation', line: 'UsePrivilegeSeparation sandbox' }
       notify:
-        - restart sshd
+        - Restart sshd
     - name: Disable UseKeyChain ssh config - 10.12.2+
       ansible.builtin.lineinfile:
         dest: /etc/ssh/ssh_config
