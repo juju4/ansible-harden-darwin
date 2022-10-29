@@ -12,7 +12,7 @@
 ## Macos 10.4-: 1
 ## Macos 10.5+: 0
 - name: Review kern.securelevel
-  ansible.builtin.sysctl:
+  ansible.posix.sysctl:
     name: "kern.securelevel"
     value: "{{ harden_darwin_sysctl_kernsecurelevel | default(0) }}"
     state: present
