@@ -54,7 +54,7 @@
   #   checksum: 'sha256:d5002d499e3b3653a9505b2781f51d6d38507816b7eb9e9367d2c59fadfcac8c'
   #   mode: '0644'
   #   validate_certs: false
-  ansible.builtin.command: "curl -so /tmp/linuxprivchecker.py https://www.securitysift.com/download/linuxprivchecker.py"  # noqa 303
+  ansible.builtin.command: "curl -so /tmp/linuxprivchecker.py https://www.securitysift.com/download/linuxprivchecker.py"  # noqa command-instead-of-module
   args:
     creates: /tmp/linuxprivchecker.py
   # become: yes
@@ -93,7 +93,7 @@
   until: pkg_result is success
 
 - name: Execute kernelpop
-  ansible.builtin.shell: "/opt/local/bin/python3.6 kernelpop.py -b | tee /tmp/kernelpop.out"  # noqa 306
+  ansible.builtin.shell: "/opt/local/bin/python3.6 kernelpop.py -b | tee /tmp/kernelpop.out"  # noqa risky-shell-pipe
   args:
     chdir: /Users/_test/kernelpop
     creates: /tmp/kernelpop.out

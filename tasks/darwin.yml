@@ -51,7 +51,7 @@
 
 ## http://www.macos.utah.edu/documentation/administration/pmset.html
 ## FIXME! not idempotent
-- name: Enforce hibernation and evict Filevault keys from memory instead of traditional sleep to memory  # noqa 301
+- name: Enforce hibernation and evict Filevault keys from memory instead of traditional sleep to memory  # noqa no-changed-when
   ansible.builtin.command: "pmset -a {{ item.k }} {{ item.v }}"
   with_items:
     - { k: 'destroyfvkeyonstandby', v: '1' }

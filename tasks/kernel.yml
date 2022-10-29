@@ -1,5 +1,5 @@
 ---
 # https://hacksoc.co.uk/_media/user/modern_macos_security_bsidesmcr.pdf
 
-- name: Allow kernel extensions from teamid - only in system recovery mode  # noqa 301
+- name: Allow kernel extensions from teamid - only in system recovery mode  # noqa no-changed-when
   ansible.builtin.command: spctl kext-consent add <teamid>

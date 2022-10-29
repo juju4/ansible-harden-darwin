@@ -1,10 +1,10 @@
 ---
 
-- name: Set file immutable (schg)  # noqa 301
+- name: Set file immutable (schg)  # noqa no-changed-when
   ansible.builtin.command: "chflags schg {{ item }}"
   with_items: "{{ harden_darwin_set_immutable }}"
 
-- name: Set file not immutable (schg)  # noqa 301
+- name: Set file not immutable (schg)  # noqa no-changed-when
   ansible.builtin.command: "chflags noschg {{ item }}"
   with_items: "{{ harden_darwin_set_notimmutable }}"
 
