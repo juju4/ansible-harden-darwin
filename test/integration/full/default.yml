@@ -6,7 +6,7 @@
       ## osxfuse is required for veracrypt
       - { u: 'https://github.com/osxfuse/osxfuse/releases/download/macfuse-4.3.0/macfuse-4.3.0.dmg',
           v: True,
-          s: '8447e2ef3252cbab2608aeacec096b85561e7fdc8809157063a90ded812d48e8',
+          s: 'sha256:8447e2ef3252cbab2608aeacec096b85561e7fdc8809157063a90ded812d48e8',
           n: 'FUSE',
           t: 'pkg',
           m: '/Volumes/FUSE for macOS',
@@ -17,7 +17,7 @@
       }
       - { u: 'https://launchpad.net/veracrypt/trunk/1.25.9/+download/VeraCrypt_1.25.9.dmg',
           v: true,
-          s: '8acfdcfca5b64218431b990d1018b0c54feb508207640e819397cdbe701ae1eb',
+          s: 'sha256:8acfdcfca5b64218431b990d1018b0c54feb508207640e819397cdbe701ae1eb',
           n: 'VeraCrypt',
           t: 'pkg',
           m: '/Volumes/VeraCrypt for OSX',
@@ -26,7 +26,7 @@
       }
       - { u: 'https://github.com/google/santa/releases/download/2022.3/santa-2022.3.dmg',
           v: false,
-          s: '89498c1867b00ad53f04c01c7cd8565d5d64428874803b38919e5f12e71022fe',
+          s: 'sha256:89498c1867b00ad53f04c01c7cd8565d5d64428874803b38919e5f12e71022fe',
           n: 'santa-2022.3',
           t: 'pkg',
           version: '2022.3',
@@ -35,7 +35,7 @@
       }
       - { u: 'https://pkg.osquery.io/darwin/osquery-5.2.3.pkg',
           v: true,
-          s: '1927c1bb0138fa9c9dc1c48682cfe7270f91adad20409313c7aef284e4d773ca',
+          s: 'sha256:1927c1bb0138fa9c9dc1c48682cfe7270f91adad20409313c7aef284e4d773ca',
           n: 'osquery',
           t: 'pkgonly',
           version: '5.2.3',
@@ -45,12 +45,12 @@
       # https://gpgtools.org/
       # - { u: 'https://releases.gpgtools.org/GPG_Suite-2020.1.dmg',
       #     v: False,
-      #     s: 'xxx'
+      #     s: 'sha256:xxx'
       # }
       # https://downloads.chef.io/products/inspec
       - { u: 'https://packages.chef.io/files/stable/inspec/5.14.0/mac_os_x/12/inspec-5.14.0-1.x86_64.dmg',
           v: true,
-          s: '9deb2141ead0b94ab80e048110bff955230def6156dc5cdc52b9d26fe7d08764',
+          s: 'sha256:9deb2141ead0b94ab80e048110bff955230def6156dc5cdc52b9d26fe7d08764',
           n: 'inspec',
           t: 'pkg',
           m: '/Volumes/InSpec',
@@ -61,14 +61,14 @@
       - { u: 'https://download.mozilla.org/?product=firefox-latest-ssl&os=osx&lang=en-US',
           f: 'firefox-latest-ssl-en-US.dmg',
           v: true,
-          s: '',
+          s: 'sha256:',
           n: 'Firefox',
           t: 'app',
           version: '90.0'
       }
       # https://chromereleases.googleblog.com/search/label/Stable%20updates
       - { u: 'https://dl.google.com/chrome/mac/stable/GGRO/googlechrome.dmg',
-          v: true, s: '',
+          v: true, s: 'sha256:',
           n: 'Google Chrome',
           t: 'app',
           version: '92.0'
@@ -76,12 +76,12 @@
       # Only if Macos 10.12 or above
       - { u: 'https://github.com/objective-see/LuLu/releases/download/v2.4.1/LuLu_2.4.1.dmg',
           v: true,
-          s: 'fe2607d874456295154238fb387e2f038b2b9f475d440ded0e495fd90aacc934',
+          s: 'sha256:fe2607d874456295154238fb387e2f038b2b9f475d440ded0e495fd90aacc934',
           n: 'Lulu',
           t: 'app',
           version: '2.4.1'
       }
-      # - { u: '', f: '', v: true, s: 'aaaa', n: '', t: 'app', m: '/Volumes/app', version: '', versioncmd: '', to: '/Applications/example.app' }
+      # - { u: '', f: '', v: true, s: 'sha256:aaaa', n: '', t: 'app', m: '/Volumes/app', version: '', versioncmd: '', to: '/Applications/example.app' }
     harden_darwin_testing: true
     harden_darwin_testing_privesc: false
     harden_darwin_hard_fail_developertools: false
@@ -95,7 +95,7 @@
           - "{{ macos_apps_install_list }}"
           - { u: 'https://github.com/macports/macports-base/releases/download/v2.7.1/MacPorts-2.7.1-11-BigSur.pkg',
               v: false,
-              s: '72189c01f8a21f33869636061dc95b51b20428fa3937518e375fb6e8dd7e4fe3',
+              s: 'sha256:72189c01f8a21f33869636061dc95b51b20428fa3937518e375fb6e8dd7e4fe3',
               n: 'MacPorts',
               t: 'pkgonly',
               version: '2.7.1',
@@ -108,7 +108,7 @@
           - "{{ macos_apps_install_list }}"
           - { u: 'https://github.com/macports/macports-base/releases/download/v2.7.1/MacPorts-2.7.1-10.15-Catalina.pkg',
               v: false,
-              s: 'cd312d9755ec822630e4c26c6bb863f87fdac2e4d71d5d5f24cea2b20a7bc0f1',
+              s: 'sha256:cd312d9755ec822630e4c26c6bb863f87fdac2e4d71d5d5f24cea2b20a7bc0f1',
               n: 'MacPorts',
               t: 'pkgonly',
               version: '2.7.1',
@@ -121,7 +121,7 @@
           - "{{ macos_apps_install_list }}"
           - { u: 'https://github.com/macports/macports-base/releases/download/v2.7.1/MacPorts-2.7.1-10.14-Mojave.pkg',
               v: false,
-              s: '29e2ff54749819dbdb8a6fd2f6f5ba56f467dc554f4fc2c145fd64b607d84272',
+              s: 'sha256:29e2ff54749819dbdb8a6fd2f6f5ba56f467dc554f4fc2c145fd64b607d84272',
               n: 'MacPorts',
               t: 'pkgonly',
               version: '2.7.1',
@@ -134,7 +134,7 @@
           - "{{ macos_apps_install_list }}"
           - { u: 'https://distfiles.macports.org/MacPorts/MacPorts-2.6.3-10.13-HighSierra.pkg',
               v: false,
-              s: '218a64116b429140bab5cd795379d814a40f42bc0d45c7e96a1ea4b35be58776',
+              s: 'sha256:218a64116b429140bab5cd795379d814a40f42bc0d45c7e96a1ea4b35be58776',
               n: 'MacPorts',
               t: 'pkgonly',
               version: '2.6.3',
@@ -147,7 +147,7 @@
           - "{{ macos_apps_install_list }}"
           - { u: 'https://distfiles.macports.org/MacPorts/MacPorts-2.6.3-10.12-Sierra.pkg',
               v: true,
-              s: '6414963aef281c6a50145afcbc2eab4bc6eda3678df059c772e048524d4491a0',
+              s: 'sha256:6414963aef281c6a50145afcbc2eab4bc6eda3678df059c772e048524d4491a0',
               n: 'MacPorts',
               t: 'pkgonly',
               version: '2.6.3',
@@ -160,7 +160,7 @@
           - "{{ macos_apps_install_list }}"
           - { u: 'https://distfiles.macports.org/MacPorts/MacPorts-2.6.3-10.11-ElCapitan.pkg',
               v: true,
-              s: '174e3203362f4ddf2cd1ad55c1d050768dd38d8efff1e2e215163cd71cdfec93',
+              s: 'sha256:174e3203362f4ddf2cd1ad55c1d050768dd38d8efff1e2e215163cd71cdfec93',
               n: 'MacPorts',
               t: 'pkgonly',
               version: '2.6.3',
