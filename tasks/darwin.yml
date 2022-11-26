@@ -252,7 +252,7 @@
     url: https://fix-macosx.com/fix-macosx.py
     dest: "{{ install_archives }}/fix-macosx.py"
     mode: '0755'
-    sha256sum: "b5a07e12269a11341c21f5a1a0951d9b9dbb002681ea1c251a325dc04951b9b3"
+    checksum: "sha256:b5a07e12269a11341c21f5a1a0951d9b9dbb002681ea1c251a325dc04951b9b3"
     validate_certs: false
   when: harden_darwin_fixmacosleak
 
