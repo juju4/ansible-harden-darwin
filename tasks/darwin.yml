@@ -46,7 +46,8 @@
   changed_when: false
   register: wakestate
 - name: Disable wake for network access
-  ansible.builtin.command: "/usr/sbin/systemsetup -setwakeonnetworkaccess off"
+  ansible.builtin.command:  # noqa no-changed-when
+    cmd: "/usr/sbin/systemsetup -setwakeonnetworkaccess off"
   when: "'Off' not in wakestate.stdout and 'Not supported on this machine.' not in wakestate.stdout"
 
 ## http://www.macos.utah.edu/documentation/administration/pmset.html
@@ -207,10 +208,11 @@
       changed_when: false
     - name: Allow osascript to command keyboard/mouse
       ## works on osx but not travis osx, latest osx (10.11 have 7 columns vs 6 before)
-      ansible.builtin.command: >
-        sqlite3 "/Library/Application Support/com.apple.TCC/TCC.db"
-          "INSERT or REPLACE INTO access('service','client','client_type','allowed','prompt_count','csreq')
-          VALUES('kTCCServiceAccessibility','com.apple.RemoteDesktopAgent',1,1,1,NULL)"
+      ansible.builtin.command:  # noqa no-changed-when
+        cmd: >
+          sqlite3 "/Library/Application Support/com.apple.TCC/TCC.db"
+            "INSERT or REPLACE INTO access('service','client','client_type','allowed','prompt_count','csreq')
+            VALUES('kTCCServiceAccessibility','com.apple.RemoteDesktopAgent',1,1,1,NULL)"
       become: yes
       when: tccdb.stat.exists and not ('com.apple.RemoteDesktopAgent' in tccselect.stdout)
     - name: WARNING

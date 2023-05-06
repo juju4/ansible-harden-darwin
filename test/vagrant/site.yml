@@ -1,6 +1,7 @@
 ---
 
-- hosts: vagrantselect
+- name: Test vagrant playbook
+  hosts: vagrantselect
   vars:
     macos_apps_install_list:
       ## osxfuse is required for veracrypt
@@ -64,7 +65,7 @@
     # harden_darwin_blockblock: false
   pre_tasks:
     - name: Macos 11 | set fact
-      set_fact:
+      ansible.builtin.set_fact:
         macos_apps_install_list:
           - "{{ macos_apps_install_list }}"
           - { u: 'https://github.com/macports/macports-base/releases/download/v2.7.1/MacPorts-2.7.1-11-BigSur.pkg',
@@ -77,7 +78,7 @@
           }
       when: ansible_distribution == 'MacOSX' and ansible_distribution_version.split('.')[0] == '11'
     - name: Macos 10.15 | set fact
-      set_fact:
+      ansible.builtin.set_fact:
         macos_apps_install_list:
           - "{{ macos_apps_install_list }}"
           - { u: 'https://github.com/macports/macports-base/releases/download/v2.7.1/MacPorts-2.7.1-10.15-Catalina.pkg',
@@ -90,7 +91,7 @@
           }
       when: ansible_distribution == 'MacOSX' and ansible_distribution_version.split('.')[1] == '15'
     - name: Macos 10.14 | set fact
-      set_fact:
+      ansible.builtin.set_fact:
         macos_apps_install_list:
           - "{{ macos_apps_install_list }}"
           - { u: 'https://github.com/macports/macports-base/releases/download/v2.7.1/MacPorts-2.7.1-10.14-Mojave.pkg',
@@ -103,7 +104,7 @@
           }
       when: ansible_distribution == 'MacOSX' and ansible_distribution_version.split('.')[1] == '14'
     - name: Macos 10.13 | set fact
-      set_fact:
+      ansible.builtin.set_fact:
         macos_apps_install_list:
           - "{{ macos_apps_install_list }}"
           - { u: 'https://distfiles.macports.org/MacPorts/MacPorts-2.5.4-10.13-HighSierra.pkg',
@@ -116,7 +117,7 @@
           }
       when: ansible_distribution == 'MacOSX' and ansible_distribution_version.split('.')[1] == '13'
     - name: Macos 10.12 | set fact
-      set_fact:
+      ansible.builtin.set_fact:
         macos_apps_install_list:
           - "{{ macos_apps_install_list }}"
           - { u: 'https://github.com/macports/macports-base/releases/download/v2.4.4/MacPorts-2.4.4-10.12-Sierra.pkg',
@@ -130,7 +131,7 @@
           }
       when: ansible_distribution == 'MacOSX' and ansible_distribution_version.split('.')[1] == '12'
     - name: Macos 10.11 | set fact
-      set_fact:
+      ansible.builtin.set_fact:
         macos_apps_install_list:
           - "{{ macos_apps_install_list }}"
           - { u: 'https://github.com/macports/macports-base/releases/download/v2.4.2/MacPorts-2.4.2-10.11-ElCapitan.pkg',
@@ -144,5 +145,5 @@
           }
       when: ansible_distribution == 'MacOSX' and ansible_distribution_version.split('.')[1] == '11'
   roles:
-    - juju4.macos-apps-install
-    - juju4.harden-darwin
+    - juju4.macos_apps_install
+    - juju4.harden_darwin

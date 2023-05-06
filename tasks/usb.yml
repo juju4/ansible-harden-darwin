@@ -10,7 +10,8 @@
   register: kextstat
 
 - name: USB+Firewire | Disable mass storage with kextunload
-  ansible.builtin.command: "kextunload /System/Library/Extensions/{{ item }}.kext"
+  ansible.builtin.command:  # noqa no-changed-when
+    cmd: "kextunload /System/Library/Extensions/{{ item }}.kext"
   with_items:
     - IOUSBMassStorageClass
     - IOUSBMassStorageDriver
@@ -33,9 +34,7 @@
         - IOUSBMassStorageClass
         - IOFireWireSerialBusProtocolTransport
       register: rmkext
-    - name: USB+Firewire | force refresh of Extensions cache at next reboot
-      ansible.builtin.file:
-        dest: /System/Library/Extensions
-        mode: '0644'
-        state: touch
-      when: rmkext.changed
+      notify:
+        - USB+Firewire | Force refresh of Extensions cache at next reboot
+    - name: Flush handlers
+      ansible.builtin.meta: flush_handlers

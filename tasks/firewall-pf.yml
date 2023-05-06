@@ -8,7 +8,8 @@
   ignore_errors: true
   register: ifstatus
 - name: Create pflog interface
-  ansible.builtin.command: "ifconfig pflog0 create"
+  ansible.builtin.command:  # noqa no-changed-when
+    cmd: "ifconfig pflog0 create"
   when: "not 'pflog0' in ifstatus.stdout and harden_darwin_fw_pf"
 
 - name: Configure pf
@@ -30,8 +31,10 @@
   ignore_errors: true
   register: pfstatus
 - name: Enable pf
-  ansible.builtin.command: pfctl -e
+  ansible.builtin.command:  # noqa no-changed-when
+    cmd: pfctl -e
   when: "'Disabled' in pfstatus.stdout and harden_darwin_fw_pf"
 - name: Disable pf
-  ansible.builtin.command: pfctl -d
+  ansible.builtin.command:  # noqa no-changed-when
+    cmd: pfctl -d
   when: "not 'Disabled' in pfstatus.stdout and not harden_darwin_fw_pf"

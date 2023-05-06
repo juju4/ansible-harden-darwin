@@ -81,7 +81,8 @@
     path: /private/var/root/osxlockdown.audit
   register: osxlfile
 - name: Build osxlockdown
-  ansible.builtin.command: "{{ item.c }}"
+  ansible.builtin.command:  # noqa no-changed-when
+    cmd: "{{ item.c }}"
   args:
     chdir: "{{ item.d }}"
   with_items:
@@ -95,7 +96,8 @@
   when: ansible_distribution_version.find('10.11') != -1 and not osxlfile.stat.exists
   failed_when: false
 - name: Execute osxlockdown - audit mode only
-  ansible.builtin.shell: "./osxlockdown | tee /private/var/root/osxlockdown.audit"
+  ansible.builtin.shell:  # noqa no-changed-when
+    cmd: "./osxlockdown | tee /private/var/root/osxlockdown.audit"
   args:
     chdir: "{{ install_archives }}/osxlockdown"
   environment:

@@ -64,7 +64,8 @@
       changed_when: false
       register: launchctllist
     - name: Ensure service is enabled and started
-      ansible.builtin.command: "/usr/local/bin/osqueryctl start"
+      ansible.builtin.command:  # noqa no-changed-when
+        cmd: "/usr/local/bin/osqueryctl start"
       when: >
         launchctllist is defined and
         launchctllist.stdout is defined and

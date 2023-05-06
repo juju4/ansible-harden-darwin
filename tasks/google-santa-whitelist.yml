@@ -22,9 +22,11 @@
     # - ansible.builtin.debug: var=fileinfo
 
     - name: Santa | per certificate - {{ action }}
-      ansible.builtin.command: "/usr/local/bin/santactl rule --{{ action }} --certificate --path '{{ path }}'"
+      ansible.builtin.command:  # noqa no-changed-when
+        cmd: "/usr/local/bin/santactl rule --{{ action }} --certificate --path '{{ path }}'"
       when: not (match + 'listed (Certificate)' in fileinfo.stdout) and type == 'cert'
 
     - name: Santa | per hash - {{ action }}
-      ansible.builtin.command: "/usr/local/bin/santactl rule --{{ action }} --sha256 {{ filestat.stat.checksum }} --path '{{ path }}'"
+      ansible.builtin.command:  # noqa no-changed-when
+        cmd: "/usr/local/bin/santactl rule --{{ action }} --sha256 {{ filestat.stat.checksum }} --path '{{ path }}'"
       when: not (match + 'listed (Binary)' in fileinfo.stdout) and type == 'hash'

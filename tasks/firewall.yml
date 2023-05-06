@@ -45,7 +45,8 @@
   when: harden_darwin_firewall_allow_signedapps
 
 - name: Block all incoming connections
-  ansible.builtin.command: "/usr/libexec/ApplicationFirewall/socketfilterfw --setblockall on"
+  ansible.builtin.command:  # noqa no-changed-when
+    cmd: "/usr/libexec/ApplicationFirewall/socketfilterfw --setblockall on"
   when: harden_darwin_firewall_blockall_apps_in
 
 - name: List application firewall rules

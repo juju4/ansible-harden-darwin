@@ -5,7 +5,8 @@
     path: /etc/ssh/ssh_host_ed25519_key
   register: sshkey
 - name: Generate any missing SSH host key
-  ansible.builtin.command: ssh-keygen -A
+  ansible.builtin.command:  # noqa no-changed-when
+    cmd: ssh-keygen -A
   when: not sshkey.stat.exists
 
 - name: Check if /etc/ssh/sshd_config exists
@@ -63,9 +64,11 @@
         - Restart sshd
       when: ansible_distribution_version is version_compare( '10.12.2', '>=')
 - name: Where is sshd_config if not standard?
-  ansible.builtin.command: "ls -l /etc/ssh/sshd_config /private/etc/ssh/"
+  ansible.builtin.command:
+    cmd: "ls -l /etc/ssh/sshd_config /private/etc/ssh/"
   when: not sshdconf.stat.exists
   failed_when: false
+  changed_when: false
 
 # - name: sshd configuration file update
 #   template: src=sshd_config
