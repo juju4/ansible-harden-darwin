@@ -6,11 +6,13 @@
 ## plutil -convert binary1 -o - filename.plist
 ## defaults write /path/to/plist/file "URL Types" -array-add '{"URL Identifier" = "com.myapp.2"; "URL Schemes" = { "two"; }; }'l
 ## defaults write /path/to/plist/file "URL Types" -array-add '{"URL Identifier" = "com.myapp.2"; "URL Schemes" = { "two"; }; }'l
+## https://www.mac4n6.com/blog/2016/1/1/manual-analysis-of-nskeyedarchiver-formatted-plist-files-a-review-of-the-new-os-x-1011-recent-items
 
-- name: Add TLP:YELLOW category
+- name: Add Finder tag categories
   community.general.osx_defaults:
     domain: '/Users/*/Library/Application Support/com.apple.sharedfilelist/com.apple.LSSharedFileList.ProjectsItems.sfl'
     # key: AppleLanguages
     key: '$objects'
     type: string
-    value: 'x-apple-findertag:TLP%3AYELLOW'
+    value: "x-apple-findertag:{{ item }}"
+  loop: "{{ harden_darwin_findertags_list }}"

@@ -493,6 +493,13 @@ harden_darwin_certificates_files: []
 ## MDM Mobile config
 harden_darwin_mobileconfigs: []
 
+harden_darwin_findertags_list:
+  - TLP%3ACLEAR
+  - TLP%3AGREEN
+  - TLP%3AAMBER
+  - TLP%3AAMBER%2BSTRICT
+  - TLP%3ARED
+
 install_archives: /private/var/_install
 backupdir: /var/_backup
 
