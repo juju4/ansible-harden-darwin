@@ -30,7 +30,7 @@
       vars:
         type: cert
         path: "{{ item }}"
-        action: whitelist
+        santa_action: whitelist
         match: White
       with_items: "{{ harden_darwin_santa_whitelist_cert }}"
 
@@ -39,7 +39,7 @@
       vars:
         type: hash
         path: "{{ item }}"
-        action: whitelist
+        santa_action: whitelist
         match: White
       with_items: "{{ harden_darwin_santa_whitelist_hash }}"
 
@@ -48,7 +48,7 @@
       vars:
         type: hash
         path: "{{ item }}"
-        action: blacklist
+        santa_action: blacklist
         match: Black
       with_items: "{{ harden_darwin_santa_blacklist_hash }}"
 

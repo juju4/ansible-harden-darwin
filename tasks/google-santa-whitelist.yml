@@ -1,8 +1,8 @@
 ---
 
 - name: Validate requested action
-  ansible.builtin.fail: "FATAL! unrecognized action {{ action }}"
-  when: not (action == 'whitelist' or action == 'blacklist')
+  ansible.builtin.fail: "FATAL! unrecognized action {{ santa_action }}"
+  when: not (santa_action == 'whitelist' or santa_action == 'blacklist')
 
 - name: "Recover file info for {{ path }}"
   ansible.builtin.stat:
@@ -21,12 +21,12 @@
 
     # - ansible.builtin.debug: var=fileinfo
 
-    - name: Santa | per certificate - {{ action }}
+    - name: Santa | per certificate - {{ santa_action }}
       ansible.builtin.command:  # noqa no-changed-when
-        cmd: "/usr/local/bin/santactl rule --{{ action }} --certificate --path '{{ path }}'"
-      when: not (match + 'listed (Certificate)' in fileinfo.stdout) and type == 'cert'
+        cmd: "/usr/local/bin/santactl rule --{{ santa_action }} --certificate --path '{{ path }}'"
+      when: not (match + 'listed (Certificate)' in fileinfo.stdout) and santa_type == 'cert'
 
-    - name: Santa | per hash - {{ action }}
+    - name: Santa | per hash - {{ santa_action }}
       ansible.builtin.command:  # noqa no-changed-when
-        cmd: "/usr/local/bin/santactl rule --{{ action }} --sha256 {{ filestat.stat.checksum }} --path '{{ path }}'"
-      when: not (match + 'listed (Binary)' in fileinfo.stdout) and type == 'hash'
+        cmd: "/usr/local/bin/santactl rule --{{ santa_action }} --sha256 {{ filestat.stat.checksum }} --path '{{ path }}'"
+      when: not (match + 'listed (Binary)' in fileinfo.stdout) and santa_type == 'hash'

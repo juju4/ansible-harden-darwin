@@ -30,9 +30,9 @@
     - name: Include google-santa-whitelist
       ansible.builtin.include_tasks: google-santa-whitelist.yml
       vars:
-        type: hash
+        santa_type: hash
         path: "{{ item }}"
-        action: whitelist
+        santa_action: whitelist
         match: White
       with_items:
         - "{{ install_archives }}/{{ app_name }}.app/Contents/MacOS/{{ app_name }}"
@@ -50,9 +50,9 @@
     - name: Include google-santa-whitelist
       ansible.builtin.include_tasks: google-santa-whitelist.yml
       vars:
-        type: hash
+        santa_type: hash
         path: "{{ item }}"
-        action: whitelist
+        santa_action: whitelist
         match: White
       with_items:
         - "/Applications/OverSight.app/Contents/MacOS/OverSight"
