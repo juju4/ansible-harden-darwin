@@ -1,0 +1,8 @@
+---
+
+## BigSur
+darwin_booltype: 'bool'
+darwin_booltype_false: false
+darwin_booltype_true: true
+
+harden_darwin_certificates: false
