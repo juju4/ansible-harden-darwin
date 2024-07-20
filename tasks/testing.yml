@@ -21,4 +21,6 @@
 
 - name: Import testing-speculative
   ansible.builtin.import_tasks: testing-speculative.yml
-  when: harden_darwin_testing_speculative
+  when:
+    - harden_darwin_testing_speculative
+    - ansible_architecture == 'i386' or ansible_architecture == 'x86_64'
