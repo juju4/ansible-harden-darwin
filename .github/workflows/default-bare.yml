@@ -18,7 +18,7 @@ jobs:
       ANSIBLE_CALLBACKS_ENABLED: profile_tasks
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           path: juju4.harden_darwin
       - name: Set up Python
