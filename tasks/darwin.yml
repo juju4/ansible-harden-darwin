@@ -335,4 +335,4 @@
   ansible.builtin.import_tasks: mobileconfig.yml
 - name: Import darwin-hostname
   ansible.builtin.import_tasks: darwin-hostname.yml
-  when: harden_darwin_hostname is defined and harden_darwin_hostname
+  when: harden_darwin_hostname is defined and harden_darwin_hostname | length > 0
