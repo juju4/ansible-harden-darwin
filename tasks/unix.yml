@@ -62,7 +62,7 @@
         - { regexp: '^    UseKeyChain', line: '    UseKeychain no' }
       notify:
         - Restart sshd
-      when: ansible_distribution_version is version_compare( '10.12.2', '>=')
+      when: ansible_facts['distribution_version'] is version_compare( '10.12.2', '>=')
 - name: Where is sshd_config if not standard?
   ansible.builtin.command:
     cmd: "ls -l /etc/ssh/sshd_config /private/etc/ssh/"

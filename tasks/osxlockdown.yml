@@ -10,8 +10,8 @@
     repo: https://github.com/SummitRoute/osxlockdown
     dest: "{{ install_archives }}/osxlockdown"
     version: "{{ osxlockdown_version | default('eff7eb67db81991fb5a6b59d88b97bb721c9a907') }}"
-  # when: "{{ ansible_distribution_version | regex_replace('^(\d+)\.(\d+)\.(\d+)$', '\\1.\\2') }}" == '10.11'
-  when: ansible_distribution_version.find('10.11') != -1 and not osxl.stat.exists
+  # when: "{{ ansible_facts['distribution_version'] | regex_replace('^(\d+)\.(\d+)\.(\d+)$', '\\1.\\2') }}" == '10.11'
+  when: ansible_facts['distribution_version'].find('10.11') != -1 and not osxl.stat.exists
 
 ## go install with macport or homebrew
 - name: Check if macports is present
@@ -93,7 +93,7 @@
     GOROOT: "{{ GOROOT }}"
     GOPATH: "/tmp/gowork"
   become: yes
-  when: ansible_distribution_version.find('10.11') != -1 and not osxlfile.stat.exists
+  when: ansible_facts['distribution_version'].find('10.11') != -1 and not osxlfile.stat.exists
   failed_when: false
 - name: Execute osxlockdown - audit mode only
   ansible.builtin.shell:  # noqa no-changed-when
@@ -107,11 +107,11 @@
   become: yes
   register: osxlout
   when: >
-    ansible_distribution_version.find('10.11') != -1 and
+    ansible_facts['distribution_version'].find('10.11') != -1 and
     not osxlfile.stat.exists and
     harden_darwin_osxlockdown == 'audit'
   ignore_errors: true
 - name: Debug | osxlockdown output
   ansible.builtin.debug:
     var: osxlout.stdout_lines
-  when: ansible_distribution_version.find('10.11') != -1 and not osxlfile.stat.exists
+  when: ansible_facts['distribution_version'].find('10.11') != -1 and not osxlfile.stat.exists

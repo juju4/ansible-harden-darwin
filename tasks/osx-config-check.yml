@@ -10,7 +10,7 @@
     repo: https://github.com/kristovatlas/osx-config-check
     dest: "{{ install_archives }}/osx-config-check"
     version: "{{ osxconfigcheck_version | default('7ab816d52d818a770b712ad0652e7bd7457ffd15') }}"
-#  when: "{{ ansible_distribution_version | regex_replace('^(\d+)\.(\d+)\.(\d+)$', '\\1.\\2') }}" == '10.11'
+#  when: "{{ ansible_facts['distribution_version'] | regex_replace('^(\d+)\.(\d+)\.(\d+)$', '\\1.\\2') }}" == '10.11'
 
 ## Note: report is written to ~/Documents/ ...
 - name: Execute osx-config-check - audit mode only  # noqa risky-shell-pipe

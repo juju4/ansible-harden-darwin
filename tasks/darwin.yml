@@ -200,7 +200,7 @@
   register: tccdb
 ## incompatible with 10.12+, https://github.com/Homebrew/brew/pull/1029
 - name: TCC
-  when: ansible_distribution_version is version_compare( '10.12', '<')
+  when: ansible_facts['distribution_version'] is version_compare( '10.12', '<')
   block:
     - name: Check current tcc.db
       ansible.builtin.command: "sqlite3 \"/Library/Application Support/com.apple.TCC/TCC.db\" \"SELECT * FROM access\""
@@ -222,7 +222,7 @@
 - name: WARNING
   ansible.builtin.debug:
     msg: "Warning! macOS Sierra+ accessibility can't be enable from command line."
-  when: ansible_distribution_version is version_compare( '10.12', '>=')
+  when: ansible_facts['distribution_version'] is version_compare( '10.12', '>=')
 
 - name: Disable IPv6 noise
   ansible.posix.sysctl:
