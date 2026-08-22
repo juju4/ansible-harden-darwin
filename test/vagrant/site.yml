@@ -47,16 +47,6 @@
       #     v: false,
       #     s: 'c66ecf48ccf709f704f02097cf9d68ba97b0efba24f7a0b7b46adfd1133cb86a'
       # }
-      - { u: 'https://packages.chef.io/files/stable/inspec/4.38.9/mac_os_x/10.15/inspec-4.38.9-1.x86_64.dmg',
-          v: true,
-          s: 'bc5772b1db8e13f2766390e995dbda1651813d1b1737c88af47b8f217acb03b0',
-          n: 'inspec',
-          t: 'pkg',
-          m: '/Volumes/InSpec',
-          version: '4.6.9',
-          exec_name: 'inspec-4.6.9-1.pkg',
-          versioncmd: 'inspec --version 2>&1 | tail -1'
-      }
       # - { u: '', f: '', v: true, s: 'aaaa', n: '', t: 'app', m: '/Volumes/app', version: '', versioncmd: '', to: '/Applications/example.app' }
     harden_darwin_testing: true
     harden_darwin_testing_privesc: false

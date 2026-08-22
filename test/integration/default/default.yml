@@ -48,17 +48,6 @@
       #     v: False,
       #     s: 'sha256:xxx'
       # }
-      # https://downloads.chef.io/products/inspec
-      - { u: 'https://packages.chef.io/files/stable/inspec/5.14.0/mac_os_x/12/inspec-5.14.0-1.x86_64.dmg',
-          v: true,
-          s: 'sha256:9deb2141ead0b94ab80e048110bff955230def6156dc5cdc52b9d26fe7d08764',
-          n: 'inspec',
-          t: 'pkg',
-          m: '/Volumes/InSpec',
-          version: '5.14.0',
-          exec_name: 'inspec-5.14.0-1.pkg',
-          versioncmd: 'inspec --version 2>&1 | tail -1'
-      }
       # - { u: '', f: '', v: true, s: 'sha256:aaaa', n: '', t: 'app', m: '/Volumes/app', version: '', versioncmd: '', to: '/Applications/example.app' }
     harden_darwin_testing: true
     harden_darwin_testing_privesc: false

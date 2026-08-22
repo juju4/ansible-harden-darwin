@@ -504,7 +504,6 @@ install_archives: /private/var/_install
 backupdir: /var/_backup
 
 harden_darwin_testing: false
-harden_darwin_testing_inspec: true
 harden_darwin_testing_privesc: true
 harden_darwin_testing_speculative: true
 

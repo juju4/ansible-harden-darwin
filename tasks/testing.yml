@@ -1,20 +1,5 @@
 ---
 
-- name: Inspec
-  when: harden_darwin_testing_inspec
-  block:
-    - name: Testing | run macos-baseline
-      ansible.builtin.shell: >
-        /usr/local/bin/inspec exec https://github.com/juju4/macos-baseline/archive/master.tar.gz |
-            tee /var/log/inspec.log
-      ignore_errors: true
-      register: inspeclog
-      args:
-        creates: /var/log/inspec.log
-    - name: Debug | inspec output
-      ansible.builtin.debug:
-        var: inspeclog.stdout_lines
-
 - name: Import testing-privesc
   ansible.builtin.import_tasks: testing-privesc.yml
   when: harden_darwin_testing_privesc
